@@ -6,10 +6,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'chores.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^', include(views.index)),
+    url(r'^', 'chores.views.index', name='index'),
     url(r'^admin/', include(admin.site.urls)),
 )
