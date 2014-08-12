@@ -1,6 +1,44 @@
-from django.http import HttpResponse
+from django import http
+from django.conf import settings
+from django.contrib.auth import models as auth_models, login
 from django.shortcuts import render_to_response
 
+from chores.models import User
+from chores.utils import Facebook
+
 def index(request):
+
+  if not request.user.is_authenticated():
+    return render_to_response('login.html', {})
+
   ctx = {}
   return render_to_response('index.html', ctx)
+
+def login(request):
+
+  token = request.GET.get('access_token')
+  user_id = request.GET.get('user_id')
+
+  fb = Facebook()
+
+  if not fb.check_user(token, user_id):
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': 'Nice try.'
+    }))
+
+  user, created = User.objects.get_or_create(fb_user_id=fb.user_info.get('user_id'))
+
+  if created:
+    user.d_user, created = auth_models.User.objects.get_or_created(
+      email='%s@chores.dev' % user.fb_user_id,
+      username=user.fb_user_id,
+    )
+    user.d_user.set_password(settings.GENERIC_USER_PASSWORD)
+    user.d_user.save()
+    user.save()
+
+  login(request, user.d_user)
+
+  return http.HttpResponseRedirect('/')
+

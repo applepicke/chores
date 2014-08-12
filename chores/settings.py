@@ -65,7 +65,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'chores',
         'USER': 'root',
-        'PASSWORD': 'magicalbeandip',
+        'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
@@ -89,3 +89,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SESSION_ENGINE = 'redis_sessions.session'
+
+APP_ID = '332305020261516'
+APP_SECRET = '3a54fc53a73878ed337e768eb0d2e1c7'
+
+GENERIC_USER_PASSWORD = 'HSOUH12849&^$(asdf'
