@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from os.path import join
+from os.path import join, normpath
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -27,10 +27,32 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 TEMPLATE_DIRS = (
     join(BASE_DIR,  'chores/templates'),
 )
+
+STATIC_ROOT = normpath(join(BASE_DIR, 'static'))
+STATIC_URL = '/static'
+STATICFILES_DIRS = (
+    normpath(join(BASE_DIR, 'assets')),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+PIPELINE_ENABLED = False
+
+PIPELINE_JS = {
+    'app': {
+        'source_filenames': (
+            'js/app.js',
+            'js/facebook.js',
+        ),
+        'output_filename': 'js/app.js',
+    }
+}
 
 # Application definition
 
@@ -41,6 +63,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pipeline'
 )
 
 MIDDLEWARE_CLASSES = (
