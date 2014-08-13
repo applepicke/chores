@@ -25,3 +25,5 @@ celerybeat-schedule
 
 */static/css/*
 */static/js/*
+
+bower_components
