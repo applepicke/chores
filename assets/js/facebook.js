@@ -1,11 +1,17 @@
 function statusChangeCallback(response) {
 
   if (response.status === 'connected') {
-    console.log(response)
+    var data = {
+      'access_token': response.authResponse.accessToken,
+      'user_id': response.authResponse.userID,
+    };
+    $.post('/login/', data);
   } else if (response.status === 'not_authorized') {
 
   } else {
+
   }
+
 }
 
 function checkLoginState() {

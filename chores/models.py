@@ -7,7 +7,7 @@ class User(models.Model):
   fb_user_id = models.CharField(max_length=255)
   email = models.CharField(max_length=255)
   extras = JSONField(default='{}')
-  d_user = models.ForeignKey(auth_models.User)
+  d_user = models.ForeignKey(auth_models.User, null=True)
 
 class House(models.Model):
   name = models.CharField(max_length=255)

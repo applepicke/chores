@@ -1,3 +1,5 @@
+import json
+
 from django import http
 from django.conf import settings
 from django.contrib.auth import models as auth_models, login
@@ -16,8 +18,8 @@ def index(request):
 
 def login(request):
 
-  token = request.GET.get('access_token')
-  user_id = request.GET.get('user_id')
+  token = request.POST.get('access_token')
+  user_id = request.POST.get('user_id')
 
   fb = Facebook()
 
@@ -29,8 +31,8 @@ def login(request):
 
   user, created = User.objects.get_or_create(fb_user_id=fb.user_info.get('user_id'))
 
-  if created:
-    user.d_user, created = auth_models.User.objects.get_or_created(
+  if created or not user.d_user:
+    user.d_user, created = auth_models.User.objects.get_or_create(
       email='%s@chores.dev' % user.fb_user_id,
       username=user.fb_user_id,
     )
@@ -38,7 +40,8 @@ def login(request):
     user.d_user.save()
     user.save()
 
-  login(request, user.d_user)
+  if not user.d_user.is_authenticated():
+    login(request, user.d_user)
 
   return http.HttpResponseRedirect('/')
 

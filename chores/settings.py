@@ -35,6 +35,7 @@ STATIC_ROOT = normpath(join(BASE_DIR, 'static'))
 STATIC_URL = '/static'
 STATICFILES_DIRS = (
     normpath(join(BASE_DIR, 'assets')),
+    normpath(join(BASE_DIR, 'bower_components')),
 )
 
 STATICFILES_FINDERS = (
@@ -47,6 +48,7 @@ PIPELINE_ENABLED = False
 PIPELINE_JS = {
     'app': {
         'source_filenames': (
+            'jquery/dist/jquery.js',
             'js/app.js',
             'js/facebook.js',
         ),
@@ -63,13 +65,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pipeline'
+    'django_extensions',
+    'pipeline',
+    'chores',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
