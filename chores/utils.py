@@ -16,6 +16,17 @@ class Facebook(object):
       settings.APP_SECRET,
     )).read().split('=')[1]
 
+  def get_user_info(self, user_id):
+    response = urllib2.urlopen("https://graph.facebook.com/user/%s?access_token=%s" % (
+      user_id,
+      self.get_access_token(),
+    )).read()
+
+    self.user = json.loads(response).get('data')
+
+    return self.user
+
+
   def check_user(self, input_token, user_id):
     response = urllib2.urlopen("https://graph.facebook.com/debug_token?access_token=%s&input_token=%s" % (
       self.get_access_token(),

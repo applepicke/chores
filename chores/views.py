@@ -29,7 +29,10 @@ def login(request):
       'msg': 'Nice try.'
     }))
 
-  user, created = User.objects.get_or_create(fb_user_id=fb.user_info.get('user_id'))
+  user, created = User.objects.get_or_create(
+    fb_user_id=fb.user_info.get('user_id'),
+    access_token=token
+  )
 
   if created or not user.d_user:
     user.d_user, created = auth_models.User.objects.get_or_create(

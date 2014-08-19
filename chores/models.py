@@ -8,11 +8,13 @@ class User(models.Model):
   email = models.CharField(max_length=255)
   extras = JSONField(default='{}')
   d_user = models.ForeignKey(auth_models.User, null=True)
+  access_token = models.CharField(max_length=255)
 
 class House(models.Model):
   name = models.CharField(max_length=255)
-  address = models.CharField(max_length=255)
-  owner = models.ForeignKey(User)
+  address = models.CharField(max_length=2000)
+  owner = models.ForeignKey(User, null=True)
+  recurs = models.CharField(max_length=255)
 
   def shuffle(self):
     chores = self.chores.order_by('id')
@@ -32,7 +34,7 @@ class House(models.Model):
 
 class Chore(models.Model):
   name = models.CharField(max_length=255)
-  user = models.ForeignKey(User)
-  active_date = models.DateField()
+  description = models.CharField(max_length=2000)
+  user = models.ForeignKey(User, null=True)
   house = models.ForeignKey(House, related_name='chores')
 
