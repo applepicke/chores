@@ -129,3 +129,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'wcurtiscollins@gmail.com'
 EMAIL_HOST_PASSWORD = 'A42583984g'
 EMAIL_PORT = 587
+
+try:
+    from .local import *
+except ImportError:
+    pass
