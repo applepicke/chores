@@ -15,8 +15,6 @@ anyjson==0.3.3
 billiard==2.7.3.34
 celery==3.0.24
 cssmin==0.2.0
-## FIXME: could not find svn URL in dependency_links for this package:
-dja-skel==0.1dev-r628
 django-appconf==0.6
 django-celery==3.0.21
 django-compressor==1.3
