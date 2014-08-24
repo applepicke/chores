@@ -1,4 +1,5 @@
 import json
+import facebook
 
 from django import http
 from django.conf import settings
@@ -29,12 +30,18 @@ def login(request):
       'msg': 'Nice try.'
     }))
 
-  user, created = User.objects.get_or_create(
-    fb_user_id=fb.user_info.get('user_id'),
-    access_token=token
-  )
+  try:
+    user, created = User.objects.get_or_create(
+      fb_user_id=fb.user_info.get('user_id'),
+    )
+  except User.MultipleObjectsReturned:
+    user = User.objects.filter(
+      fb_user_id=fb.user_info.get('user_id')
+    ).latest('id')
+    created = False
 
   if created or not user.d_user:
+    print created
     user.d_user, created = auth_models.User.objects.get_or_create(
       email='%s@chores.dev' % user.fb_user_id,
       username=user.fb_user_id,
@@ -42,6 +49,14 @@ def login(request):
     user.d_user.set_password(settings.GENERIC_USER_PASSWORD)
     user.d_user.save()
     user.save()
+
+  graph = facebook.GraphAPI(token)
+  email = graph.get_object('me').get('email')
+
+  user.access_token = token
+  user.email = email
+  user.save()
+
 
   if not user.d_user.is_authenticated():
     login(request, user.d_user)

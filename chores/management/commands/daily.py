@@ -23,8 +23,7 @@ class Command(BaseCommand):
     for house in House.objects.filter(recurs__iexact=today):
       for chore in house.chores.all():
         if chore.user:
-          graph = facebook.GraphAPI(chore.user.access_token)
-          email = graph.get_object('me').get('email')
+          email = chore.user.email
           if email:
             send_mail(
               'Chores',
