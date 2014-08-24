@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from chores.models import House
 
 today = datetime.datetime.now().strftime('%A').lower()
-today = 'sunday'
 
 msg = """
 Your chore is: %s
