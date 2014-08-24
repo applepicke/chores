@@ -37,7 +37,6 @@ ipython==2.0.0
 jsonfield==0.9.22
 kombu==2.5.16
 paramiko==1.13.0
-pycrypto==2.6.1
 python-dateutil==2.2
 pytz==2014.2
 redis==2.10.2
