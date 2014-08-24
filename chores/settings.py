@@ -67,7 +67,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'pipeline',
-    'chores',
+    'chores'
 )
 
 MIDDLEWARE_CLASSES = (

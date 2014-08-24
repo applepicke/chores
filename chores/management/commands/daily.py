@@ -28,7 +28,7 @@ class Command(BaseCommand):
             send_mail(
               'Chores',
               msg % (chore.name, chore.description),
-              'wcurtiscollins@gmail.com',
+              'wcurtiscollins@willyc.me',
               [email],
               fail_silently=False
             )

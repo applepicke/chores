@@ -11,8 +11,7 @@ from chores.utils import Facebook
 
 def index(request):
 
-  if not request.user.is_authenticated():
-    return render_to_response('login.html', {})
+  return render_to_response('login.html', {})
 
   ctx = {}
   return render_to_response('index.html', ctx)
@@ -51,12 +50,13 @@ def login(request):
     user.save()
 
   graph = facebook.GraphAPI(token)
-  email = graph.get_object('me').get('email')
+  obj = graph.get_object('me')
 
   user.access_token = token
-  user.email = email
+  user.email = obj.get('email')
+  user.first_name = obj.get('first_name')
+  user.last_name = obj.get('last_name')
   user.save()
-
 
   if not user.d_user.is_authenticated():
     login(request, user.d_user)
