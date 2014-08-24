@@ -130,6 +130,8 @@ EMAIL_HOST_USER = 'wcurtiscollins@gmail.com'
 EMAIL_HOST_PASSWORD = 'A42583984g'
 EMAIL_PORT = 587
 
+SERVER_EMAIL = 'wcurtiscollins@gmail.com'
+
 try:
     from .local import *
 except ImportError:
