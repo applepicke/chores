@@ -36,10 +36,14 @@ class Facebook(object):
 
 
   def check_user(self, input_token, user_id):
-    response = urllib2.urlopen("https://graph.facebook.com/debug_token?access_token=%s&input_token=%s" % (
-      self.get_access_token(),
-      input_token
-    )).read()
+    try:
+      response = urllib2.urlopen("https://graph.facebook.com/debug_token?access_token=%s&input_token=%s" % (
+        self.get_access_token(),
+        input_token
+      )).read()
+    except urllib2.HTTPError, e:
+      logger.error('HTTPError = ' + str(e.code))
+      logger.error(e.read())
 
     self.user_info = json.loads(response).get('data')
 
