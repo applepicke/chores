@@ -8,11 +8,7 @@ function statusChangeCallback(response) {
   } else if (response.status === 'not_authorized') {
 
   } else {
-    var data = {
-      'access_token': response.authResponse.accessToken,
-      'user_id': response.authResponse.userID,
-    };
-    $.post('/login/', data);
+
   }
 
 }
