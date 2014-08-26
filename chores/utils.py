@@ -1,7 +1,10 @@
 import urllib2
 import json
+import logging
 
 from django.conf import settings
+
+logger = logging.getLogger('utils')
 
 class Facebook(object):
   user_info = None
@@ -11,10 +14,14 @@ class Facebook(object):
 
   @staticmethod
   def get_access_token():
-    return urllib2.urlopen("https://graph.facebook.com/oauth/access_token?client_id=%s&client_secret=%s&grant_type=client_credentials" % (
-      settings.APP_ID,
-      settings.APP_SECRET,
-    )).read().split('=')[1]
+    try:
+      return urllib2.urlopen("https://graph.facebook.com/oauth/access_token?client_id=%s&client_secret=%s&grant_type=client_credentials" % (
+        settings.APP_ID,
+        settings.APP_SECRET,
+      )).read().split('=')[1]
+    except Exception as e:
+      logger.error(e)
+
 
   def get_user_info(self, user_id):
     response = urllib2.urlopen("https://graph.facebook.com/user/%s?access_token=%s" % (
