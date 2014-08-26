@@ -11,7 +11,9 @@ from chores.utils import Facebook
 
 def index(request):
 
-  return render_to_response('login.html', {})
+  return render_to_response('login.html', {
+    'settings': settings,
+  })
 
   ctx = {}
   return render_to_response('index.html', ctx)

@@ -1,3 +1,5 @@
+chores = chores || {}
+
 $(function () {
 
 
