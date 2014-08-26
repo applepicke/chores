@@ -4,7 +4,7 @@ import logging
 
 from django.conf import settings
 
-logger = logging.getLogger('utils')
+logger = logging.getLogger('')
 
 class Facebook(object):
   user_info = None
@@ -19,8 +19,9 @@ class Facebook(object):
         settings.APP_ID,
         settings.APP_SECRET,
       )).read().split('=')[1]
-    except Exception as e:
-      logger.error(e)
+    except urllib2.HTTPError, e:
+      logger.error('HTTPError = ' + str(e.code))
+      logger.error(e.read())
 
 
   def get_user_info(self, user_id):
