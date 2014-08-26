@@ -1,5 +1,5 @@
 function statusChangeCallback(response) {
-  console.log(response)
+
   if (response.status === 'connected') {
     var data = {
       'access_token': response.authResponse.accessToken,
