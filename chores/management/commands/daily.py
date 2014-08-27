@@ -21,7 +21,9 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     for house in House.objects.filter(recurs__iexact=today):
+      print 'Entering: %s' % house.name
       for chore in house.chores.all():
+        print 'Chore: %s' % chore.name
         if chore.user:
           email = chore.user.email
           if email:
