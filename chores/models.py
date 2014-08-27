@@ -42,10 +42,10 @@ class House(models.Model):
     first.user = prev.user
     first.save()
 
-    def __str__(self):
-      return '%s' % (
-        self.name
-      )
+  def __str__(self):
+    return '%s' % (
+      self.name
+    )
 
 class Chore(models.Model):
   name = models.CharField(max_length=255)
