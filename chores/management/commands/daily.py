@@ -31,6 +31,7 @@ class Command(BaseCommand):
 
     for house in House.objects.filter(recurs__iexact=today):
       print 'Entering: %s' % house.name
+
       for chore in house.chores.all():
         print 'Chore: %s' % chore.name
         if chore.user:
@@ -48,9 +49,13 @@ class Command(BaseCommand):
 
           number = chore.user.phone_number
 
-          if number:
+          if settings.DEBUG == True:
+            print SMS_MSG % (chore.user.name, chore.name)
+          elif number:
             client.messages.create(
               to=number,
               from_=settings.TWILIO_NUM,
               body=SMS_MSG % (chore.user.name, chore.name)
             )
+
+      house.shuffle()

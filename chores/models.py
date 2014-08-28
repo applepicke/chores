@@ -33,19 +33,13 @@ class House(models.Model):
 
   def shuffle(self):
     chores = self.chores.order_by('id')
+    users = [c.user for c in chores]
 
-    first = None
-    prev = None
+    i = -1
     for chore in chores:
-      if not first:
-        first = prev = chore
-        continue
-      chore.user = prev.user
+      chore.user = users[i]
       chore.save()
-      prev = chore
-
-    first.user = prev.user
-    first.save()
+      i += 1
 
   def __str__(self):
     return '%s' % (
