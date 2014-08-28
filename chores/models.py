@@ -9,9 +9,14 @@ class User(models.Model):
   first_name = models.CharField(max_length=255, default='')
   last_name = models.CharField(max_length=255, default='')
   email = models.CharField(max_length=255)
+  phone_number = models.CharField(max_length=20, default='')
   extras = JSONField(default='{}')
   d_user = models.ForeignKey(auth_models.User, null=True)
   access_token = models.CharField(max_length=255)
+
+  @property
+  def name(self):
+    return '%s %s' % (self.first_name, self.last_name)
 
   def __str__(self):
     return '%s %s - %s' % (

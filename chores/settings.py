@@ -119,18 +119,18 @@ STATIC_URL = '/static/'
 
 SESSION_ENGINE = 'redis_sessions.session'
 
+# Facebook test site credentials
 APP_ID = '332305020261516'
 APP_SECRET = '3a54fc53a73878ed337e768eb0d2e1c7'
 
+# Twilio credentials
+TWILIO_ACCOUNT_SID = 'ACb388d04293abdbe17968b51fa16c74f2'
+TWILIO_AUTH_TOKEN = '121fa6726edce5d4c104bbf4697ce330'
+TWILIO_NUM = '+18194142120'
+
 GENERIC_USER_PASSWORD = 'HSOUH12849&^$(asdf'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'wcurtiscollins@gmail.com'
-EMAIL_HOST_PASSWORD = 'A42583984g'
-EMAIL_PORT = 587
-
-SERVER_EMAIL = 'wcurtiscollins@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 try:
     from .local import *
