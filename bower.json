@@ -1,0 +1,22 @@
+{
+  "name": "chores",
+  "version": "0.0.1",
+  "homepage": "chores.willyc.me",
+  "authors": [
+    "Willy Collins <wcurtiscollins@gmail.com>"
+  ],
+  "description": "chores app",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.23",
+    "jquery": "~2.1.1"
+  }
+}
