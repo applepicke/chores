@@ -51,10 +51,27 @@ PIPELINE_JS = {
             'jquery/dist/jquery.js',
             'js/app.js',
             'js/facebook.js',
+            'angular/angular.js',
         ),
         'output_filename': 'js/app.js',
     }
 }
+
+PIPELINE_CSS = {
+    'app': {
+        'source_filenames': (
+            'foundation/css/foundation.css',
+            'css/app.sass',
+        ),
+        'output_filename': 'js/app.css',
+    }
+}
+
+PIPELINE_COMPILERS = (
+   'pipeline.compilers.sass.SASSCompiler',
+   'pipeline.compilers.coffee.CoffeeScriptCompiler'
+)
+
 
 # Application definition
 
