@@ -1,0 +1,20 @@
+{% load compressed %}
+
+<html>
+<meta>
+  <title>{% block title %}Chores{% endblock %}</title>
+  {% block styles %}
+    {% compressed_css 'app' %}
+  {% endblock %}
+  {% block extra_styles %}{% endblock %}
+</meta>
+<body>
+  {% block content %}
+  {% endblock %}
+
+  {% block scripts %}
+    {% compressed_js 'app' %}
+  {% endblock %}
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
