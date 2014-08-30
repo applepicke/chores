@@ -7,12 +7,10 @@ function statusChangeCallback(response) {
     };
     $.post('/login/', data)
       .success(function (response) {
+        window.location = '/'
       });
   } else if (response.status === 'not_authorized') {
-    console.log('no auth')
-
   } else {
-    console.log('WHHATTT')
   }
 
 }
