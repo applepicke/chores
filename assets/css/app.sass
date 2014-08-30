@@ -1,6 +1,28 @@
-#login
-  background: #12181E
+$main-blue: #12181E
+$main-white: #eee
+
+body
+  background: $main-blue
   height: 100%
+
+  h1, h2, h3, h4, h5, p, span
+    color: $main-white
+
+.top-bar
+  background: $main-blue
+
+.top-bar-section ul li a
+  background: $main-blue
+
+.top-bar-section ul li
+  background: $main-blue
+
+.top-bar-section li:not(.has-form) a:not(.button)
+  &:hover
+    background: $main-blue
+  background: $main-blue
+
+#login
 
   #header
     width: 700px
@@ -8,7 +30,6 @@
     padding-top: 100px
 
     h1
-      color: #eee
       font-weight: bold
       text-align: center
       font-size: 50px

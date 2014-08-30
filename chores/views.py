@@ -8,16 +8,14 @@ from django.shortcuts import render_to_response
 
 from chores.models import User
 from chores.utils import Facebook
+from chores.context import context
 
 def index(request):
 
   if not request.user.is_authenticated():
-    return render_to_response('login.html', {
-      'settings': settings,
-    })
+    return render_to_response('login.html', context(request))
 
-  ctx = {}
-  return render_to_response('app.html', ctx)
+  return render_to_response('app.html', context(request))
 
 def login(request):
 
@@ -42,27 +40,30 @@ def login(request):
     ).latest('id')
     created = False
 
+  graph = facebook.GraphAPI(token)
+  obj = graph.get_object('me')
+
   if created or not user.d_user:
-    print created
     user.d_user, created = auth_models.User.objects.get_or_create(
       email='%s@chores.dev' % user.fb_user_id,
       username=user.fb_user_id,
     )
+    user.email = obj.get('email')
+    user.first_name = obj.get('first_name')
+    user.last_name = obj.get('last_name')
     user.d_user.set_password(settings.GENERIC_USER_PASSWORD)
     user.d_user.save()
     user.save()
 
-  graph = facebook.GraphAPI(token)
-  obj = graph.get_object('me')
-
   user.access_token = token
-  user.email = obj.get('email')
-  user.first_name = obj.get('first_name')
-  user.last_name = obj.get('last_name')
   user.save()
 
   if not user.d_user.is_authenticated():
     login(request, user.d_user)
 
-  return http.HttpResponseRedirect('/')
+  return http.HttpResponse(json.dumps({
+    'success': True,
+    'code': 'logged-in',
+    'created': created,
+  }))
 

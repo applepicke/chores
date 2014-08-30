@@ -5,11 +5,15 @@ function statusChangeCallback(response) {
       'access_token': response.authResponse.accessToken,
       'user_id': response.authResponse.userID,
     };
-    $.post('/login/', data);
+    $.post('/login/', data)
+      .success(function (response) {
+        console.log('hello')
+      });
   } else if (response.status === 'not_authorized') {
+    console.log('no auth')
 
   } else {
-
+    console.log('WHHATTT')
   }
 
 }

@@ -3,6 +3,9 @@
 <html>
 <meta>
   <title>{% block title %}Chores{% endblock %}</title>
+  <script type="text/javascript">
+    window.APP_ID = {{ APP_ID }}
+  </script>
   {% block styles %}
     {% compressed_css 'app' %}
   {% endblock %}

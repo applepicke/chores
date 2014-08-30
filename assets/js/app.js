@@ -1,4 +1,4 @@
-chores = chores || {}
+window.chores = window.chores || {}
 
 $(function () {
 
