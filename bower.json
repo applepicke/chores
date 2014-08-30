@@ -16,8 +16,8 @@
     "tests"
   ],
   "dependencies": {
-    "foundation": "~5.4.1"
-    "jquery": "~2.1.1"
+    "foundation": "~5.4.1",
+    "jquery": "~2.1.1",
     "angular": "~1.2.23"
   }
 }
