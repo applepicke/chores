@@ -31,7 +31,7 @@ TEMPLATE_DIRS = (
     join(BASE_DIR,  'chores/templates'),
 )
 
-STATIC_ROOT = normpath(join(BASE_DIR, 'static'))
+STATIC_ROOT = normpath(BASE_DIR)
 STATIC_URL = '/static'
 STATICFILES_DIRS = (
     normpath(join(BASE_DIR, 'assets')),
@@ -51,9 +51,17 @@ PIPELINE_JS = {
             'jquery/dist/jquery.js',
             'js/app.js',
             'js/facebook.js',
-            'angular/angular.js',
         ),
         'output_filename': 'js/app.js',
+    },
+    'chores': {
+        'source_filenames': (
+            'angular/angular.js',
+            'js/chores/services.js',
+            'js/chores/controllers.js',
+            'js/chores/app.js',
+        ),
+        'output_filename': 'js/chores.js',
     }
 }
 

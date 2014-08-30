@@ -1,7 +1,18 @@
 {% extends 'logged_in.html' %}
 
+{% load compressed %}
+
 {% block content %}
-  <div class="header">
-    <h1>Yay you did it!</h1>
+  <div ng-app="chores">
+    <div class="view-container">
+      <div ng-view class="view-frame"></div>
+    </div>
   </div>
 {% endblock %}
+
+{% block scripts %}
+  {{ super }}
+  {% compressed_js 'chores' %}
+{% endblock %}
+
+
