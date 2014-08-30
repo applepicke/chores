@@ -3,21 +3,25 @@ import facebook
 
 from django import http
 from django.conf import settings
-from django.contrib.auth import models as auth_models, login
+from django.contrib.auth import models as auth_models, login, logout, authenticate
 from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 
 from chores.models import User
 from chores.utils import Facebook
 from chores.context import context
 
 def index(request):
-
   if not request.user.is_authenticated():
     return render_to_response('login.html', context(request))
 
   return render_to_response('app.html', context(request))
 
-def login(request):
+def logout_view(request):
+  logout(request)
+  return http.HttpResponseRedirect(reverse('index'))
+
+def login_view(request):
 
   token = request.POST.get('access_token')
   user_id = request.POST.get('user_id')
@@ -40,7 +44,14 @@ def login(request):
     ).latest('id')
     created = False
 
-  graph = facebook.GraphAPI(token)
+  try:
+    graph = facebook.GraphAPI(token)
+  except facebook.GraphAPIError:
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': 'Quit trying to sneak in.'
+    }))
+
   obj = graph.get_object('me')
 
   if created or not user.d_user:
@@ -58,8 +69,8 @@ def login(request):
   user.access_token = token
   user.save()
 
-  if not user.d_user.is_authenticated():
-    login(request, user.d_user)
+  authenticated = authenticate(token=token)
+  login(request, authenticated)
 
   return http.HttpResponse(json.dumps({
     'success': True,

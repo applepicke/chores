@@ -149,6 +149,11 @@ GENERIC_USER_PASSWORD = 'HSOUH12849&^$(asdf'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+AUTHENTICATION_BACKENDS = (
+    'chores.backends.FacebookBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 try:
     from .local import *
 except ImportError:
