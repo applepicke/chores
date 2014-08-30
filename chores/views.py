@@ -19,7 +19,7 @@ def index(request):
 
 def logout_view(request):
   logout(request)
-  return http.HttpResponseRedirect(reverse('index'))
+  return http.HttpResponseRedirect('/')
 
 def login_view(request):
 

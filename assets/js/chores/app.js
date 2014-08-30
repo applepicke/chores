@@ -8,11 +8,11 @@ chores.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/houses', {
-        templateUrl: 'partials/house_list.html',
+        templateUrl: '/static/partials/house_list.html',
         controller: 'HouseList'
       }).
       when('/houses/:houseId', {
-        templateUrl: 'partials/house-detail.html',
+        templateUrl: '/static/partials/house_detail.html',
         controller: 'HouseDetail'
       }).
       otherwise({

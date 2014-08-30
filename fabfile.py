@@ -7,4 +7,6 @@ def production():
   with cd(code_dir):
     run("git pull")
     run('%s manage.py syncdb' % python)
+    run('bower install')
+    run('%s manage.py collectstatic' % python)
     run('touch chores/wsgi.py')
