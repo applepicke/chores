@@ -9,6 +9,9 @@
   {% block extra_styles %}{% endblock %}
 </meta>
 <body>
+  {% block header %}
+  {% endblock %}
+
   {% block content %}
   {% endblock %}
 
@@ -16,5 +19,8 @@
     {% compressed_js 'app' %}
   {% endblock %}
   {% block extra_scripts %}{% endblock %}
+
+  {% block footer %}
+  {% endblock %}
 </body>
 </html>

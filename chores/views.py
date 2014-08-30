@@ -11,12 +11,13 @@ from chores.utils import Facebook
 
 def index(request):
 
-  return render_to_response('login.html', {
-    'settings': settings,
-  })
+  if not request.user.is_authenticated():
+    return render_to_response('login.html', {
+      'settings': settings,
+    })
 
   ctx = {}
-  return render_to_response('index.html', ctx)
+  return render_to_response('app.html', ctx)
 
 def login(request):
 
