@@ -62,6 +62,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'angular/angular.js',
             'angular-route/angular-route.js',
+            'angular-resource/angular-resource.js',
             'js/chores/app.js',
             'js/chores/services.js',
             'js/chores/controllers.js',
