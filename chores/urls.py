@@ -12,6 +12,6 @@ urlpatterns = patterns('',
   url(r'^logout/$', 'chores.views.logout_view', name='logout'),
   url(r'^admin/', include(admin.site.urls)),
   url(r'^houses/$', 'chores.views.index', name='houses'),
-  url(r'^house/(?P<id>\d+)/$', 'chores/views.index', name='house'),
+  url(r'^house/(?P<id>\d+)/$', 'chores.views.index', name='house'),
   url(r'^$', 'chores.views.index', name='index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
