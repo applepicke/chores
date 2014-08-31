@@ -1,6 +1,6 @@
 'use strict';
 
-var chores = angular.module('chores', ['ngResource']);
+var chores = angular.module('chores');
 
 chores.factory('House', ['$resource',
   function($resource){

@@ -23,6 +23,10 @@ SECRET_KEY = '+-qo9*o7c4z42t+x8z7370199j@q-*osb5)p*!01t7jyg&pvbw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ADMINS = (
+    ('William Collins', 'wcurtiscollins@gmail.com'),
+)
+
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -58,9 +62,9 @@ PIPELINE_JS = {
         'source_filenames': (
             'angular/angular.js',
             'angular-route/angular-route.js',
+            'js/chores/app.js',
             'js/chores/services.js',
             'js/chores/controllers.js',
-            'js/chores/app.js',
         ),
         'output_filename': 'js/chores.js',
     }
