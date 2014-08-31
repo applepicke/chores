@@ -13,5 +13,9 @@ urlpatterns = patterns('',
   url(r'^admin/', include(admin.site.urls)),
   url(r'^houses/$', 'chores.views.index', name='houses'),
   url(r'^house/(?P<id>\d+)/$', 'chores.views.index', name='house'),
+
+  url(r'^api/houses/$', 'chores.views.get_houses', name='get_houses'),
+  url(r'^api/house/(?P<id>\d+)/$', 'chores.views.get_house_detail', name='get_house_detail'),
+
   url(r'^$', 'chores.views.index', name='index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

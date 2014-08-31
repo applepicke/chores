@@ -7,6 +7,11 @@ chores.controller('MainController', ['$scope', '$route', '$routeParams', 'House'
 
   }])
 
+chores.controller('Welcome', ['$scope', 'House',
+  function ($scope, House) {
+    $scope.name = 'AHHH';
+  }])
+
 chores.controller('HouseList', ['$scope', 'House',
   function ($scope, House) {
     $scope.name = 'WILLYYY';
@@ -17,7 +22,4 @@ chores.controller('HouseDetail', ['$scope', 'House',
     $scope.name = 'AHHH';
   }])
 
-chores.controller('HouseDetail', ['$scope', 'House',
-  function ($scope, House) {
-    $scope.name = 'AHHH';
-  }])
+

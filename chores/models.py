@@ -18,6 +18,10 @@ class User(models.Model):
   def name(self):
     return '%s %s' % (self.first_name, self.last_name)
 
+  @property
+  def houses(self):
+    return House.objects.filter(owner__id=self.id)
+
   def __str__(self):
     return '%s %s - %s' % (
       self.first_name,

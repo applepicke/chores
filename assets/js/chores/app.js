@@ -2,8 +2,8 @@
 
 var chores = angular.module('chores', ['ngRoute', 'ngResource']);
 
-chores.config(['$routeProvider',
-  function($routeProvider) {
+chores.config(['$routeProvider', '$locationProvider',
+  function($routeProvider, $locationProvider) {
     $routeProvider.
       when('/', {
         templateUrl: '/static/partials/welcome.html',
@@ -20,4 +20,6 @@ chores.config(['$routeProvider',
       otherwise({
         redirectTo: '/'
       });
+
+      $locationProvider.html5Mode(true);
   }]);

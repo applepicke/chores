@@ -109,6 +109,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'chores.middleware.UserMiddleware',
 )
 
 ROOT_URLCONF = 'chores.urls'

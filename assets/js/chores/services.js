@@ -6,13 +6,13 @@ chores.factory('House', ['$resource',
   function($resource){
 
     function getHouse(id) {
-      $resource('houses/:houseId', {}, {
+      $resource('api/houses/:houseId', {}, {
         query: { method:'GET', params: { houseId: id } }
       });
     }
 
     function getHouses() {
-      $resource('houses', {}, {
+      $resource('api/models/houses', {}, {
         query: { method: 'GET', params: {}}
       });
     }

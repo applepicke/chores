@@ -6,12 +6,14 @@ from django.conf import settings
 from django.contrib.auth import models as auth_models, login, logout, authenticate
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 
-from chores.models import User
+from chores.models import User, House, Chore
 from chores.utils import Facebook
 from chores.context import context
 
 def index(request):
+
   if not request.user.is_authenticated():
     return render_to_response('login.html', context(request))
 
@@ -20,6 +22,31 @@ def index(request):
 def logout_view(request):
   logout(request)
   return http.HttpResponseRedirect('/')
+
+@login_required
+def get_houses(request):
+  user = request.app_user
+  houses = user.houses
+
+  return http.HttpResponse(json.dumps({
+    'count': len(houses),
+    'houses': [{
+      'name': house.name
+    } for house in houses]
+  }))
+
+@login_required
+def get_house_detail(request, id):
+  user = request.app_user
+  house = House.objects.get(id=id)
+
+  if not house.owner == user:
+    raise http.Http404
+
+  return http.HttpResponse(json.dumps({
+    'name': house.name,
+  }))
+
 
 def login_view(request):
 
