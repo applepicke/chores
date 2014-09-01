@@ -7,16 +7,22 @@ chores.controller('MainController', ['$scope', '$route', '$routeParams', 'House'
 
   }])
 
-chores.controller('Welcome', ['$scope', 'House',
-  function ($scope, House) {
+chores.controller('Welcome', ['$scope', '$location', 'House',
+  function ($scope, $location, House) {
     $scope.houseName = '';
+    $scope.errorClass = 'hidden';
+
     $scope.saveHouse = function () {
       House.createHouse($scope.houseName, function (result) {
-        console.log(result);
+        if (result.success) {
+          $location.path('/houses/' + result.id);
+        }
+        else {
+          $scope.error = result.msg;
+          $scope.errorClass = '';
+        }
       });
     };
-
-    $scope.win = 'beans';
   }])
 
 chores.controller('HouseList', ['$scope', 'House',

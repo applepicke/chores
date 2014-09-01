@@ -28,10 +28,8 @@ def api_houses(request):
   user = request.app_user
   houses = user.houses
 
-  print request.POST
-
   if request.method == 'POST':
-    name = request.POST.get('name', '')
+    name = request.REQUEST.get('name', '')
 
     if not name:
       return http.HttpResponse(json.dumps({
@@ -40,7 +38,9 @@ def api_houses(request):
       }))
 
     #house = House.objects.create(name=name, owner=user)
-    house = None
+    house = {
+      'id': 1
+    }
 
     if not house:
       return http.HttpResponse(json.dumps({
@@ -50,6 +50,7 @@ def api_houses(request):
 
     return http.HttpResponse(json.dumps({
       'success': True,
+      'id': house.get('id'),
     }))
 
   return http.HttpResponse(json.dumps({
