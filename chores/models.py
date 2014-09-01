@@ -22,6 +22,9 @@ class User(models.Model):
   def houses(self):
     return House.objects.filter(owner__id=self.id)
 
+  def chores(self):
+    return Chore.objects.filter(user__id=self.id)
+
   def __str__(self):
     return '%s %s - %s' % (
       self.first_name,

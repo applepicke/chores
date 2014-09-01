@@ -75,6 +75,7 @@ PIPELINE_CSS = {
     'app': {
         'source_filenames': (
             'foundation/css/foundation.css',
+            'font-awesome/css/font-awesome.css',
             'css/app.sass',
         ),
         'output_filename': 'js/app.css',

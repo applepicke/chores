@@ -9,7 +9,9 @@ chores.controller('MainController', ['$scope', '$route', '$routeParams', 'House'
 
 chores.controller('Welcome', ['$scope', 'House',
   function ($scope, House) {
-    $scope.name = 'AHHH';
+    House.getHouses(function (data) {
+      $scope.houses = data.houses;
+    });
   }])
 
 chores.controller('HouseList', ['$scope', 'House',

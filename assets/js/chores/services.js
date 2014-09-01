@@ -5,16 +5,18 @@ var chores = angular.module('chores');
 chores.factory('House', ['$resource',
   function($resource){
 
-    function getHouse(id) {
-      $resource('api/houses/:houseId', {}, {
+    function getHouse(id, done) {
+      var house = $resource('api/houses/:houseId', {}, {
         query: { method:'GET', params: { houseId: id } }
       });
+      house.query(done);
     }
 
-    function getHouses() {
-      $resource('api/models/houses', {}, {
+    function getHouses(done) {
+      var houses = $resource('api/houses', {}, {
         query: { method: 'GET', params: {}}
       });
+      houses.query(done);
     }
 
     return {
