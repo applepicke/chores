@@ -34,9 +34,9 @@ class User(models.Model):
 
 class House(models.Model):
   name = models.CharField(max_length=255)
-  address = models.CharField(max_length=2000)
+  address = models.CharField(max_length=2000, null=True)
   owner = models.ForeignKey(User, null=True)
-  recurs = models.CharField(max_length=255)
+  recurs = models.CharField(max_length=255, default='sunday')
 
   def shuffle(self):
     chores = self.chores.order_by('id')

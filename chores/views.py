@@ -24,9 +24,33 @@ def logout_view(request):
   return http.HttpResponseRedirect('/')
 
 @login_required
-def get_houses(request):
+def api_houses(request):
   user = request.app_user
   houses = user.houses
+
+  print request.POST
+
+  if request.method == 'POST':
+    name = request.POST.get('name', '')
+
+    if not name:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'Did you forget to enter a name for your household?',
+      }))
+
+    #house = House.objects.create(name=name, owner=user)
+    house = None
+
+    if not house:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'Something went terribly wrong!',
+      }))
+
+    return http.HttpResponse(json.dumps({
+      'success': True,
+    }))
 
   return http.HttpResponse(json.dumps({
     'count': len(houses),
@@ -36,7 +60,7 @@ def get_houses(request):
   }))
 
 @login_required
-def get_house_detail(request, id):
+def api_house(request, id):
   user = request.app_user
   house = House.objects.get(id=id)
 
@@ -46,7 +70,6 @@ def get_house_detail(request, id):
   return http.HttpResponse(json.dumps({
     'name': house.name,
   }))
-
 
 def login_view(request):
 

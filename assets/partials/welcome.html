@@ -5,14 +5,15 @@
 </div>
 <div class="row">
   <div class="house-input small-centered small-8 large-5 columns">
-    <input type="text" name="house" placeholder="Enter the name of your household..."></input>
+    <label for="house">Household Name</label>
+    <input ng-model="houseName" type="text" name="house" placeholder="Enter the name of your household..."></input>
   </div>
 </div>
 <div class="row">
   <div class="next-page small-centered small-8 large-3 columns">
-    <p class="button success radius small">
+    <a href="#" class="button success radius small" ng-click="saveHouse()">
       <span class="">Next Step</span>
       <span class="fa fa-arrow-circle-o-right"></span>
-    </p>
+    </a>
   </div>
 </div>
