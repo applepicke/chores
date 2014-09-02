@@ -1,6 +1,5 @@
-window.chores = window.chores || {}
+window.chores = window.chores || {};
 
 $(function () {
 
-
-})
+});

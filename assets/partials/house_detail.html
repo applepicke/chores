@@ -1,0 +1,52 @@
+<div class="house-detail">
+  <div class="row">
+    <h3 ng-bind="house.name" class="small-centered small-12 columns"></h3>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="chores-list small-10 small-centered large-uncentered large-8 columns">
+      <h4>
+        <span class="fa fa-cutlery"></span>
+        Chores
+        <a data-reveal-id="choreModal" href="#">
+          <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
+        </a>
+      </h4>
+      <p>You don't have any chores yet.</p>
+    </div>
+
+    <div class="user-list small-10 small-centered large-uncentered large-3 columns">
+      <h4>
+        <span class="fa fa-user"></span>
+        Users
+        <a data-reveal-id="userModel" href="#"><span class="add-user fa fa-plus-circle"></span></a>
+      </h4>
+      <ul>
+      <li ng-repeat="user in house.users" class="user">{{ user.name }}</li>
+      </ul>
+    </div>
+
+    <div id="choreModal" class="reveal-modal" data-reveal>
+      <h3>Add Chore</h3>
+      <label for="name">Name</label>
+      <input type="text" name="name" placeholder="Enter name here..."></input>
+      <label for="description">Description</label>
+      <input type="text" name="description" placeholder="Enter description here..."></input>
+      <label for="chore-users">Who is doing the chore?</label>
+      <select name="chore-users" placeholder="Enter name here...">
+        <option value="-1">I don't know yet!</option>
+        <option ng-repeat="user in house.users" value="{{ user.email }}">{{ user.name }}</option>
+      </select>
+      <div class="row">
+        <a class="small-6 large-2 large-offset-4 columns button secondary" href="#">Cancel</a>
+        <a class="small-6 large-2 end columns button" href="#">Save</a>
+      </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+  </div>
+
+</div>
+

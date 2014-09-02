@@ -1,20 +1,22 @@
-<div class="row">
-  <div class="small-centered small-11 large-8 columns welcome">
-    <p>It looks like you don't have any households set up yet. Go ahead and give your house a fantastic name.</p>
+<div class="welcome">
+  <div class="row">
+    <div class="small-centered small-11 large-8 columns">
+      <p>It looks like you don't have any households set up yet. Go ahead and give your house a fantastic name.</p>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="house-input small-centered small-8 large-5 columns">
-    <p class="error {{ errorClass }}">{{ error }}</p>
-    <label for="house">Household Name</label>
-    <input ng-model="houseName" type="text" name="house" placeholder="Enter the name of your household..."></input>
+  <div class="row">
+    <div class="house-input small-centered small-8 large-5 columns">
+      <p class="error {{ errorClass }}">{{ error }}</p>
+      <label for="house">Household Name</label>
+      <input ng-model="houseName" ng-enter="saveHouse()" type="text" name="house" placeholder="Enter the name of your household..."></input>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="next-page small-centered small-8 large-3 columns">
-    <a href="#" class="button success radius small" ng-click="saveHouse()">
-      <span class="">Next Step</span>
-      <span class="fa fa-arrow-circle-o-right"></span>
-    </a>
+  <div class="row">
+    <div class="next-page small-centered small-8 large-3 columns">
+      <a href="#" class="button success radius small" ng-click="saveHouse()">
+        <span class="">Next Step</span>
+        <span class="fa fa-arrow-circle-o-right"></span>
+      </a>
+    </div>
   </div>
 </div>

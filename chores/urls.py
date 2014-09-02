@@ -11,11 +11,10 @@ urlpatterns = patterns('',
   url(r'^login/$', 'chores.views.login_view', name='login'),
   url(r'^logout/$', 'chores.views.logout_view', name='logout'),
   url(r'^admin/', include(admin.site.urls)),
-  url(r'^houses/$', 'chores.views.index', name='houses'),
-  url(r'^house/(?P<id>\d+)/$', 'chores.views.index', name='house'),
+  url(r'^houses/', 'chores.views.index', name='houses'),
 
   url(r'^api/houses/?$', 'chores.views.api_houses', name='api_houses'),
-  url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
+  url(r'^api/houses/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
 
   url(r'^$', 'chores.views.index', name='index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

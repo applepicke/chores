@@ -1,8 +1,8 @@
 {% load compressed %}
 
-<html>
+<html {% block html_attrs %}{% endblock %}>
 <meta>
-  <title>{% block title %}Chores{% endblock %}</title>
+  <title {% block title_bind %}{% endblock %}>{% block title %}Chores{% endblock %}</title>
   <script type="text/javascript">
     window.APP_ID = {{ APP_ID }}
   </script>

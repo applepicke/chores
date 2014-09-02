@@ -1,5 +1,6 @@
 $main-blue: #12181E
 $main-white: #eee
+$primary-green: #43AC6A
 
 body
   background: $main-blue
@@ -7,6 +8,44 @@ body
 
   h1, h2, h3, h4, h5, p, span, label
     color: $main-white
+
+  h1, h2, h3, h4, h5
+    text-transform: uppercase
+    font-weight: bold
+
+  h1
+    font-size: 40px
+
+  h2
+    font-size: 30px
+
+  h3
+    font-size: 25px
+
+  h4
+    font-size: 20px
+
+  li
+    color: #eee
+
+span.fa
+  margin-right: 10px
+
+p
+  .small-description
+    font-size: 15px
+
+.reveal-modal
+  h1, h2, h3, h4, h5, p, span, label
+    color: #333
+
+.panel
+  background: #eee
+  opacity: 0.8
+
+  --webkit-border-radius: 10px
+  --moz-border-radius: 10px
+  border-radius: 10px
 
 .top-bar
   background: $main-blue
@@ -41,13 +80,22 @@ body
 
 .welcome
   margin: 5% auto 5% auto
-  text-align: center
 
   p
     font-size: 30px
+    text-align: center
 
   .house-input
     margin-top: 10px
+
+.house-detail
+
+  h3
+    text-align: center
+
+  .add-chore
+    color: $primary-green
+    border-bottom: none
 
 #login
 

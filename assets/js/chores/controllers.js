@@ -13,12 +13,12 @@ chores.controller('Welcome', ['$scope', '$location', 'House',
     $scope.errorClass = 'hidden';
 
     $scope.saveHouse = function () {
-      House.createHouse($scope.houseName, function (result) {
-        if (result.success) {
-          $location.path('/houses/' + result.id);
+      House.createHouse($scope.houseName, function (response) {
+        if (response.success) {
+          $location.path('/houses/' + response.id);
         }
         else {
-          $scope.error = result.msg;
+          $scope.error = response.msg;
           $scope.errorClass = '';
         }
       });
@@ -32,9 +32,21 @@ chores.controller('HouseList', ['$scope', 'House',
     });
   }]);
 
-chores.controller('HouseDetail', ['$scope', 'House',
-  function ($scope, House) {
-    $scope.name = 'AHHH';
+chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House',
+  function ($scope, $routeParams, $rootScope, House) {
+    $(document).foundation();
+    $scope.house = {};
+
+    House.getHouse($routeParams.houseId, function (response) {
+      if (response.success) {
+        $scope.house = response.house;
+        $rootScope.title = $scope.house.name;
+      }
+      else {
+        //Redirect somewhere else
+      }
+
+    });
   }])
 
 

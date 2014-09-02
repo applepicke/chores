@@ -66,10 +66,19 @@ def api_house(request, id):
   house = House.objects.get(id=id)
 
   if not house.owner == user:
-    raise http.Http404
+    return http.HttpResponse(json.dumps({
+      'success': False,
+    }))
 
   return http.HttpResponse(json.dumps({
-    'name': house.name,
+    'success': True,
+    'house': {
+      'name': house.name,
+      'users': [{
+        'name': user.name,
+        'email': user.email,
+      } for user in house.users],
+    },
   }))
 
 def login_view(request):

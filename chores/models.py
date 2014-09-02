@@ -34,9 +34,14 @@ class User(models.Model):
 
 class House(models.Model):
   name = models.CharField(max_length=255)
-  address = models.CharField(max_length=2000, null=True)
-  owner = models.ForeignKey(User, null=True)
+  address = models.CharField(max_length=2000, default='', null=True)
+  owner = models.ForeignKey(User, null=True, related_name="owned_houses")
+  members = models.ManyToManyField(User, related_name="houses")
   recurs = models.CharField(max_length=255, default='sunday')
+
+  @property
+  def users(self):
+    return [self.owner] + list(self.members.all())
 
   def shuffle(self):
     chores = self.chores.order_by('id')

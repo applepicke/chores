@@ -53,6 +53,7 @@ PIPELINE_JS = {
     'app': {
         'source_filenames': (
             'jquery/dist/jquery.js',
+            'modernizr/modernizr.js',
             'js/app.js',
             'js/facebook.js',
         ),
@@ -63,9 +64,12 @@ PIPELINE_JS = {
             'angular/angular.js',
             'angular-route/angular-route.js',
             'angular-resource/angular-resource.js',
+            'foundation/js/foundation.js',
+            'foundation/js/foundation/foundation.reveal.js',
             'js/chores/app.js',
             'js/chores/services.js',
             'js/chores/controllers.js',
+            'js/chores/directives.js',
         ),
         'output_filename': 'js/chores.js',
     }

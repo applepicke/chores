@@ -1,19 +1,20 @@
 {% extends 'logged_in.html' %}
 
+{% block html_attrs %}ng-app="chores"{% endblock %}
+{% block title_bind %}ng-bind="$root.title"{% endblock %}
+
 {% load compressed %}
 
 {% block content %}
-  <div ng-app="chores">
-    <div ng-controller="MainController">
-      <div class="view-container">
-        <div ng-view class="view-frame"></div>
-      </div>
+  <div ng-controller="MainController">
+    <div class="view-container">
+      <div ng-view class="view-frame"></div>
     </div>
   </div>
 {% endblock %}
 
 {% block scripts %}
-  {{ super }}
+  {{ block.super }}
   {% compressed_js 'chores' %}
 {% endblock %}
 
