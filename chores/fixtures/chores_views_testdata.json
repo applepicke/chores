@@ -1,0 +1,93 @@
+[
+{
+    "pk": 2, 
+    "model": "chores.user", 
+    "fields": {
+        "phone_number": "555555555", 
+        "first_name": "bill", 
+        "last_name": "esto", 
+        "access_token": "sdsdsdsd", 
+        "fb_user_id": "b", 
+        "extras": {
+            "blubb": "buubba"
+        }, 
+        "d_user": 1, 
+        "email": "idunna@butt.ok"
+    }
+},
+{
+    "pk": 3, 
+    "model": "chores.user", 
+    "fields": {
+        "phone_number": "6666666666", 
+        "first_name": "greg", 
+        "last_name": "goggins", 
+        "access_token": "fghjfgh", 
+        "fb_user_id": "g", 
+        "extras": {
+            "flippers": "none"
+        }, 
+        "d_user": 1, 
+        "email": "goggins@g.g"
+    }
+},
+{
+    "pk": 4, 
+    "model": "chores.user", 
+    "fields": {
+        "phone_number": "", 
+        "first_name": "Calvin", 
+        "last_name": "Collins", 
+        "access_token": "CAAEuOsqwlIwBAHBd5Dp8Tkii7BQofxeD2JhGKDqMBhAKV3d8K7ip9qsZBOBNp01zS0wZAf5SK5JvhFdelR4A5mjCvZCErzKVWD9cz8CeOSlqFWIq1jeDvutmKtZBh8I0ZCmCZBLnBm3P7o1LfmEbr7dzIWF3UqOQZCwQGSxS1KXR2r3fuY3LWh9V6woiocYwbs8ijz2UfKMTcI0iqOi8UFvWiVmEHg7BCMZD", 
+        "fb_user_id": "10152672094838522", 
+        "extras": "{}", 
+        "d_user": 2, 
+        "email": "calvinkcollins@gmail.com"
+    }
+},
+{
+    "pk": 3, 
+    "model": "chores.house", 
+    "fields": {
+        "owner": 4, 
+        "recurs": "tuesday", 
+        "name": "Coyle Cave", 
+        "members": [
+            2, 
+            3, 
+            4
+        ], 
+        "address": "5 Coyle Drive"
+    }
+},
+{
+    "pk": 5, 
+    "model": "chores.chore", 
+    "fields": {
+        "house": 3, 
+        "user": 2, 
+        "name": "Garbage", 
+        "description": "take it out"
+    }
+},
+{
+    "pk": 6, 
+    "model": "chores.chore", 
+    "fields": {
+        "house": 3, 
+        "user": 3, 
+        "name": "Vacuum", 
+        "description": "vacuum the floor"
+    }
+},
+{
+    "pk": 7, 
+    "model": "chores.chore", 
+    "fields": {
+        "house": 3, 
+        "user": 4, 
+        "name": "dishes", 
+        "description": "do the dishes every night"
+    }
+}
+]
