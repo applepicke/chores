@@ -63,23 +63,62 @@ def api_houses(request):
 @login_required
 def api_house(request, id):
   user = request.app_user
-  house = House.objects.get(id=id)
 
-  if not house.owner == user:
-    return http.HttpResponse(json.dumps({
-      'success': False,
-    }))
+  try:
+    house = user.owned_houses.get(id=id)
+  except House.DoesNotExist:
+    raise http.Http404
 
   return http.HttpResponse(json.dumps({
     'success': True,
     'house': {
       'name': house.name,
-      'users': [{
-        'name': user.name,
-        'email': user.email,
-      } for user in house.users],
+      'users': [user.as_dict() for user in house.users],
+      'chores': [chore.as_dict() for chore in house.chores.all()],
     },
   }))
+
+@login_required
+def create_chore(request, house_id):
+  user = request.app_user
+
+  try:
+    house = user.owned_houses.get(id=id)
+  except House.DoesNotExist:
+    raise Http404
+
+  chore = json.loads(request.POST.get('chore', '[]'))
+  user = [user for user in house.users if user.email == chore.get('user', '')]
+
+  if not user:
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': 'Household does not contain a user with that email address',
+    }))
+
+  if len(user) > 1:
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': 'Uh oh. There is more than one user with that email. We fudged up, but we\'ll fix it for you!',
+    }))
+
+  user = user[0]
+
+  db_chore = house.chores.create(
+    name=chore.get('name'),
+    description=chore.get('description'),
+    user=user,
+  )
+
+  return http.HttpResponse(json.dumps({
+    'success': True,
+    'chore': {
+      'name': db_chore.name,
+      'description': db_chore.description,
+      'user': user.as_dict(),
+    },
+  }))
+
 
 def login_view(request):
 

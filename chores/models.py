@@ -22,8 +22,16 @@ class User(models.Model):
   def houses(self):
     return House.objects.filter(owner__id=self.id)
 
+  @property
   def chores(self):
     return Chore.objects.filter(user__id=self.id)
+
+  def as_dict(self):
+    return {
+      'id': self.id,
+      'name': self.name,
+      'email': self.email,
+    }
 
   def __str__(self):
     return '%s %s - %s' % (
@@ -68,6 +76,13 @@ class Chore(models.Model):
     return '%s' % (
       self.name
     )
+
+  def as_dict(self):
+    return {
+      'id': self.id,
+      'name': self.name,
+      'description': self.description,
+    }
 
 class UserAdmin(admin.ModelAdmin):
     pass
