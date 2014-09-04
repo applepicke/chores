@@ -72,41 +72,42 @@ def api_house(request, id):
   return http.HttpResponse(json.dumps({
     'success': True,
     'house': {
+      'id': house.id,
       'name': house.name,
       'users': [user.as_dict() for user in house.users],
+      'owner': house.owner.as_dict(),
       'chores': [chore.as_dict() for chore in house.chores.all()],
     },
   }))
 
 @login_required
-def create_chore(request, house_id):
+def chores(request, house_id):
   user = request.app_user
 
   try:
-    house = user.owned_houses.get(id=id)
+    house = user.owned_houses.get(id=house_id)
   except House.DoesNotExist:
     raise Http404
 
-  chore = json.loads(request.POST.get('chore', '[]'))
-  user = [user for user in house.users if user.email == chore.get('user', '')]
+  user = [user for user in house.users if str(user.id) == request.REQUEST.get('userId', '')]
 
   if not user:
     return http.HttpResponse(json.dumps({
       'success': False,
-      'msg': 'Household does not contain a user with that email address',
+      'msg': 'User does not exist in this household',
     }))
 
   if len(user) > 1:
     return http.HttpResponse(json.dumps({
       'success': False,
-      'msg': 'Uh oh. There is more than one user with that email. We fudged up, but we\'ll fix it for you!',
+      'msg': 'Uh oh. There is more than one user with that id. We fudged up, but we\'ll fix it for you!',
     }))
 
   user = user[0]
 
   db_chore = house.chores.create(
-    name=chore.get('name'),
-    description=chore.get('description'),
+    name=request.REQUEST.get('name'),
+    description=request.REQUEST.get('description'),
     user=user,
   )
 

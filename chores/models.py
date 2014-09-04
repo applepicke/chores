@@ -68,7 +68,7 @@ class House(models.Model):
 
 class Chore(models.Model):
   name = models.CharField(max_length=255)
-  description = models.CharField(max_length=2000)
+  description = models.CharField(max_length=2000, null=True, default='')
   user = models.ForeignKey(User, null=True)
   house = models.ForeignKey(House, related_name='chores')
 

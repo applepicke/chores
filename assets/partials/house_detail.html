@@ -38,27 +38,29 @@
         <h3 class="small-12 columns">Add Chore</h3>
       </div>
       <div class="row">
-        <div class="large-6 columns">
-          <label for="name">Name</label>
-          <input type="text" name="name" placeholder="Enter name here..."></input>
-        </div>
-        <div class="large-6 columns">
-          <label for="description">Description</label>
-          <input type="text" name="description" placeholder="Enter description here..."></input>
-        </div>
+        <div class="alert-box alert" ng-class="{ hidden: !newChore.generalError }">{{ newChore.generalErrorMsg }}</div>
       </div>
       <div class="row">
         <div class="large-6 columns">
+          <label for="name">Name
+            <input ng-model="newChore.name" ng-class="{ error: newChore.nameError }" type="text" name="name" placeholder="Enter name here..."></input>
+          </label>
+          <small class="error" ng-class="{ hidden: !newChore.nameError }">{{ newChore.nameErrorMsg }}</small>
+        </div>
+        <div class="large-6 columns">
           <label for="chore-users">Who is doing the chore?</label>
-          <select name="chore-users" placeholder="Enter name here...">
-            <option value="-1">I don't know yet!</option>
-            <option ng-repeat="user in house.users" value="{{ user.email }}">{{ user.name }}</option>
+          <select ng-model="newChore.userId" ng-options="user.id as user.name for user in house.users" name="chore-users" placeholder="Enter name here...">
           </select>
         </div>
       </div>
       <div class="row">
-        <a class="small-6 large-2 large-offset-4 columns button secondary" href="#">Cancel</a>
-        <a class="small-6 large-2 end columns button" href="#">Save</a>
+        <div class="large-12 columns">
+          <label for="description">Description</label>
+          <textarea ng-model="newChore.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <a ng-save-chore class="small-12 large-2 large-offset-9 columns button" href="#">Save</a>
       </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
