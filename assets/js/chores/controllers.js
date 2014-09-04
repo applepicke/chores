@@ -62,16 +62,15 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
         return done({ success: false });
       }
 
-      House.createChore($scope.house, $scope.newChore, function (newChore) {
+      House.createChore($scope.house, $scope.newChore, function (result) {
 
-        if (!newChore.success) {
+        if (!result.success) {
           $scope.newChore.generalError = true;
-          $scope.newChore.generalErrorMsg = newChore.msg;
-          return done(newChore);
+          $scope.newChore.generalErrorMsg = result.msg;
+          return done(result);
         }
-
-        $scope.house.chores.push(newChore);
-        done(newChore);
+        $scope.house.chores.push(result.chore);
+        done(result);
       });
     }
 
