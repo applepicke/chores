@@ -3,13 +3,16 @@
     <h1 ng-bind="house.name" class="small-centered small-12 columns"></h1>
   </div>
   <div class="row">
-    <h5 ng-bind="house.description" class="small-12 columns"></h5>
+    <div class="small-12 columns">
+      <h5 class="left" ng-bind="house.description"></h5>
+      <span class="left edit-description fa fa-pencil"></span>
+    </div>
   </div>
 
   <br/>
 
   <div class="row">
-    <div class="chores-list small-12 small-centered large-uncentered large-8 columns">
+    <div class="chores-list small-12 small-centered large-uncentered large-6 columns">
       <h4>
         <span class="fa fa-cutlery"></span>
         Chores
@@ -18,11 +21,13 @@
         </a>
       </h4>
       <ul>
-        <li ng-repeat="chore in house.chores">{{ chore.name }}</li>
+        <li ng-repeat="chore in house.chores">
+          {{ chore.name }}
+        </li>
       </ul>
     </div>
 
-    <div class="user-list small-12 small-centered large-uncentered large-3 columns">
+    <div class="user-list small-12 small-centered large-uncentered large-offset-3 large-3 columns">
       <h4>
         <span class="fa fa-user"></span>
         Users
@@ -70,6 +75,11 @@
       <label for="email">Email</label>
       <input type="email" name="email" placeholder="Enter email here..."></input>
       <a href="#" class="button tiny invite-button">Send Invite</a>
+    </div>
+
+    <div id="areYouSureModal" class="reveal-modal small" data-reveal>
+      <p>Are you sure you want to delete this chore?</p>
+
     </div>
 
   </div>

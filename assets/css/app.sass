@@ -100,8 +100,24 @@ p
   h3
     text-align: center
 
+  .edit-description
+    vertical-align: bottom
+    margin-left: 10px
+    cursor: pointer
+
   .add-chore
     border-bottom: none
+
+  .chores-list
+    ul
+      li
+        .chore-actions
+          display: none
+
+        &:hover
+          cursor: pointer
+          .chore-actions
+            display: block
 
 #login
 
