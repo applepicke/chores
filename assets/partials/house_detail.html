@@ -16,12 +16,12 @@
       <h4>
         <span class="fa fa-cutlery"></span>
         Chores
-        <a data-reveal-id="choreModal" href="#">
+        <a ng-clear-chore data-reveal-id="choreModal" href="#">
           <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
         </a>
       </h4>
       <ul>
-        <li ng-repeat="chore in house.chores">
+        <li ng-edit-chore="{{chore.id}}" data-reveal-id="choreModal" ng-repeat="chore in house.chores">
           {{ chore.name }}
         </li>
       </ul>

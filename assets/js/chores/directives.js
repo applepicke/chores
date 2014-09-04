@@ -26,3 +26,19 @@ chores.directive('ngSaveChore', function () {
     });
   };
 });
+
+chores.directive('ngEditChore', function () {
+  return function ($scope, element, attrs) {
+    element.bind('click', function (event) {
+      console.log(attrs)
+    });
+  };
+});
+
+chores.directive('ngClearChore', function () {
+  return function ($scope, element, attrs) {
+    element.bind('click', function (event) {
+
+    })
+  };
+});
