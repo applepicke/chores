@@ -56,6 +56,12 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       }
     });
 
+    $scope.reloadChores = function () {
+      House.getChores($scope.house, function (result) {
+        $scope.house.chores = result.chores;
+      });
+    };
+
     $scope.saveChore = function (done) {
       if (!$scope.newChore.model.name) {
         $scope.newChore.nameError = true;
@@ -71,9 +77,7 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
           return done(result);
         }
 
-        House.getChores($scope.house, function (result) {
-          $scope.house.chores = result.chores;
-        });
+        $scope.reloadChores();
 
         done(result);
       });
@@ -102,6 +106,12 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       $scope.newChore.showDelete = true;
     };
 
+    $scope.deleteChore = function (id, done) {
+      House.deleteChore(id, function (result) {
+        $scope.reloadChores();
+        done(result);
+      });
+    };
   }])
 
 

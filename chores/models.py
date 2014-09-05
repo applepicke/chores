@@ -19,12 +19,15 @@ class User(models.Model):
     return '%s %s' % (self.first_name, self.last_name)
 
   @property
-  def houses(self):
-    return House.objects.filter(owner__id=self.id)
-
-  @property
   def chores(self):
     return Chore.objects.filter(user__id=self.id)
+
+  def owns_chore(self, id):
+    for house in self.owned_houses.all():
+      if int(id) in [chore.id for chore in house.chores.all()]:
+        return True
+
+    return False
 
   def as_dict(self):
     return {

@@ -26,6 +26,13 @@ chores.factory('House', ['$resource',
       chores.query(done);
     }
 
+    function deleteChore(id, done) {
+      var Chore = $resource('/api/chores/:choreId/', {}, {
+        delete: { method: 'DELETE', params: { choreId: id } }
+      });
+      Chore.delete({}, {}, done);
+    }
+
     function createHouse(name, done) {
       var house = $resource('/api/houses/', {}, {
         query: { method: 'POST', params: {
@@ -53,6 +60,7 @@ chores.factory('House', ['$resource',
       getHouses: getHouses,
       createHouse: createHouse,
       createChore: createChore,
-      getChores: getChores
+      getChores: getChores,
+      deleteChore: deleteChore
     }
   }]);

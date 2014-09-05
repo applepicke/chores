@@ -137,6 +137,25 @@ def chores(request, house_id):
     'chores': [chore.as_dict() for chore in chores]
   }))
 
+@login_required
+def chore(request, chore_id):
+  user = request.app_user
+
+  try:
+    chore = Chore.objects.get(id=chore_id)
+  except Chore.DoesNotExist:
+    raise http.Http404
+
+  if not user.owns_chore(chore_id):
+    raise http.Http404
+
+  if request.method == 'DELETE':
+    chore.delete()
+    return http.HttpResponse(json.dumps({
+      'success': True,
+    }))
+
+  raise http.Http404
 
 def login_view(request):
 

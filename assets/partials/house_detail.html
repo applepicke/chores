@@ -67,11 +67,11 @@
         </div>
       </div>
       <div class="row">
-        <div class="small-12 large-2 large-offset-8 columns">
-          <a ng-delete-chore="click" ng-class="{ hidden: !newChore.showDelete }" class="button alert" href="#">Delete</a>
+        <div class="button-holder small-12 large-2 large-offset-8 columns">
+          <a ng-delete-chore="{{ newChore.model.id }}" ng-class="{ hidden: !newChore.showDelete }" class="small-12 button alert" href="#">Delete</a>
         </div>
-        <div class="small-12 large-2 columns">
-          <a ng-save-chore="click" class="button" href="#">Save</a>
+        <div class="button-holder small-12 large-2 columns">
+          <a ng-save-chore="click" class="button small-12" href="#">Save</a>
         </div>
       </div>
       <a class="close-reveal-modal">&#215;</a>
@@ -81,12 +81,11 @@
       <p>Enter the email address of the user you would like to add to the household. Once they confirm their spot you can begin assigning them to chores.</p>
       <label for="email">Email</label>
       <input type="email" name="email" placeholder="Enter email here..."></input>
-      <a href="#" class="button tiny invite-button">Send Invite</a>
+      <a href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>
     </div>
 
     <div id="areYouSureModal" class="reveal-modal small" data-reveal>
       <p>Are you sure you want to delete this chore?</p>
-
     </div>
 
   </div>

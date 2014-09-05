@@ -41,13 +41,23 @@ chores.directive('ngSaveChore', function () {
   };
 });
 
+chores.directive('ngDeleteChore', function () {
+  return function ($scope, element, attrs) {
+    element.bind('click', function (event) {
+      $scope.deleteChore(attrs.ngDeleteChore, function () {
+        element.foundation('reveal', 'close');
+      });
+    });
+  };
+});
+
 makeDirective('ngEditChore', 'click', function ($scope, element, attrs, event) {
   $scope.$apply(function () {
     $scope.replaceNewChore(attrs.ngEditChore);
   });
 });
 
-makeDirective('ngClearChore','click', function ($scope, element, attrs, event) {
+makeDirective('ngClearChore', 'click', function ($scope, element, attrs, event) {
   $scope.$apply(function () {
     $scope.resetNewChore();
   });
