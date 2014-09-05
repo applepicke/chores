@@ -21,7 +21,7 @@
         </a>
       </h4>
       <ul>
-        <li ng-edit-chore="{{chore.id}}" data-reveal-id="choreModal" ng-repeat="chore in house.chores">
+        <li ng-edit-chore="{{ chore.id }}" data-reveal-id="choreModal" ng-repeat="chore in house.chores">
           {{ chore.name }}
         </li>
       </ul>
@@ -40,7 +40,9 @@
 
     <div id="choreModal" class="reveal-modal medium" data-reveal>
       <div class="row">
-        <h3 class="small-12 columns">Add Chore</h3>
+        <h3 class="small-12 columns">
+          <span>{{ newChore.title }}</span>
+        </h3>
       </div>
       <div class="row">
         <div class="alert-box alert" ng-class="{ hidden: !newChore.generalError }">{{ newChore.generalErrorMsg }}</div>
@@ -48,24 +50,24 @@
       <div class="row">
         <div class="large-6 columns">
           <label for="name">Name
-            <input ng-model="newChore.name" ng-class="{ error: newChore.nameError }" type="text" name="name" placeholder="Enter name here..."></input>
+            <input ng-save-chore="keypress" ng-model="newChore.model.name" ng-class="{ error: newChore.nameError }" type="text" name="name" placeholder="Enter name here..."></input>
           </label>
           <small class="error" ng-class="{ hidden: !newChore.nameError }">{{ newChore.nameErrorMsg }}</small>
         </div>
         <div class="large-6 columns">
           <label for="chore-users">Who is doing the chore?</label>
-          <select ng-model="newChore.userId" ng-options="user.id as user.name for user in house.users" name="chore-users" placeholder="Enter name here...">
+          <select ng-model="newChore.model.userId" ng-options="user.id as user.name for user in house.users" name="chore-users" placeholder="Enter name here...">
           </select>
         </div>
       </div>
       <div class="row">
         <div class="large-12 columns">
           <label for="description">Description</label>
-          <textarea ng-model="newChore.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
+          <textarea ng-model="newChore.model.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
         </div>
       </div>
       <div class="row">
-        <a ng-save-chore class="small-12 large-2 large-offset-9 columns button" href="#">Save</a>
+        <a ng-save-chore="click" class="small-12 large-2 large-offset-9 columns button" href="#">Save</a>
       </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>

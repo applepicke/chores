@@ -54,6 +54,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'jquery/dist/jquery.js',
             'modernizr/modernizr.js',
+            'underscore/underscore.js',
             'js/app.js',
             'js/facebook.js',
         ),

@@ -89,35 +89,52 @@ def chores(request, house_id):
   except House.DoesNotExist:
     raise Http404
 
-  user = [user for user in house.users if str(user.id) == request.REQUEST.get('userId', '')]
+  if request.method == "POST":
 
-  if not user:
+    user = [user for user in house.users if str(user.id) == request.REQUEST.get('userId', '')]
+
+    if not user:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'User does not exist in this household',
+      }))
+
+    if len(user) > 1:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'Uh oh. There is more than one user with that id. We fudged up, but we\'ll fix it for you!',
+      }))
+
+    user = user[0]
+
+    try:
+      db_chore = house.chores.get(id=request.REQUEST.get('id'))
+      db_chore.name = request.REQUEST.get('name')
+      db_chore.description = request.REQUEST.get('description')
+      db_chore.user = user
+      db_chore.save()
+      created = False
+    except Chore.DoesNotExist:
+      db_chore = house.chores.create(
+        name=request.REQUEST.get('name'),
+        description=request.REQUEST.get('description'),
+        user=user,
+      )
+      created = True
+
     return http.HttpResponse(json.dumps({
-      'success': False,
-      'msg': 'User does not exist in this household',
+      'created': created,
+      'success': True,
+      'chore': {
+        'name': db_chore.name,
+        'description': db_chore.description,
+        'user': user.as_dict(),
+      },
     }))
 
-  if len(user) > 1:
-    return http.HttpResponse(json.dumps({
-      'success': False,
-      'msg': 'Uh oh. There is more than one user with that id. We fudged up, but we\'ll fix it for you!',
-    }))
-
-  user = user[0]
-
-  db_chore = house.chores.create(
-    name=request.REQUEST.get('name'),
-    description=request.REQUEST.get('description'),
-    user=user,
-  )
-
+  chores = house.chores.all()
   return http.HttpResponse(json.dumps({
-    'success': True,
-    'chore': {
-      'name': db_chore.name,
-      'description': db_chore.description,
-      'user': user.as_dict(),
-    },
+    'chores': [chore.as_dict() for chore in chores]
   }))
 
 

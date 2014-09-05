@@ -19,6 +19,13 @@ chores.factory('House', ['$resource',
       houses.query(done);
     }
 
+    function getChores(house, done) {
+      var chores = $resource('/api/houses/:houseId/chores/', {}, {
+        query: { method: 'GET', params: { houseId: house.id } }
+      });
+      chores.query(done);
+    }
+
     function createHouse(name, done) {
       var house = $resource('/api/houses/', {}, {
         query: { method: 'POST', params: {
@@ -36,7 +43,8 @@ chores.factory('House', ['$resource',
       Chore.save({
         name: chore.name,
         description: chore.description,
-        userId: chore.userId
+        userId: chore.userId,
+        id: chore.id
       }, {}, done);
     }
 
@@ -44,6 +52,7 @@ chores.factory('House', ['$resource',
       getHouse: getHouse,
       getHouses: getHouses,
       createHouse: createHouse,
-      createChore: createChore
+      createChore: createChore,
+      getChores: getChores
     }
   }]);

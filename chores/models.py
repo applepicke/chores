@@ -82,6 +82,7 @@ class Chore(models.Model):
       'id': self.id,
       'name': self.name,
       'description': self.description,
+      'user': self.user.as_dict() if self.user else None,
     }
 
 class UserAdmin(admin.ModelAdmin):
