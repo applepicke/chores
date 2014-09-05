@@ -67,7 +67,12 @@
         </div>
       </div>
       <div class="row">
-        <a ng-save-chore="click" class="small-12 large-2 large-offset-9 columns button" href="#">Save</a>
+        <div class="small-12 large-2 large-offset-8 columns">
+          <a ng-delete-chore="click" ng-class="{ hidden: !newChore.showDelete }" class="button alert" href="#">Delete</a>
+        </div>
+        <div class="small-12 large-2 columns">
+          <a ng-save-chore="click" class="button" href="#">Save</a>
+        </div>
       </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>

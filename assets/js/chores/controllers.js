@@ -83,6 +83,7 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       $scope.newChore.model = {};
       $scope.newChore.model.userId = $scope.house.owner.id;
       $scope.newChore.title = 'Add Chore';
+      $scope.newChore.showDelete = false;
     };
 
     $scope.replaceNewChore = function (id) {
@@ -98,6 +99,7 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       });
 
       $scope.newChore.title = "Edit Chore";
+      $scope.newChore.showDelete = true;
     };
 
   }])
