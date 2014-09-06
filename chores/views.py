@@ -153,9 +153,30 @@ def chore(request, chore_id):
     chore.delete()
     return http.HttpResponse(json.dumps({
       'success': True,
+      'id': int(chore_id),
     }))
 
   raise http.Http404
+
+@login_required
+def user_request(request, house_id):
+  user = app_user
+
+  try:
+    house = user.owned_houses.get(id=house_id)
+  except House.DoesNotExist:
+    raise http.Http404
+
+  if 'email' not in request.REQUEST:
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': 'You must enter an email address'
+    }))
+
+  house.members.create(
+    email=request.REQUEST.get('email'),
+    confirmed=False
+  )
 
 def login_view(request):
 
@@ -192,7 +213,7 @@ def login_view(request):
 
   if created or not user.d_user:
     user.d_user, created = auth_models.User.objects.get_or_create(
-      email='%s@chores.dev' % user.fb_user_id,
+      email=obj.get('email'),
       username=user.fb_user_id,
     )
     user.email = obj.get('email')
@@ -200,6 +221,7 @@ def login_view(request):
     user.last_name = obj.get('last_name')
     user.d_user.set_password(settings.GENERIC_USER_PASSWORD)
     user.d_user.save()
+    user.confirmed = True
     user.save()
 
   user.access_token = token

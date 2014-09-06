@@ -62,6 +62,15 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       });
     };
 
+    $scope._replaceChore = function (newChore) {
+      var chore = _.find($scope.house.chores, function (chore) {
+        return chore.id === newChore.id;
+      });
+      chore.name = newChore.name;
+      chore.description = newChore.description;
+      chore.user = newChore.user;
+    };
+
     $scope.saveChore = function (done) {
       if (!$scope.newChore.model.name) {
         $scope.newChore.nameError = true;
@@ -108,7 +117,8 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
 
     $scope.deleteChore = function (id, done) {
       House.deleteChore(id, function (result) {
-        $scope.reloadChores();
+        var chores = $scope.house.chores;
+        $scope.house.chores = _.without(chores, _.findWhere(chores, { id: result.id }));
         done(result);
       });
     };

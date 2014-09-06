@@ -25,20 +25,24 @@
           {{ chore.name }}
         </li>
       </ul>
+      <p ng-hide="house.chores">You don't have any chores.</p>
     </div>
 
     <div class="user-list small-12 small-centered large-uncentered large-offset-3 large-3 columns">
       <h4>
         <span class="fa fa-user"></span>
-        Users
+        Members
         <a data-reveal-id="userModal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
       </h4>
       <ul>
-      <li ng-repeat="user in house.users" class="user">{{ user.name }}</li>
+      <li ng-repeat="user in house.users" class="user">
+        <span ng-show="user.confirmed">{{ user.name }}</span>
+        <span ng-hide="user.confirmed">{{ user.email }} (Pending)</span>
+      </li>
       </ul>
     </div>
 
-    <div id="choreModal" class="reveal-modal medium" data-reveal>
+    <div id="choreModal" class="reveal-modal small" data-reveal>
       <div class="row">
         <h3 class="small-12 columns">
           <span>{{ newChore.title }}</span>
@@ -66,19 +70,16 @@
           <textarea ng-model="newChore.model.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
         </div>
       </div>
-      <div class="row">
-        <div class="button-holder small-12 large-2 large-offset-8 columns">
-          <a ng-delete-chore="{{ newChore.model.id }}" ng-class="{ hidden: !newChore.showDelete }" class="small-12 button alert" href="#">Delete</a>
-        </div>
-        <div class="button-holder small-12 large-2 columns">
-          <a ng-save-chore="click" class="button small-12" href="#">Save</a>
-        </div>
+      <div class="right">
+        <a ng-delete-chore="{{ newChore.model.id }}" ng-class="{ hidden: !newChore.showDelete }" class="button alert" href="#">Delete</a>
+        <a ng-save-chore="click" class="right button" href="#">Save</a>
       </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
 
     <div id="userModal" class="reveal-modal small" data-reveal>
-      <p>Enter the email address of the user you would like to add to the household. Once they confirm their spot you can begin assigning them to chores.</p>
+      <h4>Add Member
+      <p>Enter the email address of the user you would like to add to the household.</p>
       <label for="email">Email</label>
       <input type="email" name="email" placeholder="Enter email here..."></input>
       <a href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>

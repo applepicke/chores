@@ -44,8 +44,10 @@ chores.directive('ngSaveChore', function () {
 chores.directive('ngDeleteChore', function () {
   return function ($scope, element, attrs) {
     element.bind('click', function (event) {
-      $scope.deleteChore(attrs.ngDeleteChore, function () {
-        element.foundation('reveal', 'close');
+      $scope.$apply(function () {
+        $scope.deleteChore(attrs.ngDeleteChore, function () {
+          element.foundation('reveal', 'close');
+        });
       });
     });
   };

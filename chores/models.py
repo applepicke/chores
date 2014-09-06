@@ -5,14 +5,15 @@ from django.contrib import admin
 from jsonfield import JSONField
 
 class User(models.Model):
-  fb_user_id = models.CharField(max_length=255)
+  fb_user_id = models.CharField(max_length=255, default='')
   first_name = models.CharField(max_length=255, default='')
   last_name = models.CharField(max_length=255, default='')
   email = models.CharField(max_length=255)
   phone_number = models.CharField(max_length=20, default='')
   extras = JSONField(default='{}')
   d_user = models.ForeignKey(auth_models.User, null=True)
-  access_token = models.CharField(max_length=255)
+  access_token = models.CharField(max_length=255, default='')
+  confirmed = models.BooleanField(default=False)
 
   @property
   def name(self):
@@ -34,6 +35,7 @@ class User(models.Model):
       'id': self.id,
       'name': self.name,
       'email': self.email,
+      'confirmed': self.confirmed,
     }
 
   def __str__(self):
