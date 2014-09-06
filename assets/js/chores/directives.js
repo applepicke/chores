@@ -41,6 +41,22 @@ chores.directive('ngSaveChore', function () {
   };
 });
 
+chores.directive('ngAddMember', function () {
+  return function ($scope, element, attrs) {
+    element.bind(attrs['ngAddMember'], function (event) {
+      if (event.which !== 13 && event.which !== 1) {
+        return;
+      }
+
+      $scope.addMember(function (result) {
+        if (result.success) {
+          element.foundation('reveal', 'close');
+        }
+      });
+    });
+  };
+});
+
 chores.directive('ngDeleteChore', function () {
   return function ($scope, element, attrs) {
     element.bind('click', function (event) {
@@ -59,8 +75,14 @@ makeDirective('ngEditChore', 'click', function ($scope, element, attrs, event) {
   });
 });
 
-makeDirective('ngClearChore', 'click', function ($scope, element, attrs, event) {
+makeDirective('ngClear', 'click', function ($scope, element, attrs, event) {
   $scope.$apply(function () {
-    $scope.resetNewChore();
+    if (attrs['ngClear'] === 'chore') {
+      $scope.resetNewChore();
+    }
+    else if (attrs['ngClear'] === 'member') {
+      $scope.newMember.model = {};
+    }
   });
 });
+

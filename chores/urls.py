@@ -16,6 +16,8 @@ urlpatterns = patterns('',
   url(r'^api/houses/?$', 'chores.views.api_houses', name='api_houses'),
   url(r'^api/houses/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
   url(r'^api/houses/(?P<house_id>\d+)/chores/?$', 'chores.views.chores', name='create_chore'),
+  url(r'^api/houses/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
+
   url(r'^api/chores/(?P<chore_id>\d+)/?$', 'chores.views.chore', name='api_chore'),
 
   url(r'^$', 'chores.views.index', name='index'),

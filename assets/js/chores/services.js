@@ -55,12 +55,23 @@ chores.factory('House', ['$resource',
       }, {}, done);
     }
 
+    function addMember(house, email, done) {
+      var Member = $resource('/api/houses/:houseId/members/', {}, {
+        add: { method: 'POST', params: { houseId: house.id } }
+      });
+
+      Member.add({
+        email: email
+      }, {}, done);
+    }
+
     return {
       getHouse: getHouse,
       getHouses: getHouses,
       createHouse: createHouse,
       createChore: createChore,
       getChores: getChores,
-      deleteChore: deleteChore
+      deleteChore: deleteChore,
+      addMember: addMember,
     }
   }]);

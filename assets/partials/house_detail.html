@@ -16,7 +16,7 @@
       <h4>
         <span class="fa fa-cutlery"></span>
         Chores
-        <a ng-clear-chore data-reveal-id="choreModal" href="#">
+        <a ng-clear="chore" data-reveal-id="choreModal" href="#">
           <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
         </a>
       </h4>
@@ -32,12 +32,11 @@
       <h4>
         <span class="fa fa-user"></span>
         Members
-        <a data-reveal-id="userModal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
+        <a ng-clear="member" data-reveal-id="userModal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
       </h4>
       <ul>
-      <li ng-repeat="user in house.users" class="user">
-        <span ng-show="user.confirmed">{{ user.name }}</span>
-        <span ng-hide="user.confirmed">{{ user.email }} (Pending)</span>
+      <li ng-repeat="user in house.members" class="user">
+        <span>{{ user.name }}</span>
       </li>
       </ul>
     </div>
@@ -60,7 +59,7 @@
         </div>
         <div class="large-6 columns">
           <label for="chore-users">Who is doing the chore?</label>
-          <select ng-model="newChore.model.userId" ng-options="user.id as user.name for user in house.users" name="chore-users" placeholder="Enter name here...">
+          <select ng-model="newChore.model.userId" ng-options="user.id as user.name for user in house.members" name="chore-users" placeholder="Enter name here...">
           </select>
         </div>
       </div>
@@ -78,11 +77,15 @@
     </div>
 
     <div id="userModal" class="reveal-modal small" data-reveal>
-      <h4>Add Member
-      <p>Enter the email address of the user you would like to add to the household.</p>
-      <label for="email">Email</label>
-      <input type="email" name="email" placeholder="Enter email here..."></input>
-      <a href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>
+      <h3>Invite Member</h3>
+      <div class="row">
+        <label for="email">
+          Email
+          <input ng-add-member="keypress" ng-class="{ error: newMember.model.generalError }" ng-model="newMember.model.email" type="email" name="email" placeholder="Enter email here..."></input>
+          <small class="error" ng-class="{ hidden: !newMember.model.generalError }">{{ newMember.model.generalErrorMsg }}</small>
+        </label>
+      </div>
+      <a ng-add-member="click" href="#" class="small-12 large-3 large-offset-9 columns button tiny invite-button">Send Invite</a>
     </div>
 
     <div id="areYouSureModal" class="reveal-modal small" data-reveal>

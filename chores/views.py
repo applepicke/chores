@@ -74,7 +74,7 @@ def api_house(request, id):
     'house': {
       'id': house.id,
       'name': house.name,
-      'users': [user.as_dict() for user in house.users],
+      'members': [user.as_dict() for user in house.users],
       'owner': house.owner.as_dict(),
       'chores': [chore.as_dict() for chore in house.chores.all()],
     },
@@ -159,8 +159,8 @@ def chore(request, chore_id):
   raise http.Http404
 
 @login_required
-def user_request(request, house_id):
-  user = app_user
+def members(request, house_id):
+  user = request.app_user
 
   try:
     house = user.owned_houses.get(id=house_id)
@@ -173,10 +173,15 @@ def user_request(request, house_id):
       'msg': 'You must enter an email address'
     }))
 
-  house.members.create(
+  member = house.members.create(
     email=request.REQUEST.get('email'),
     confirmed=False
   )
+
+  return http.HttpResponse(json.dumps({
+    'success': True,
+    'member': member.as_dict()
+  }))
 
 def login_view(request):
 

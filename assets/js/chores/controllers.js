@@ -41,6 +41,11 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       model: {}
     };
 
+    $scope.newMember = {
+      generalError: false,
+      model: {}
+    };
+
     House.getHouse($routeParams.houseId, function (response) {
       if (response.success) {
         $scope.house = response.house;
@@ -120,6 +125,24 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
         var chores = $scope.house.chores;
         $scope.house.chores = _.without(chores, _.findWhere(chores, { id: result.id }));
         done(result);
+      });
+    };
+
+    $scope.addMember = function (done) {
+      var email = $scope.newMember.model.email;
+
+      if (!email) {
+        $scope.newMember.model.generalError = true;
+        $scope.newMember.model.generalErrorMsg = 'Must specify an email';
+        return done({ success: false });
+      }
+
+      House.addMember($scope.house, email, function (result) {
+        $scope.newMember.model.email = '';
+        if (result.success) {
+          $scope.house.members.push(result.member)
+          done(result);
+        }
       });
     };
   }])

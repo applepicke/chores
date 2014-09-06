@@ -17,6 +17,8 @@ class User(models.Model):
 
   @property
   def name(self):
+    if not self.confirmed:
+      return '%s (Pending)' % self.email
     return '%s %s' % (self.first_name, self.last_name)
 
   @property
