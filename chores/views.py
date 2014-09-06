@@ -1,5 +1,6 @@
 import json
 import facebook
+import smtplib
 
 from django import http
 from django.conf import settings
@@ -9,8 +10,9 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from chores.models import User, House, Chore
-from chores.utils import Facebook
+from chores.utils import Facebook, untokenize
 from chores.context import context
+from chores.users.invitations import Invitation
 
 def index(request):
 
@@ -178,13 +180,31 @@ def members(request, house_id):
     confirmed=False
   )
 
+  try:
+    invite = Invitation(member, house, request.META['HTTP_HOST'])
+    invite.send()
+  except smtplib.SMTPException:
+    member.delete()
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': 'Could not send email to that address. You sure it\'s real?',
+    }))
+
   return http.HttpResponse(json.dumps({
     'success': True,
     'member': member.as_dict()
   }))
 
-def login_view(request):
+def confirmation(request, token):
+  try:
+    id = untokenize(token)
+  except Exception as e:
+    print e
+    raise http.Http404
 
+  return http.HttpResponse(id)
+
+def login_view(request):
   token = request.POST.get('access_token')
   user_id = request.POST.get('user_id')
 

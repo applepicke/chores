@@ -140,8 +140,13 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       House.addMember($scope.house, email, function (result) {
         $scope.newMember.model.email = '';
         if (result.success) {
-          $scope.house.members.push(result.member)
+          $scope.house.members.push(result.member);
           done(result);
+        }
+        else {
+          $scope.newMember.model.generalError = true;
+          $scope.newMember.model.generalErrorMsg = result.msg;
+          done({success: false});
         }
       });
     };

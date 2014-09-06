@@ -1,10 +1,18 @@
 import urllib2
 import json
 import logging
+import base64
 
 from django.conf import settings
 
 logger = logging.getLogger('')
+
+def tokenize(txt):
+  return base64.urlsafe_b64encode('%s:%s' % (txt, settings.SECRET))
+
+def untokenize(token):
+  txt, secret = base64.urlsafe_b64decode(str(token)).split(':')
+  return txt
 
 class Facebook(object):
   user_info = None

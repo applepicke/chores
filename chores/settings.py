@@ -155,6 +155,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+SECRET = 'captain hook polymorph my eggshells'
+
 SESSION_ENGINE = 'redis_sessions.session'
 
 # Facebook test site credentials

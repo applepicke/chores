@@ -16,7 +16,7 @@ Your chore is: %s
 Description: %s
 
 Love,
-Willy
+The Chore People
 """
 
 SMS_MSG = """
