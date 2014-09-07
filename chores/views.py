@@ -200,12 +200,16 @@ def members(request, house_id):
     )
   else:
     member = existing_user
+    member.houses.add(house)
+    member.save()
 
   try:
     invite = Invitation(member, house, request.META['HTTP_HOST'])
     invite.send()
   except smtplib.SMTPException:
-    member.delete()
+    if member.id != existing_user.id:
+      member.delete()
+
     return http.HttpResponse(json.dumps({
       'success': False,
       'msg': 'Could not send email to that address. You sure it\'s real?',
