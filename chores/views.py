@@ -44,10 +44,7 @@ def api_houses(request):
         'msg': 'Did you forget to enter a name for your household?',
       }))
 
-    #house = House.objects.create(name=name, owner=user)
-    house = {
-      'id': 1
-    }
+    house = House.objects.create(name=name, owner=user)
 
     if not house:
       return http.HttpResponse(json.dumps({
