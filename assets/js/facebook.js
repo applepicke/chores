@@ -1,23 +1,34 @@
-function statusChangeCallback(response) {
-
-  if (response.status === 'connected') {
-    var data = {
-      'access_token': response.authResponse.accessToken,
-      'user_id': response.authResponse.userID,
-    };
-    $.post('/login/', data)
-      .success(function (response) {
-        window.location = '/welcome/';
-      });
-  } else if (response.status === 'not_authorized') {
-  } else {
-  }
-
+function loginForConfirmation() {
+  FB.getLoginStatus(function(response) {
+    if (response.status === 'connected') {
+      var data = {
+        'access_token': response.authResponse.accessToken,
+        'user_id': response.authResponse.userID,
+      };
+      $.post('.', data)
+        .success(function (response) {
+          window.location = '/';
+        });
+    } else if (response.status === 'not_authorized') {
+    } else {
+    }
+  });
 }
 
 function checkLoginState() {
   FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
+    if (response.status === 'connected') {
+      var data = {
+        'access_token': response.authResponse.accessToken,
+        'user_id': response.authResponse.userID,
+      };
+      $.post('/login/', data)
+        .success(function (response) {
+          window.location = '/welcome/';
+        });
+    } else if (response.status === 'not_authorized') {
+    } else {
+    }
   });
 }
 

@@ -113,12 +113,56 @@ p
 
   .chores-list
     .chore-row
-
-
       &:hover
         cursor: pointer
         .chore-actions
           display: block
+
+.confirmation-page
+  @media screen and (min-width:64.063em)
+    margin-top: 5rem
+
+  .divider
+    margin: 0 auto
+
+    .divide
+      border-top: solid 1px $main-white
+      height: 1px
+      width: 42%
+      margin: 2%
+      float: left
+
+      @media screen and (min-width:64.063em)
+        border-top: none
+        border-right: solid 1px $main-white
+        width: 1px
+        height: 10rem
+        margin: 1rem auto
+        float: none
+
+    .or
+      color: $main-white
+      text-align: center
+      float: left
+
+      @media screen and (min-width:64.063em)
+        float: none
+
+  .facebook-login-button
+    margin: 1rem auto
+
+    @media screen and (min-width:64.063em)
+      margin-top: 10rem
+
+
+.facebook-login-button
+  padding: 20px
+  background: #000
+  opacity: 0.7
+  width: 170px
+  margin: 40px auto
+
+  border-radius: 10px
 
 #login
 
@@ -131,13 +175,4 @@ p
       font-weight: bold
       text-align: center
       font-size: 50px
-
-    .login-button
-      padding: 20px
-      background: #000
-      opacity: 0.7
-      width: 170px
-      margin: 40px auto
-
-      border-radius: 10px
 

@@ -26,6 +26,8 @@ def index(request):
 
     if not request.path_info.startswith('/houses/') and house:
       return http.HttpResponseRedirect('/houses/%d' % house.id)
+    else:
+      return http.HttpResponseRedirect('/account')
 
   return render_to_response('app.html', context(request))
 
@@ -230,6 +232,58 @@ def confirmation(request, token):
   if user.confirmed:
     return http.HttpResponseRedirect('/')
 
+  if request.method == 'POST':
+
+    # User confirms identity with Facebook
+    if 'access_token' in request.REQUEST:
+      token = request.REQUEST.get('access_token')
+      user_id = request.REQUEST.get('user_id')
+      fb = Facebook()
+
+      if not fb.check_user(token, user_id):
+        return http.HttpResponse(json.dumps({
+          'success': False,
+          'msg': 'Stop being dumb',
+        }))
+
+      try:
+        graph = facebook.GraphAPI(token)
+      except facebook.GraphAPIError:
+        return http.HttpResponse(json.dumps({
+          'success': False,
+          'msg': 'Quit trying to sneak in.'
+        }))
+
+      obj = graph.get_object('me')
+      user.add_d_user(user.email)
+      user.first_name = obj.get('first_name')
+      user.last_name = obj.get('last_name')
+      user.confirmed = True
+      user.save()
+      authenticated = authenticate(token=token)
+
+    # Regular signup form
+    else:
+      user.first_name = request.REQUEST.get('first_name')
+      user.last_name = request.REQUEST.get('last_name')
+
+      if not request.REQUEST.get('password') == request.REQUEST.get('confirm_password'):
+        return http.HttpResponse(json.dumps({
+          'success': False,
+          'msg': 'Passwords need to match',
+        }))
+
+      user.add_d_user(user.email)
+      user.confirmed = True
+      user.d_user.set_password(request.REQUEST.get('password'))
+      user.save()
+      authenticated = authenticate(token=token)
+      login(request, authenticated)
+      authenticated = authenticate(username=user.email, password=reuqest.REQUEST.get('password'))
+
+    login(request, authenticated)
+    return http.HttpResponseRedirect('/')
+
   return render_to_response('confirmation.html', context(request))
 
 def login_view(request):
@@ -265,19 +319,7 @@ def login_view(request):
   obj = graph.get_object('me')
 
   if created or not user.d_user:
-    d_user = auth_models.User.objects.filter(
-      email=obj.get('email'),
-    )
-
-    if not d_user:
-      d_user = auth_models.User.objects.create(
-        email=obj.get('email'),
-        username=obj.get('email'),
-      )
-    else:
-      d_user = d_user[0]
-
-    user.d_user = d_user
+    user.add_d_user(obj.get('email'))
     user.email = obj.get('email')
     user.first_name = obj.get('first_name')
     user.last_name = obj.get('last_name')

@@ -1,6 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
+  <div class="confirmation-page">
+    <div class="row">
+      <div class="signup-form small-12 large-5 columns">
+        <h3>Sign up</h3>
+        <form action="." method="POST">
+          <label for="first_name">
+            First Name
+            <input type="text" name="first_name" placeholder="Enter your first name..."></input>
+          </label>
+          <label for="last_name">
+            Last Name
+            <input type="text" name="last_name" placeholder="Enter your last name..."></input>
+          </label>
+          <label for="password">
+            Password
+            <input type="password" name="password" placeholder="Enter a password..."></input>
+          </label>
+          <label for="confirm_password">
+            Confirm Password
+            <input type="password" name="confirm_password" placeholder="Confirm your password..."></input>
+          </label>
+          <input type="submit" class="button success small-12 large-4 large-offset-8 columns" value="Sign Up"></input>
+        </form>
+      </div>
 
+      <div class="divider small-12 large-3 columns">
+        <div class="divide"></div>
+        <div class="or">
+          OR
+        </div>
+        <div class="divide"></div>
+      </div>
 
+      <div class="small-12 large-1 end columns">
+        <div class="facebook-login-button">
+          <fb:login-button scope="public_profile,email" onlogin="loginForConfirmation();" size="xlarge">
+          </fb:login-button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
