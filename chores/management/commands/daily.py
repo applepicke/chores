@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
       for chore in house.chores.all():
         print 'Chore: %s' % chore.name
-        if chore.user:
+        if chore.user and chore.user.confirmed:
           email = chore.user.email
 
           if email:
