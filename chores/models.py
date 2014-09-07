@@ -48,11 +48,7 @@ class User(models.Model):
     }
 
   def __str__(self):
-    return '%s %s - %s' % (
-      self.first_name,
-      self.last_name,
-      self.email
-    )
+    return self.name
 
 class House(models.Model):
   name = models.CharField(max_length=255)

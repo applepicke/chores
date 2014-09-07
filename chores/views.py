@@ -177,10 +177,26 @@ def members(request, house_id):
       'msg': 'You must enter an email address'
     }))
 
-  member = house.members.create(
-    email=request.REQUEST.get('email'),
-    confirmed=False
-  )
+  existing_user = User.objects.filter(email=request.REQUEST.get('email'))
+
+  if existing_user:
+    existing_user = existing_user[0]
+
+  exists = existing_user in house.members.all()
+
+  if exists:
+    return http.HttpResponse(json.dumps({
+      'success': False,
+      'msg': '%s already has a member with that email address' % house.name,
+    }))
+
+  if not existing_user:
+    member = house.members.create(
+      email=request.REQUEST.get('email'),
+      confirmed=False,
+    )
+  else:
+    member = existing_user
 
   try:
     invite = Invitation(member, house, request.META['HTTP_HOST'])
