@@ -19,6 +19,11 @@ def index(request):
   if not request.user.is_authenticated():
     return render_to_response('login.html', context(request))
 
+  house = request.app_user.house
+
+  if not request.path_info.startswith('/houses/') and house:
+    return http.HttpResponseRedirect('/houses/%d' % house.id)
+
   return render_to_response('app.html', context(request))
 
 def logout_view(request):
@@ -198,11 +203,14 @@ def members(request, house_id):
 def confirmation(request, token):
   try:
     id = untokenize(token)
-  except Exception as e:
-    print e
+    user = User.objects.get(id=id)
+  except:
     raise http.Http404
 
-  return http.HttpResponse(id)
+  if user.confirmed:
+    return http.HttpResponseRedirect('/')
+
+  return render_to_response('confirmation.html', context(request))
 
 def login_view(request):
   token = request.POST.get('access_token')

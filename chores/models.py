@@ -22,6 +22,13 @@ class User(models.Model):
     return '%s %s' % (self.first_name, self.last_name)
 
   @property
+  def house(self):
+    houses = self.owned_houses.all()
+    if houses:
+      return houses[0]
+    return None
+
+  @property
   def chores(self):
     return Chore.objects.filter(user__id=self.id)
 
