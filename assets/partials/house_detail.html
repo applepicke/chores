@@ -12,7 +12,7 @@
   <br/>
 
   <div class="row">
-    <div class="chores-list small-12 small-centered large-uncentered large-6 columns">
+    <div class="chores-list small-12 small-centered large-uncentered large-8 columns">
       <h4>
         <span class="fa fa-cutlery"></span>
         Chores
@@ -20,25 +20,36 @@
           <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
         </a>
       </h4>
-      <ul>
-        <li ng-edit-chore="{{ chore.id }}" data-reveal-id="choreModal" ng-repeat="chore in house.chores">
-          {{ chore.name }}
-        </li>
-      </ul>
+      <table ng-show="house.chores">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Assigned to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="chore-row" ng-edit-chore="{{ chore.id }}" data-reveal-id="choreModal" ng-repeat="chore in house.chores">
+            <td>{{ chore.name }}</td>
+            <td>{{ chore.description }}</td>
+            <td>{{ chore.user.name }}</td>
+          </tr>
+        </tbody>
+      </table>
       <p ng-hide="house.chores">You don't have any chores.</p>
     </div>
 
-    <div class="user-list small-12 small-centered large-uncentered large-offset-3 large-3 columns">
+    <div class="user-list small-12 small-centered large-uncentered large-offset-1 large-3 columns">
       <h4>
         <span class="fa fa-user"></span>
         Members
         <a ng-clear="member" data-reveal-id="userModal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
       </h4>
-      <ul>
-      <li ng-repeat="user in house.members" class="user">
-        <span>{{ user.name }}</span>
-      </li>
-      </ul>
+      <table>
+        <tr ng-repeat="user in house.members" class="user">
+          <td>{{ user.name }}</td>
+        </tr>
+      </table>
     </div>
 
     <div id="choreModal" class="reveal-modal small" data-reveal>
