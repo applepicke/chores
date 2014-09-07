@@ -5,7 +5,7 @@ var chores = angular.module('chores', ['ngRoute', 'ngResource']);
 chores.config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     $routeProvider.
-      when('/', {
+      when('/welcome', {
         templateUrl: '/static/partials/welcome.html',
         controller: 'Welcome'
       }).

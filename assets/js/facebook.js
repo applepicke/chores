@@ -7,7 +7,7 @@ function statusChangeCallback(response) {
     };
     $.post('/login/', data)
       .success(function (response) {
-        window.location = '/'
+        window.location = '/welcome/';
       });
   } else if (response.status === 'not_authorized') {
   } else {
@@ -29,11 +29,6 @@ window.fbAsyncInit = function() {
     xfbml      : true,  // parse social plugins on this page
     version    : 'v2.0' // use version 2.0
   });
-
-  // FB.getLoginStatus(function(response) {
-  //   statusChangeCallback(response);
-  // });
-
 };
 
 (function(d, s, id) {
