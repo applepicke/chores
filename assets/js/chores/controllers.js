@@ -102,6 +102,8 @@ chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House
       $scope.newChore.model.userId = $scope.house.owner.id;
       $scope.newChore.title = 'Add Chore';
       $scope.newChore.showDelete = false;
+      $scope.newChore.generalError = false;
+      $scope.newChore.nameError = false;
     };
 
     $scope.replaceNewChore = function (id) {
