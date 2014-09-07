@@ -17,6 +17,8 @@ from chores.users.invitations import Invitation
 def index(request):
 
   if not request.user.is_authenticated():
+    if not request.path_info == '/':
+      return http.HttpResponseRedirect('/')
     return render_to_response('login.html', context(request))
 
   if request.app_user:
@@ -55,7 +57,7 @@ def api_houses(request):
 
     return http.HttpResponse(json.dumps({
       'success': True,
-      'id': house.get('id'),
+      'id': house.id,
     }))
 
   return http.HttpResponse(json.dumps({
@@ -259,10 +261,19 @@ def login_view(request):
   obj = graph.get_object('me')
 
   if created or not user.d_user:
-    user.d_user, created = auth_models.User.objects.get_or_create(
+    d_user = auth_models.User.objects.filter(
       email=obj.get('email'),
-      username=user.fb_user_id,
     )
+
+    if not d_user:
+      d_user = auth_models.User.objects.create(
+        email=obj.get('email'),
+        username=obj.get('email'),
+      )
+    else:
+      d_user = d_user[0]
+
+    user.d_user = d_user
     user.email = obj.get('email')
     user.first_name = obj.get('first_name')
     user.last_name = obj.get('last_name')
