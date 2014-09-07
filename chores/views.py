@@ -19,10 +19,11 @@ def index(request):
   if not request.user.is_authenticated():
     return render_to_response('login.html', context(request))
 
-  house = request.app_user.house
+  if request.app_user:
+    house = request.app_user.house
 
-  if not request.path_info.startswith('/houses/') and house:
-    return http.HttpResponseRedirect('/houses/%d' % house.id)
+    if not request.path_info.startswith('/houses/') and house:
+      return http.HttpResponseRedirect('/houses/%d' % house.id)
 
   return render_to_response('app.html', context(request))
 
