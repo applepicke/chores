@@ -32,6 +32,13 @@ chores.controller('HouseList', ['$scope', 'House',
     });
   }]);
 
+chores.controller('Account', ['$scope', 'Account',
+  function ($scope, Account) {
+    Account.getAccount(function (account) {
+      $scope.account = account;
+    });
+  }]);
+
 chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House',
   function ($scope, $routeParams, $rootScope, House) {
     $(document).foundation();

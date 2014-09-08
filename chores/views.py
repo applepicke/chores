@@ -21,12 +21,12 @@ def index(request):
       return http.HttpResponseRedirect('/')
     return render_to_response('login.html', context(request))
 
-  if request.app_user:
+  else:
     house = request.app_user.house
 
     if not request.path_info.startswith('/houses/') and house:
       return http.HttpResponseRedirect('/houses/%d' % house.id)
-    else:
+    elif not request.path_info.startswith('/account') and not house:
       return http.HttpResponseRedirect('/account')
 
   return render_to_response('app.html', context(request))
@@ -34,6 +34,15 @@ def index(request):
 def logout_view(request):
   logout(request)
   return http.HttpResponseRedirect('/')
+
+@login_required
+def api_account(request):
+  user = request.app_user
+
+  if not user:
+    raise http.Http404
+
+  return http.HttpResponse(json.dumps(user.as_dict()))
 
 @login_required
 def api_houses(request):
@@ -229,7 +238,7 @@ def confirmation(request, token):
   except:
     raise http.Http404
 
-  if user.confirmed:
+  if user.d_user.is_authenticated() and user.d_user == request.user:
     return http.HttpResponseRedirect('/')
 
   if request.method == 'POST':
@@ -239,12 +248,6 @@ def confirmation(request, token):
       token = request.REQUEST.get('access_token')
       user_id = request.REQUEST.get('user_id')
       fb = Facebook()
-
-      if not fb.check_user(token, user_id):
-        return http.HttpResponse(json.dumps({
-          'success': False,
-          'msg': 'Stop being dumb',
-        }))
 
       try:
         graph = facebook.GraphAPI(token)
@@ -258,6 +261,7 @@ def confirmation(request, token):
       user.add_d_user(user.email)
       user.first_name = obj.get('first_name')
       user.last_name = obj.get('last_name')
+      user.fb_user_id = obj.get('id')
       user.confirmed = True
       user.save()
       authenticated = authenticate(token=token)

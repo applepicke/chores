@@ -75,3 +75,19 @@ chores.factory('House', ['$resource',
       addMember: addMember,
     }
   }]);
+
+chores.factory('Account', ['$resource',
+  function ($resource) {
+
+    function getAccount(done) {
+      var Account = $resource('/api/account', {}, {
+        get: { method: 'GET', params: {} }
+      });
+
+      Account.get({}, done);
+    }
+
+    return {
+      getAccount: getAccount
+    }
+  }]);

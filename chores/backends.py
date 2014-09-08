@@ -10,7 +10,6 @@ class FacebookBackend(object):
       return None
 
     obj = graph.get_object('me')
-
     user = User.objects.get(fb_user_id=obj.get('id'))
 
     if not user.d_user:
