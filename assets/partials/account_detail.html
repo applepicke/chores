@@ -1,32 +1,49 @@
-<div class="account-detail">
+<div class="account-detail row">
   <div class="row">
-    <h1 class="small-12 large-12 large-offset-1 columns">{{ account.name }}'s Settings</h1>
+    <h1 class="small-10 small-offset-1 large-12 large-offset-0 columns">{{ account.name }}'s Settings</h1>
   </div>
-  <div class="row">
-    <div class="small-12 large-4 large-offset-1 columns">
-      <label for="first_name">
-        First Name
-        <input type="text" name="first_name"></input>
-      </label>
+  <form action="." method="POST">
+    <div class="small-12 columns">
+      <div class="row">
+        <div class="small-10 small-offset-1 large-6 large-offset-1 columns">
+          <label for="first_name">
+            First Name
+            <input type="text" name="first_name"></input>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-10 small-offset-1 large-6 large-offset-1 columns">
+          <label for="last_name">
+            Last Name
+            <input type="text" name="last_name"></input>
+          </label>
+        </div>
+      </div>
+      <div ng-show="account.has_password" class="row">
+        <div class="small-8 large-4 large-offset-1 columns">
+          <label for="password">
+            Password
+            <input type="password" disabled name="password" value="12345678"></input>
+            <a href="#" class="button tiny success">Change Password</a>
+          </label>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="small-12 large-4 large-offset-1 columns">
-      <label for="last_name">
-        Last Name
-        <input type="text" name="last_name"></input>
-      </label>
+    <div class="small-12 columns">
+      <div class="small-10 small-offset-1 columns">
+        <div class="row">
+          <input name="allow-email" type="checkbox"></input>
+          <label for="allow-email">Receieve email communication</label>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="small-8 large-4 large-offset-1 columns">
-      <label for="password">
-        Password
-        <input type="password" disabled name="password" value="12345678"></input>
-        <a href="#" class="button tiny success">Change Password</a>
-      </label>
+    <div class="small-12 columns">
+      <div class="small-12 columns">
+        <div class="row">
+          <input type="submit" value="Save Preferences" class="button small-10 small-offset-1 large-3 large-offset-1"></input>
+        </div>
+      </div>
     </div>
-
-  </div>
-
+  </form>
 </div>

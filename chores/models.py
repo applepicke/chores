@@ -58,6 +58,8 @@ class User(models.Model):
     return {
       'id': self.id,
       'name': self.name,
+      'first_name': self.first_name,
+      'last_name': self.last_name,
       'email': self.email,
       'confirmed': self.confirmed,
     }
