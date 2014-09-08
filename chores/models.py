@@ -14,6 +14,9 @@ class User(models.Model):
   d_user = models.ForeignKey(auth_models.User, null=True)
   access_token = models.CharField(max_length=255, default='')
   confirmed = models.BooleanField(default=False)
+  email_enabled = models.BooleanField(default=True)
+  sms_enabled = models.BooleanField(default=False)
+  sms_verified = models.BooleanField(default=False)
 
   @property
   def name(self):
@@ -62,6 +65,10 @@ class User(models.Model):
       'last_name': self.last_name,
       'email': self.email,
       'confirmed': self.confirmed,
+      'has_password': True,
+      'email_enabled': self.email_enabled,
+      'sms_enabled': self.sms_enabled,
+      'sms_verified': True
     }
 
   def __str__(self):

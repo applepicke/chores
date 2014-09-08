@@ -1,13 +1,12 @@
 <div class="account-detail row">
-  <div class="row">
+  <div class="semi-section row">
     <h1 class="small-10 small-offset-1 large-12 large-offset-1 columns">{{ account.name }}'s Settings</h1>
   </div>
   <form action="." method="POST">
-    <hr class="small-10 small-offset-1 columns"/>
 
-    <div class="small-12 columns">
+    <div class="section small-12 columns">
       <div class="row">
-        <div class="small-10 small-offset-1 large-6 large-offset-1 columns">
+        <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
           <label for="first_name">
             First Name
             <input type="text" name="first_name" value="{{ account.first_name }}"></input>
@@ -15,7 +14,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="small-10 small-offset-1 large-6 large-offset-1 columns">
+        <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
           <label for="last_name">
             Last Name
             <input type="text" name="last_name" value="{{ account.last_name }}"></input>
@@ -23,7 +22,7 @@
         </div>
       </div>
       <div ng-show="account.has_password" class="row">
-        <div class="small-8 large-4 large-offset-1 columns">
+        <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
           <label for="password">
             Password
             <input type="password" disabled name="password" value="12345678"></input>
@@ -33,21 +32,46 @@
       </div>
     </div>
 
-    <hr class="small-10 small-offset-1 columns"/>
-
-    <div class="small-12 columns">
+    <div class="section small-12 columns">
       <div class="small-10 small-offset-1 columns">
         <div class="row">
-          <h3>Notifications</h3>
+          <div>
+            <h4 class="left">Email Reminders</h4>
+            <span class="switch tiny radius">
+              <input id="allow-email" type="checkbox" ng-model="account.email_enabled">
+              <label for="allow-email"></label>
+            </span>
+          </div>
         </div>
-        <div class="row">
-          <input name="allow-email" type="checkbox"></input>
-          <label for="allow-email">Wanna get email reminders when you need to get your chore done?</label>
+        <div class="semi-section row">
+          <p class="description">Do you want email notifications about your chores?</p>
+        </div>
+        <div class="sms-reminders row">
+          <div>
+            <h4 class="left">SMS Reminders</h4>
+            <span ng-show="account.sms_verified" class="switch tiny radius">
+              <input id="allow-sms" type="checkbox" ng-model="account.sms_enabled">
+              <label for="allow-sms"></label>
+            </span>
+          </div>
+        </div>
+        <div class="row panel">
+          <p class="">
+            Status:
+            <span ng-show="account.sms_verified" class="label success radius">Verified</span>
+            <span ng-hide="account.sms_verified" class="label alert radius">Not Verified</span>
+            <br/>
+            SMS Number:
+            <span ng-show="account.sms_verified" class="label">1-613-276-0907</span>
+            <span ng-hide="account.sms_verified" class="label">No number set</span>
+            <br/>
+            <br/>
+            <span ng-hide="account.sms_verified"><a href="#" class="">Click Here</a> to verify.</span>
+            <span ng-show="account.sms_verified"><a href="#" class="">Change Number</a></span>
+          </p>
         </div>
       </div>
     </div>
-
-    <hr class="small-10 small-offset-1 columns"/>
 
     <div class="small-12 columns">
       <div class="small-12 columns">

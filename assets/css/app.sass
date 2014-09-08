@@ -53,8 +53,14 @@ p
     color: #333
 
 .panel
-  background: #eee
+  background: #111
   opacity: 0.8
+  border: none
+
+  color: $main-white
+
+  p
+    color: $main-white
 
   --webkit-border-radius: 10px
   --moz-border-radius: 10px
@@ -73,6 +79,14 @@ p
   &:hover
     background: $main-blue
   background: $main-blue
+
+.switch
+  label
+    background: #999
+
+.label
+  padding-top: 0.3rem
+  padding-bottom: 0.2rem
 
 .error
   color: red
@@ -175,4 +189,32 @@ p
       font-weight: bold
       text-align: center
       font-size: 50px
+
+.account-detail
+
+  .semi-section
+    margin-bottom: 1.5rem
+
+  .section
+    margin-bottom: 2.0rem
+
+    .sms-reminders
+      line-height: 20%
+
+      .label
+        margin-left: 0.5rem
+        margin-top: 0.5rem
+
+    .switch
+      margin-left: 0.5rem
+
+      label
+        margin-top: 0.3rem
+
+.description
+  font-style: italic
+  font-weight: 100
+  letter-spacing: 0.05rem
+  margin-left: 0.5rem
+
 
