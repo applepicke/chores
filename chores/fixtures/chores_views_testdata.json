@@ -7,12 +7,15 @@
         "first_name": "bill", 
         "last_name": "esto", 
         "access_token": "sdsdsdsd", 
+        "sms_enabled": false, 
         "fb_user_id": "b", 
+        "confirmed": false, 
         "extras": {
             "blubb": "buubba"
         }, 
-        "d_user": 1, 
-        "email": "idunna@butt.ok"
+        "email_enabled": true, 
+        "email": "idunna@butt.ok", 
+        "sms_verified": false
     }
 },
 {
@@ -23,12 +26,15 @@
         "first_name": "greg", 
         "last_name": "goggins", 
         "access_token": "fghjfgh", 
+        "sms_enabled": false, 
         "fb_user_id": "g", 
+        "confirmed": false, 
         "extras": {
             "flippers": "none"
-        }, 
-        "d_user": 1, 
-        "email": "goggins@g.g"
+        },  
+        "email_enabled": true, 
+        "email": "goggins@g.g", 
+        "sms_verified": false
     }
 },
 {
@@ -38,11 +44,14 @@
         "phone_number": "", 
         "first_name": "Calvin", 
         "last_name": "Collins", 
-        "access_token": "CAAEuOsqwlIwBAHBd5Dp8Tkii7BQofxeD2JhGKDqMBhAKV3d8K7ip9qsZBOBNp01zS0wZAf5SK5JvhFdelR4A5mjCvZCErzKVWD9cz8CeOSlqFWIq1jeDvutmKtZBh8I0ZCmCZBLnBm3P7o1LfmEbr7dzIWF3UqOQZCwQGSxS1KXR2r3fuY3LWh9V6woiocYwbs8ijz2UfKMTcI0iqOi8UFvWiVmEHg7BCMZD", 
+        "access_token": "CAAEuOsqwlIwBAObQEZAvpmfOGAMy5GdknoZCnNW8bVmDd9iHjpBZCkHDe6uQfQK42AKj29WgaXN5i5NZC8Gtpj0ZB98ZCZCZAUDHmV6aF7EydHJTRiMA2xaUyUpzW8qU7qZBe2oYYREzdQJ7dWJzeAn2QZC7XaRWUwdj6WddFZBrLEnIYSrFR44Xj05ahtne6zB7xKZBbQ4lFL6AjqqLorSsrcag", 
+        "sms_enabled": false, 
         "fb_user_id": "10152672094838522", 
+        "confirmed": false, 
         "extras": "{}", 
-        "d_user": 2, 
-        "email": "calvinkcollins@gmail.com"
+        "email_enabled": true, 
+        "email": "calvinkcollins@gmail.com", 
+        "sms_verified": false
     }
 },
 {
@@ -55,7 +64,8 @@
         "members": [
             2, 
             3, 
-            4
+            4, 
+            5
         ], 
         "address": "5 Coyle Drive"
     }
