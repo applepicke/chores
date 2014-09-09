@@ -4,19 +4,47 @@
 
   <div id="login">
 
-    <div id="header">
-      <h1>Stop being a little bitch.</h1>
-      <h1>Do your chores.
-      <div class="facebook-login-button">
-        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();" size="xlarge">
-        </fb:login-button>
+    <div class="row">
+      <div class="small-12 large-8 large-offset-2" id="header">
+        <h1>Stop being a little bitch.</h1>
+        <h1>Do your chores.</h1>
       </div>
-    <div>
+      <div class="login-box small-12 large-8 large-offset-2 columns panel">
+        <div class="row">
+          <div class="signup-form small-12 large-6 columns">
+            <h3>Login</h3>
+            <form action="." method="POST">
+              <label for="email">
+                Email
+                <input type="text" name="first_name" placeholder="Enter your first name..."></input>
+              </label>
+              <label for="password">
+                Password
+                <input type="text" name="last_name" placeholder="Enter your last name..."></input>
+              </label>
+              <input type="submit" class="button success small-12 large-4 large-offset-8 columns tiny" value="Login"></input>
+            </form>
+          </div>
 
-    <div id="status">
+          <div class="facebook-side small-12 large-6 columns">
+
+            <div class="divider small-12 large-2 columns">
+              <div class="divide"></div>
+              <div class="or">
+                OR
+              </div>
+              <div class="divide"></div>
+            </div>
+
+            <div class="facebook-login-button">
+              <fb:login-button scope="public_profile,email" onlogin="checkLoginState();" size="xlarge">
+              </fb:login-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-
 
   </div>
 {% endblock %}
