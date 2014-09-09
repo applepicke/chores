@@ -79,15 +79,24 @@ chores.factory('House', ['$resource',
 chores.factory('Account', ['$resource',
   function ($resource) {
 
-    function getAccount(done) {
-      var Account = $resource('/api/account', {}, {
-        get: { method: 'GET', params: {} }
-      });
+    var Account = $resource('/api/account', {}, {
+      get: { method: 'GET', params: {} },
+      post: { method: 'POST', params: {} }
+    });
 
+    function getAccount (done) {
       Account.get({}, done);
     }
 
+    function changePassword (password, confirmPassword, done) {
+      Account.post({}, JSON.stringify({
+        password: password,
+        confirm_password: confirmPassword
+      }), done);
+    }
+
     return {
-      getAccount: getAccount
+      getAccount: getAccount,
+      changePassword: changePassword
     }
   }]);

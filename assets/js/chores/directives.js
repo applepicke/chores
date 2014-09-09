@@ -83,6 +83,9 @@ makeDirective('ngClear', 'click', function ($scope, element, attrs, event) {
     else if (attrs['ngClear'] === 'member') {
       $scope.newMember.model = {};
     }
+    else if (attrs['ngClear'] === 'password') {
+      $scope.newPassword = {};
+    }
   });
 });
 

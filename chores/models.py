@@ -19,6 +19,12 @@ class User(models.Model):
   sms_verified = models.BooleanField(default=False)
 
   @property
+  def has_password(self):
+    if self.d_user:
+      return self.d_user.has_usable_password()
+    return False
+
+  @property
   def name(self):
     if not self.confirmed:
       return '%s (Pending)' % self.email
@@ -65,10 +71,10 @@ class User(models.Model):
       'last_name': self.last_name,
       'email': self.email,
       'confirmed': self.confirmed,
-      'has_password': True,
+      'has_password': self.has_password,
       'email_enabled': self.email_enabled,
       'sms_enabled': self.sms_enabled,
-      'sms_verified': True
+      'sms_verified': False
     }
 
   def __str__(self):

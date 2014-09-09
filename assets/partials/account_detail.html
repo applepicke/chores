@@ -9,31 +9,36 @@
         <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
           <label for="first_name">
             First Name
-            <input type="text" name="first_name" value="{{ account.first_name }}"></input>
+            <input type="text" name="first_name" ng-model="account.first_name"></input>
           </label>
         </div>
       </div>
+
       <div class="row">
         <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
           <label for="last_name">
             Last Name
-            <input type="text" name="last_name" value="{{ account.last_name }}"></input>
+            <input type="text" name="last_name" ng-model="account.last_name"></input>
           </label>
         </div>
       </div>
-      <div ng-show="account.has_password" class="row">
+
+      <div class="row">
         <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
-          <label for="password">
+
+          <label ng-show="account.has_password" for="password">
             Password
             <input type="password" disabled name="password" value="12345678"></input>
-            <a href="#" class="button tiny success">Change Password</a>
+            <a href="#" ng-clear="password" data-reveal-id="change-password-modal" class="button tiny success">Change Password</a>
           </label>
+          <a href="#" ng-clear="password" ng-hide="account.has_password" data-reveal-id="change-password-modal">Set a Password</a>
         </div>
       </div>
+
     </div>
 
     <div class="section small-12 columns">
-      <div class="small-10 small-offset-1 columns">
+      <div class="small-10 small-offset-1 large-5 columns">
         <div class="row">
           <div>
             <h4 class="left">Email Reminders</h4>
@@ -49,26 +54,29 @@
         <div class="sms-reminders row">
           <div>
             <h4 class="left">SMS Reminders</h4>
-            <span ng-show="account.sms_verified" class="switch tiny radius">
+            <span class="switch tiny radius">
               <input id="allow-sms" type="checkbox" ng-model="account.sms_enabled">
               <label for="allow-sms"></label>
             </span>
           </div>
         </div>
         <div class="row panel">
-          <p class="">
-            Status:
-            <span ng-show="account.sms_verified" class="label success radius">Verified</span>
-            <span ng-hide="account.sms_verified" class="label alert radius">Not Verified</span>
+          <div class="">
+            <span class="small-6 large-8 columns">Status:</span>
+            <span class="small-4 large-2 end columns">
+              <span ng-show="account.sms_verified" class="label success radius">Verified</span>
+              <span ng-hide="account.sms_verified" class="label alert radius">Not Verified</span>
+            </span>
             <br/>
-            SMS Number:
-            <span ng-show="account.sms_verified" class="label">1-613-276-0907</span>
-            <span ng-hide="account.sms_verified" class="label">No number set</span>
+            <span class="small-6 large-8 columns">SMS Number:</span>
+            <span class="small-4 large-2 end columns">
+              <span ng-show="account.sms_verified" class="label radius">{{ account.phone_number }}</span>
+              <span ng-hide="account.sms_verified" class="label radius">No number set</span>
+            </span>
             <br/>
-            <br/>
-            <span ng-hide="account.sms_verified"><a href="#" class="">Click Here</a> to verify.</span>
+            <br ng-show="account.sms_verified"/>
             <span ng-show="account.sms_verified"><a href="#" class="">Change Number</a></span>
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -80,6 +88,28 @@
         </div>
       </div>
     </div>
-
   </form>
+
+  <div id="change-password-modal" class="reveal-modal tiny" data-reveal>
+    <div class="row">
+      <span class="small-12 alert-box alert" ng-class="{ hidden: !newPassword.generalError }">{{ newPassword.generalErrorMsg }}</span>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <label for="name">Enter New Password
+          <input ng-model="newPassword.password" ng-class="{ error: newPassword.generalError }" type="password" name="name" placeholder="Enter password here..."></input>
+        </label>
+      </div>
+
+      <div class="small-12 columns">
+        <label for="chore-users">Confirm New Password
+          <input ng-model="newPassword.confirmPassword" ng-class="{ error: newPassword.generalError }" type="password" name="name" placeholder="Enter matching password here..."></input>
+        </label>
+      </div>
+      <a ng-click="changePassword(closeModal)" href="#" class="small-12 large-5 large-offset-7 columns button tiny change-password-button">Change Password</a>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+  </div>
+
 </div>
+

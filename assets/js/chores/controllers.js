@@ -34,9 +34,37 @@ chores.controller('HouseList', ['$scope', 'House',
 
 chores.controller('Account', ['$scope', 'Account',
   function ($scope, Account) {
+    $(document).foundation();
+    $scope.newPassword = {};
+
     Account.getAccount(function (account) {
       $scope.account = account;
     });
+
+    $scope.closeModal = function (result) {
+      if (result.success) {
+        $('body').foundation('reveal', 'close');
+      }
+    };
+
+    $scope.changePassword = function (done) {
+      if ($scope.newPassword.password !== $scope.newPassword.confirmPassword) {
+        $scope.newPassword.generalError = true;
+        $scope.newPassword.generalErrorMsg = 'Passwords don\'t match';
+        return done({success: false});
+      }
+
+      Account.changePassword($scope.newPassword.password, $scope.newPassword.confirmPassword, function(result) {
+        if (!result.success) {
+          $scope.newPassword.generalError = true;
+          $scope.newPassword.generalErrorMsg = result.msg;
+          return done(result);
+        }
+
+        $scope.account.has_password = true;
+        done(result);
+      });
+    };
   }]);
 
 chores.controller('HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House',

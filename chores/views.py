@@ -42,6 +42,30 @@ def api_account(request):
   if not user:
     raise http.Http404
 
+  if request.method == 'POST':
+    password = request.JSON.get('password')
+    confirm = request.JSON.get('confirm_password')
+
+    if not password or password.strip() != confirm.strip():
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'Passwords don\'t match',
+      }))
+
+    try:
+      user.d_user.set_password(password)
+      user.d_user.save()
+    except:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'Hmmm, can\'t set password. Not quite sure why. Sorry.',
+      }))
+
+    return http.HttpResponse(json.dumps({
+      'success': True,
+      'account': user.as_dict(),
+    }))
+
   return http.HttpResponse(json.dumps(user.as_dict()))
 
 @login_required

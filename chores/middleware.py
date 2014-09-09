@@ -1,3 +1,5 @@
+import json
+
 from chores.models import User
 
 class UserMiddleware(object):
@@ -10,5 +12,16 @@ class UserMiddleware(object):
         request.app_user = None
     except:
       request.app_user = None
+
+    return None
+
+class JSONMiddleware(object):
+  def process_request(self, request):
+    try:
+      data = json.loads(request.body)
+    except:
+      data = {}
+
+    request.JSON = data
 
     return None
