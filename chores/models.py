@@ -89,6 +89,7 @@ class House(models.Model):
 
   @property
   def users(self):
+    print [self.owner] + list(self.members.all())
     return [self.owner] + list(self.members.all())
 
   def shuffle(self):

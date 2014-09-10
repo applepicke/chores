@@ -2,10 +2,15 @@ import urllib2
 import json
 import logging
 import base64
+import random
 
 from django.conf import settings
 
 logger = logging.getLogger('')
+
+def rando_msg(msgs):
+  num = random.randint(0, len(msgs) - 1)
+  return msgs[num]
 
 def tokenize(txt):
   return base64.urlsafe_b64encode('%s:%s' % (txt, settings.SECRET))

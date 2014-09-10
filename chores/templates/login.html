@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
 
+{% block extra_scripts %}
+  <script>
+    $(function () {
+      $('input[name="login-button"]').click(function (e) {
+        e.preventDefault();
+        $.post('/login/', {
+          email: $('input[name="first_name"]').val(),
+          password: $('input[name="last_name"]').val(),
+          normal_auth: 'ya sucka'
+        }, function (result) {
+          if (!result.success) {
+            $('.error').show().text(result.msg)
+          }
+          else {
+            window.location = '/';
+          }
+        }, 'json');
+      });
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
 
   <div id="login">
@@ -16,14 +38,15 @@
             <form action="." method="POST">
               <label for="email">
                 Email
-                <input type="text" name="first_name" placeholder="Enter your first name..."></input>
+                <input type="text" name="first_name" placeholder="Enter your email..."></input>
               </label>
               <label for="password">
                 Password
-                <input type="text" name="last_name" placeholder="Enter your last name..."></input>
+                <input type="password" name="last_name" placeholder="Enter your password..."></input>
               </label>
+              <div class="alert-box alert error" style="display: none;"></div>
               <a href="/signup" class="signup-button small-12 large-4 large-offset-4 columns">Sign Up</a>
-              <input type="submit" class="button success small-12 large-4 columns small" value="Login"></input>
+              <input type="submit" name="login-button" class="button success small-12 large-4 columns small" value="Login"></input>
             </form>
           </div>
 

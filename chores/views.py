@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from chores.models import User, House, Chore
-from chores.utils import Facebook, untokenize
+from chores.utils import Facebook, untokenize, rando_msg
 from chores.context import context
 from chores.users.invitations import Invitation
 
@@ -23,14 +23,30 @@ def index(request):
 
   else:
     house = request.app_user.house
+    member_of_house = request.app_user.houses.all()
 
-    if not request.path_info.startswith('/houses/') and house:
-      return http.HttpResponseRedirect('/houses/%d' % house.id)
-    elif not request.path_info.startswith('/account') and not house:
-      return http.HttpResponseRedirect('/account')
+    if house:
+      return http.HttpResponseRedirect(reverse('house', args=(house.id,)))
+    elif member_of_house:
+      return http.HttpResponseRedirect(reverse('account'))
+    else:
+      return http.HttpResponseRedirect(reverse('welcome'))
 
   return render_to_response('app.html', context(request))
 
+@login_required
+def house(request, house_id):
+  return render_to_response('app.html', context(request))
+
+@login_required
+def account(request):
+  return render_to_response('app.html', context(request))
+
+@login_required
+def welcome(request):
+  return render_to_response('app.html', context(request))
+
+@login_required
 def logout_view(request):
   logout(request)
   return http.HttpResponseRedirect('/')
@@ -262,7 +278,7 @@ def confirmation(request, token):
   except:
     raise http.Http404
 
-  if user.d_user.is_authenticated() and user.d_user == request.user:
+  if user.d_user and user.d_user.is_authenticated() and user.d_user == request.user:
     return http.HttpResponseRedirect('/')
 
   if request.method == 'POST':
@@ -305,9 +321,7 @@ def confirmation(request, token):
       user.confirmed = True
       user.d_user.set_password(request.REQUEST.get('password'))
       user.save()
-      authenticated = authenticate(token=token)
-      login(request, authenticated)
-      authenticated = authenticate(username=user.email, password=reuqest.REQUEST.get('password'))
+      authenticated = authenticate(username=user.email, password=request.REQUEST.get('password'))
 
     login(request, authenticated)
     return http.HttpResponseRedirect('/')
@@ -317,6 +331,27 @@ def confirmation(request, token):
 def login_view(request):
   token = request.POST.get('access_token')
   user_id = request.POST.get('user_id')
+
+  email = request.POST.get('email')
+  password = request.POST.get('password')
+
+  if request.POST.get('normal_auth'):
+    authenticated = authenticate(username=email, password=password)
+
+    if not authenticated:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': rando_msg([
+          'Nope. That\'s not right!',
+          'Comon, now you\'re just guessing',
+          'You\'ll get it someday',
+        ]),
+      }))
+
+    login(request, authenticated)
+    return http.HttpResponse(json.dumps({
+      'success': True,
+    }))
 
   fb = Facebook()
 
