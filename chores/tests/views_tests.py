@@ -17,7 +17,6 @@ from chores.context import context
 from chores.users.invitations import Invitation
 
 class ViewTest(TestCase):
-  fixtures = ['chores_views_testdata.json']
 
   def test_index(self):
     resp = self.client.get(reverse('index'))
@@ -27,7 +26,7 @@ class ViewTest(TestCase):
     resp = self.client.get(reverse('login'))
     self.assertEqual(resp.status_code, 200)
 
-  def test_api_house(self):
-    resp = self.client.get(reverse('api_house'))
-    self.assertEqual(resp.status_code, 200)
-    self.assertTrue('butt' in resp.context)
+  # def test_api_house(self):
+  #   resp = self.client.get(reverse('api_house'))
+  #   self.assertEqual(resp.status_code, 200)
+  #   self.assertTrue('butt' in resp.context)

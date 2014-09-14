@@ -31,3 +31,7 @@ assets/css/*.css.map
 
 bower_components
 node_modules
+
+#Coverage stuff
+.coverage
+htmlcov
