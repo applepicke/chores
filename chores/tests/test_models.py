@@ -28,3 +28,7 @@ class ModelTest(TestCase):
     self.assertFalse(new_user.house)
     new_house = mommy.make('chores.House', owner = new_user)
     self.assertEqual(new_user.house, new_house)
+
+    # Test the chores that belong to the user
+    self.assertListEqual(list(new_user.chores), [])    
+    new_chores = mommy.make()
