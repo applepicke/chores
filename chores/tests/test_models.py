@@ -13,11 +13,17 @@ class ModelTest(TestCase):
 
   def test_User(self):
     # Setup test
-    new_user = mommy.make('chores.User')
+    new_user = mommy.make('chores.User', email = 'test@weiner.com')
     self.assertTrue(isinstance(new_user,models.User))
 
     # Test if has password
-    self.assertFalse(new_user.d_user)
+    self.assertFalse(new_user.has_password)
+    new_d_user = auth_models.User.objects.create(email = new_user.email, username = new_user.email)
+    new_user.d_user = new_d_user
+    new_d_user.set_password('abc123')
+    self.assertTrue(new_user.has_password)
+    new_d_user.set_unusable_password()
+    self.assertFalse(new_user.has_password)
 
     # Test Name confirmation
     self.assertEqual(new_user.name, new_user.email + ' (Pending)')
@@ -31,4 +37,13 @@ class ModelTest(TestCase):
 
     # Test the chores that belong to the user
     self.assertListEqual(list(new_user.chores), [])    
-    new_chores = mommy.make()
+    new_chore_1 = mommy.make('chores.Chore', user = new_user)
+    new_chore_2 = mommy.make('chores.Chore', user = new_user)
+    self.assertListEqual(list(new_user.chores), [new_chore_1, new_chore_2])
+
+    # Test the add_d_user method
+    new_user_2 = mommy.make('chores.User', email = 'test-2@weiner.com')
+    new_user_2.add_d_user(email = new_user_2.email)
+    self.assertEqual(new_user_2.email, new_user_2.d_user.email)
+    new_user_2.add_d_user(email = new_user_2.email)
+    self.assertEqual(new_user_2.email, new_user_2.d_user.email)
