@@ -37,8 +37,8 @@ class ModelTest(TestCase):
 
     # Test the chores that belong to the user
     self.assertListEqual(list(new_user.chores), [])    
-    new_chore_1 = mommy.make('chores.Chore', user = new_user)
-    new_chore_2 = mommy.make('chores.Chore', user = new_user)
+    new_chore_1 = mommy.make('chores.Chore', user = new_user, house = new_house)
+    new_chore_2 = mommy.make('chores.Chore', user = new_user, house = new_house)
     self.assertListEqual(list(new_user.chores), [new_chore_1, new_chore_2])
 
     # Test the add_d_user method
@@ -47,3 +47,28 @@ class ModelTest(TestCase):
     self.assertEqual(new_user_2.email, new_user_2.d_user.email)
     new_user_2.add_d_user(email = new_user_2.email)
     self.assertEqual(new_user_2.email, new_user_2.d_user.email)
+
+    #Test the owns_chore method
+    self.assertFalse(new_user_2.owns_chore(new_chore_1.id))
+    self.assertTrue(new_user.owns_chore(new_chore_1.id))
+
+    #Test as_dict method
+    new_user_dictionary = new_user.as_dict()
+    self.assertEqual(new_user.id, new_user_dictionary['id'])
+    self.assertEqual(new_user.name, new_user_dictionary['name'])
+    self.assertEqual(new_user.first_name, new_user_dictionary['first_name'])
+    self.assertEqual(new_user.last_name, new_user_dictionary['last_name'])
+    self.assertEqual(new_user.email, new_user_dictionary['email'])
+    self.assertEqual(new_user.confirmed, new_user_dictionary['confirmed'])
+    self.assertEqual(new_user.has_password, new_user_dictionary['has_password'])
+    self.assertEqual(new_user.email_enabled, new_user_dictionary['email_enabled'])
+    self.assertEqual(new_user.sms_enabled, new_user_dictionary['sms_enabled'])
+    self.assertEqual(new_user.sms_verified, new_user_dictionary['sms_verified'])
+
+    #Test the represent as string method
+    self.assertEqual(new_user.name, str(new_user))
+
+  def test_house(self):
+    #Setup test and test house model
+    new_house = mommy.make('chores.House')
+
