@@ -1,0 +1,2 @@
+window.chores = window.chores || {};
+
