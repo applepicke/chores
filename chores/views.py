@@ -36,6 +36,11 @@ def index(request):
 
 @login_required
 def house(request, house_id):
+  try:
+    house = House.objects.get(id=house_id)
+  except House.DoesNotExist:
+    return http.HttpResponseRedirect('/')
+
   return render_to_response('app.html', context(request))
 
 @login_required

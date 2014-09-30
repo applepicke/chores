@@ -17,6 +17,10 @@ chores.config(['$routeProvider', '$locationProvider',
         templateUrl: '/static/partials/house_list.html',
         controller: 'HouseList'
       }).
+      when('/houses/:houseId/members/', {
+        templateUrl: '/static/partials/members.html',
+        controller: 'AddMembers'
+      }).
       when('/houses/:houseId', {
         templateUrl: '/static/partials/house_detail.html',
         controller: 'HouseDetail'

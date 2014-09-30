@@ -8,5 +8,6 @@ def production():
     run("git pull")
     run('%s manage.py syncdb' % python)
     run('bower install')
-    run('%s manage.py collectstatic --noinput' % python)
+    run('%s /home/applepicke/webapps/chores/chores/manage.py collectstatic --noinput' % python)
+    run('%s manage.py migrate chores' % python)
     run('touch chores/wsgi.py')

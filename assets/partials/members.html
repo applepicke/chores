@@ -1,0 +1,43 @@
+<div class="members">
+  <div class="row setup-flow">
+    <h1 class="small-10 small-offset-1 large-10 large-offset-1 columns">
+      {{ house.name }} is a great name, probably.
+    </h1>
+  </div>
+
+  <div class="subheading row setup-flow">
+    <h5 class="small-10 small-offset-1 large-10 large-offset-1 columns">
+      Now it's time to invite your groovy household members. Whether they are family, friends, robots, everyone is welcome!
+    </h5>
+  </div>
+
+  <div class="row">
+    <div ng-show="members" class="members-list small-10 small-offset-1 large-4 large-offset-4 columns">
+      <ul>
+        <li ng-repeat="member in members">
+          {{ member.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="add-member-button row">
+    <a href="#" data-reveal-id="userModal" class="button tiny success radius small-10 small-offset-1 large-2 large-offset-5">Invite Member</a>
+  </div>
+
+  <a href="#" class="button radius secondary small-10 small-offset-1 large-2 large-offset-2"><< Back</a>
+  <a href="#" class="button radius small-10 small-offset-1 large-2 large-offset-4">Next Step >></a>
+</div>
+
+<div id="userModal" class="reveal-modal small" data-reveal>
+  <h3>Invite Member</h3>
+  <div class="row">
+    <label for="email">
+      Email
+      <input ng-add-member="keypress" ng-class="{ error: newMember.model.generalError }" ng-model="newMember.model.email" type="email" name="email" placeholder="Enter email here..."></input>
+      <small class="error" ng-class="{ hidden: !newMember.model.generalError }">{{ newMember.model.generalErrorMsg }}</small>
+    </label>
+  </div>
+  <a ng-add-member="click" href="#" class="small-12 large-3 large-offset-9 columns button tiny invite-button">Send Invite</a>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
