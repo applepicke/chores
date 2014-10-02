@@ -1,51 +1,43 @@
 chores = angular.module 'chores'
 
-DefaultScope =
-  addMember: (done) ->
-    email = $scope.newMember.model.email
+initScope = (scope, defaults) ->
+  _.extend scope, defaults
 
-    if not email
-      $scope.newMember.model.generalError = true
-      $scope.newMember.model.generalErrorMsg = 'Must specify an email'
-      return done({ success: false })
+  _.extend scope,
+    addMember: (done) ->
+      email = $scope.newMember.model.email
 
-    House.addMember $scope.house, email, (result) ->
-      $scope.newMember.model.email = ''
-      if result.success
-        $scope.house.members.push(result.member)
-        done(result)
-
-      else
+      if not email
         $scope.newMember.model.generalError = true
-        $scope.newMember.model.generalErrorMsg = result.msg
-        done({success: false})
+        $scope.newMember.model.generalErrorMsg = 'Must specify an email'
+        return done({ success: false })
 
-chores.controller 'MainController', ['$scope', '$route', '$routeParams', 'House',
-  ($scope, $route, $routeParams, House) ->
-    console.log 'hello'
-]
-
-chores.controller 'Welcome', ['$scope', '$location', 'House',
-  ($scope, $location, House) ->
-    $scope.houseName = ''
-    $scope.errorClass = 'hidden'
-
-    $scope.saveHouse =  ->
-      House.createHouse $scope.houseName, (response) ->
-        if response.success
-          $location.path('/houses/' + response.id + '/members/')
+      House.addMember $scope.house, email, (result) ->
+        $scope.newMember.model.email = ''
+        if result.success
+          $scope.house.members.push(result.member)
+          done(result)
 
         else
-          $scope.error = response.msg
-          $scope.errorClass = ''
-]
+          $scope.newMember.model.generalError = true
+          $scope.newMember.model.generalErrorMsg = result.msg
+          done({success: false})
 
+  scope
+
+chores.controller 'MainController', ($scope, $route, $routeParams, House) ->
+
+chores.controller 'Welcome', ($scope, $location, House) ->
+  $scope.house = new House()
+
+  $scope.next = ->
+    $location.path('/houses/' + $scope.house.id + '/members/')
 
 chores.controller 'AddMembers', ['$scope', '$location', '$routeParams', '$rootScope', 'House',
   ($scope, $location, $routeParams, $rootScope, House) ->
     $(document).foundation()
 
-    _.extend($scope, DefaultScope);
+    _.extend($scope, new Scope())
 
     $scope.nextPage = ->
       $location.path('/houses/' + $routeParams.houseId)
@@ -92,92 +84,90 @@ chores.controller 'Account', ['$scope', 'Account',
         done(result)
 ]
 
-chores.controller 'HouseDetail', ['$scope', '$routeParams', '$rootScope', 'House',
-  ($scope, $routeParams, $rootScope, House) ->
-    $(document).foundation()
+chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House) ->
+  $(document).foundation()
 
-    _.extend($scope, DefaultScope)
+  $scope = initScope $scope,
 
-    $scope.house = {}
-    $scope.newChore =
+    house: {},
+    newChore:
       nameError: false,
       model: {}
-
-    $scope.newMember =
+    newMember:
       generalError: false,
       model: {}
 
-    House.getHouse $routeParams.houseId, (response) ->
-      if response.success
-        $scope.house = response.house
-        $scope.resetNewChore()
+  House.getHouse $routeParams.houseId, (response) ->
+    if response.success
+      $scope.house = response.house
+      $scope.resetNewChore()
 
-        if !$scope.house.description
-          $scope.house.description = 'Your household doesn\'t have a description yet!'
+      if !$scope.house.description
+        $scope.house.description = 'Your household doesn\'t have a description yet!'
 
-        $rootScope.title = $scope.house.name
+      $rootScope.title = $scope.house.name
 
-      else {
-        #Redirect somewhere else
-      }
+    else {
+      #Redirect somewhere else
+    }
 
-    $scope.reloadChores = ->
+  $scope.reloadChores = ->
       House.getChores $scope.house, (result) ->
         $scope.house.chores = result.chores
 
-    $scope._replaceChore = (newChore) ->
-      chore = _.find $scope.house.chores, (chore) ->
-        return chore.id == newChore.id
 
-      chore.name = newChore.name
-      chore.description = newChore.description
-      chore.user = newChore.user
+  $scope._replaceChore = (newChore) ->
+    chore = _.find $scope.house.chores, (chore) ->
+      return chore.id == newChore.id
 
-    $scope.saveChore = (done) ->
-      if !$scope.newChore.model.name
-        $scope.newChore.nameError = true
-        $scope.newChore.nameErrorMsg = 'Cannot be empty'
-        return done({ success: false })
+    chore.name = newChore.name
+    chore.description = newChore.description
+    chore.user = newChore.user
 
-      House.createChore $scope.house, $scope.newChore.model, (result) ->
+  $scope.saveChore = (done) ->
+    if !$scope.newChore.model.name
+      $scope.newChore.nameError = true
+      $scope.newChore.nameErrorMsg = 'Cannot be empty'
+      return done({ success: false })
 
-        if !result.success
-          $scope.newChore.generalError = true
-          $scope.newChore.generalErrorMsg = result.msg
-          return done(result)
+    House.createChore $scope.house, $scope.newChore.model, (result) ->
 
-        $scope.reloadChores()
+      if !result.success
+        $scope.newChore.generalError = true
+        $scope.newChore.generalErrorMsg = result.msg
+        return done(result)
 
-        done(result);
+      $scope.reloadChores()
 
-    $scope.resetNewChore = ->
-      $scope.newChore.model = {}
-      $scope.newChore.model.userId = $scope.house.owner.id
-      $scope.newChore.title = 'Add Chore'
-      $scope.newChore.showDelete = false
-      $scope.newChore.generalError = false
-      $scope.newChore.nameError = false
-      true
+      done(result);
 
-    $scope.replaceNewChore = (id) ->
-      id = parseInt id
-      chore = _.find $scope.house.chores, (c) ->
-        return c.id == id
+  $scope.resetNewChore = ->
+    $scope.newChore.model = {}
+    $scope.newChore.model.userId = $scope.house.owner.id
+    $scope.newChore.title = 'Add Chore'
+    $scope.newChore.showDelete = false
+    $scope.newChore.generalError = false
+    $scope.newChore.nameError = false
+    true
 
-      _.extend $scope.newChore.model,
-        name: chore.name,
-        description: chore.description,
-        userId: if chore.user then chore.user.id else $scope.house.owner.id,
-        id: chore.id
+  $scope.replaceNewChore = (id) ->
+    id = parseInt id
+    chore = _.find $scope.house.chores, (c) ->
+      return c.id == id
 
-      $scope.newChore.title = "Edit Chore"
-      $scope.newChore.showDelete = true
+    _.extend $scope.newChore.model,
+      name: chore.name,
+      description: chore.description,
+      userId: if chore.user then chore.user.id else $scope.house.owner.id,
+      id: chore.id
 
-    $scope.deleteChore = (id, done) ->
-      House.deleteChore id, (result) ->
-        chores = $scope.house.chores
-        $scope.house.chores = _.without(chores, _.findWhere(chores, { id: result.id }))
-        done(result)
-]
+    $scope.newChore.title = "Edit Chore"
+    $scope.newChore.showDelete = true
+
+  $scope.deleteChore = (id, done) ->
+    House.deleteChore id, (result) ->
+      chores = $scope.house.chores
+      $scope.house.chores = _.without(chores, _.findWhere(chores, { id: result.id }))
+      done(result)
 
 

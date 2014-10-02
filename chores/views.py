@@ -92,33 +92,33 @@ def api_account(request):
 @login_required
 def api_houses(request):
   user = request.app_user
-  houses = user.houses
+  houses = user.houses.all()
 
-  if request.method == 'POST':
-    name = request.REQUEST.get('name', '')
+  if request.method == 'POST' and not houses:
+    name = request.POST.get('name', '')
 
     if not name:
       return http.HttpResponse(json.dumps({
-        'success': False,
         'msg': 'Did you forget to enter a name for your household?',
-      }))
+      }), status=400)
 
     house = House.objects.create(name=name, owner=user)
 
     if not house:
       return http.HttpResponse(json.dumps({
-        'success': False,
         'msg': 'Something went terribly wrong!',
-      }))
+      }), status=400)
 
     return http.HttpResponse(json.dumps({
-      'success': True,
-      'id': house.id,
+      'data': {
+        'id': house.id,
+        'name': house.name,
+      },
     }))
 
   return http.HttpResponse(json.dumps({
     'count': len(houses),
-    'houses': [{
+    'data': [{
       'name': house.name
     } for house in houses]
   }))
@@ -133,8 +133,7 @@ def api_house(request, id):
     raise http.Http404
 
   return http.HttpResponse(json.dumps({
-    'success': True,
-    'house': {
+    'data': {
       'id': house.id,
       'name': house.name,
       'members': [user.as_dict() for user in house.users],

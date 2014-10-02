@@ -1,2 +1,1 @@
 window.chores = window.chores || {};
-

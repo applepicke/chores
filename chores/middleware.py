@@ -22,6 +22,8 @@ class JSONMiddleware(object):
     except:
       data = {}
 
-    request.JSON = data
+    temp = request.POST.dict()
+    temp.update(data)
+    request.POST = temp
 
     return None

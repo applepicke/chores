@@ -68,6 +68,7 @@ PIPELINE_JS = {
             'foundation/js/foundation.js',
             'foundation/js/foundation/foundation.reveal.js',
             'js/chores/app.coffee',
+            'js/chores/base_services.coffee',
             'js/chores/services.coffee',
             'js/chores/controllers.coffee',
             'js/chores/directives.coffee',
