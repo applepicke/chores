@@ -89,7 +89,6 @@ class House(models.Model):
 
   @property
   def users(self):
-    print [self.owner] + list(self.members.all())
     return [self.owner] + list(self.members.all())
 
   def shuffle(self):
@@ -106,6 +105,13 @@ class House(models.Model):
     return '%s' % (
       self.name
     )
+
+  def as_dict(self):
+    return {
+      'id': self.id,
+      'name': self.name,
+      'members': [m.as_dict() for m in self.users]
+    }
 
 class Chore(models.Model):
   name = models.CharField(max_length=255)

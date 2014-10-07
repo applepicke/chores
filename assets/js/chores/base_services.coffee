@@ -1,12 +1,13 @@
 chores = angular.module 'chores'
 
 chores.factory 'Base', ($q, $http) ->
+
   class Base
     @properties: ->
       p = {}
       p.id = null
       p.name = null
-      p.errors = []
+      p.errors = {}
       p
 
     @apiPath: '/api'
@@ -48,7 +49,6 @@ chores.factory 'Base', ($q, $http) ->
         if @id?
           promise = $http.put "#{@constructor.apiPath}/#{@id}", data, {params: params}
         else
-          console.log @constructor.apiPath
           promise = $http.post @constructor.apiPath, data, {params: params}
         promise
           .success (data, status, headers, config) =>

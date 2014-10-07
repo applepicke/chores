@@ -1,8 +1,13 @@
 chores = angular.module 'chores'
 
-chores.factory 'House', (Base, $resource) ->
+chores.factory 'House', (Base, Account, $resource) ->
 
   class House extends Base
+
+    @properties: ->
+      p = Base.properties()
+      p.members = []
+      p
 
     @apiPath: "#{Base.apiPath}/houses/"
 
@@ -16,6 +21,10 @@ chores.factory 'House', (Base, $resource) ->
       if @validateName()
         @save
           name: @name
+
+    addMember: (member) ->
+      member.sendInvite(@id).then (_member) =>
+        @members.push(_member)
 
   return House
 
@@ -99,7 +108,40 @@ chores.factory 'House', (Base, $resource) ->
     addMember: addMember
   }
 
-chores.factory 'Account', ($resource) ->
+chores.factory 'Account', (Base, $resource) ->
+
+  class Account extends Base
+
+    @properties: ->
+      p = Base.properties()
+      p.email = null
+
+    @apiPath: "#{Base.apiPath}/account/"
+
+    validate: ->
+      if not @validateForConfirmation()
+        return false
+      super
+
+    validateForConfirmation: ->
+      if not @email
+        @errors = {msg: 'You forget to type in an email. Dummy.'}
+        return false
+      true
+
+    sendInvite: (houseId) ->
+      if @validateForConfirmation()
+        @save
+          email: @email
+          house_id: houseId
+
+    create: ->
+      if @validate()
+        @save
+          email: @email
+
+  return Account
+
   Account = $resource '/api/account', {},
     get: { method: 'GET', params: {} },
     post: { method: 'POST', params: {} }

@@ -29,6 +29,7 @@ celerybeat-schedule
 assets/css/*.css
 assets/css/*.css.map
 assets/js/chores/*.js
+assets/js/*.js
 
 bower_components
 node_modules

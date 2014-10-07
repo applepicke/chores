@@ -64,63 +64,113 @@ def api_account(request):
     raise http.Http404
 
   if request.method == 'POST':
-    password = request.JSON.get('password')
-    confirm = request.JSON.get('confirm_password')
 
-    if not password or password.strip() != confirm.strip():
+    # SAVE PREFERENCES
+    if request.POST.get('id'):
+      password = request.JSON.get('password')
+      confirm = request.JSON.get('confirm_password')
+
+      if not password or password.strip() != confirm.strip():
+        return http.HttpResponse(json.dumps({
+          'success': False,
+          'msg': 'Passwords don\'t match',
+        }))
+
+      try:
+        user.d_user.set_password(password)
+        user.d_user.save()
+      except:
+        return http.HttpResponse(json.dumps({
+          'success': False,
+          'msg': 'Hmmm, can\'t set password. Not quite sure why. Sorry.',
+        }))
+
       return http.HttpResponse(json.dumps({
-        'success': False,
-        'msg': 'Passwords don\'t match',
+        'success': True,
+        'account': user.as_dict(),
       }))
 
-    try:
-      user.d_user.set_password(password)
-      user.d_user.save()
-    except:
+    # ADD MEMBER
+    if request.POST.get('email') and request.POST.get('house_id'):
+
+      try:
+        house = user.owned_houses.get(id=request.POST.get('house_id'))
+      except House.DoesNotExist:
+        raise http.Http404
+
+      existing_user = User.objects.filter(email=request.REQUEST.get('email'))
+
+      if existing_user:
+        existing_user = existing_user[0]
+
+      exists = existing_user in house.members.all()
+
+      if exists:
+        return http.HttpResponse(json.dumps({
+          'msg': '%s already has a member with that email address' % house.name,
+        }), 400)
+
+      if not existing_user:
+        member = house.members.create(
+          email=request.REQUEST.get('email'),
+          confirmed=False,
+        )
+      else:
+        member = existing_user
+        member.houses.add(house)
+        member.save()
+
+      try:
+        invite = Invitation(member, house, request.META['HTTP_HOST'])
+        invite.send()
+      except smtplib.SMTPException:
+        if not existing_user:
+          member.delete()
+
+        return http.HttpResponse(json.dumps({
+          'msg': 'Could not send email to that address. You sure it\'s real?',
+        }), 400)
+
       return http.HttpResponse(json.dumps({
-        'success': False,
-        'msg': 'Hmmm, can\'t set password. Not quite sure why. Sorry.',
+        'data': member.as_dict()
       }))
 
-    return http.HttpResponse(json.dumps({
-      'success': True,
-      'account': user.as_dict(),
-    }))
-
-  return http.HttpResponse(json.dumps(user.as_dict()))
+  return http.HttpResponse(json.dumps({
+    'data': user.as_dict(),
+  }))
 
 @login_required
 def api_houses(request):
   user = request.app_user
-  houses = user.houses.all()
+  houses = list(user.houses.all()) + list(user.owned_houses.all())
 
   if request.method == 'POST' and not houses:
+
     name = request.POST.get('name', '')
 
-    if not name:
+    if name:
+      house = House.objects.create(name=name, owner=user)
+
+      if not house:
+        return http.HttpResponse(json.dumps({
+          'msg': 'Something went terribly wrong!',
+        }), status=400)
+
       return http.HttpResponse(json.dumps({
-        'msg': 'Did you forget to enter a name for your household?',
-      }), status=400)
+        'data': {
+          'id': house.id,
+          'name': house.name,
+        },
+      }))
 
-    house = House.objects.create(name=name, owner=user)
+  house_id = request.GET.get('id')
 
-    if not house:
-      return http.HttpResponse(json.dumps({
-        'msg': 'Something went terribly wrong!',
-      }), status=400)
-
-    return http.HttpResponse(json.dumps({
-      'data': {
-        'id': house.id,
-        'name': house.name,
-      },
-    }))
+  if house_id:
+    houses = [house for house in houses if str(house.id) == house_id]
 
   return http.HttpResponse(json.dumps({
     'count': len(houses),
-    'data': [{
-      'name': house.name
-    } for house in houses]
+    'data': [house.as_dict() for house in houses]
   }))
 
 @login_required

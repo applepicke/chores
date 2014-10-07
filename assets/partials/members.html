@@ -12,9 +12,9 @@
   </div>
 
   <div class="row">
-    <div ng-show="members" class="members-list small-10 small-offset-1 large-4 large-offset-4 columns">
+    <div ng-show="house.members" class="members-list small-10 small-offset-1 large-4 large-offset-4 columns">
       <ul>
-        <li ng-repeat="member in members">
+        <li ng-repeat="member in house.members">
           {{ member.name }}
         </li>
       </ul>
@@ -26,7 +26,7 @@
   </div>
 
   <a href="#" class="button radius secondary small-10 small-offset-1 large-2 large-offset-2"><< Back</a>
-  <a href="#" class="button radius small-10 small-offset-1 large-2 large-offset-4">Next Step >></a>
+  <a href="#" ng-click="next()" class="button radius small-10 small-offset-1 large-2 large-offset-4">Next Step >></a>
 </div>
 
 <div id="userModal" class="reveal-modal small" data-reveal>
@@ -34,8 +34,8 @@
   <div class="row">
     <label for="email">
       Email
-      <input ng-add-member="keypress" ng-class="{ error: newMember.model.generalError }" ng-model="newMember.model.email" type="email" name="email" placeholder="Enter email here..."></input>
-      <small class="error" ng-class="{ hidden: !newMember.model.generalError }">{{ newMember.model.generalErrorMsg }}</small>
+      <input ng-add-member="keypress" ng-class="{ error: newMember.errors }" ng-model="newMember.email" type="email" name="email" placeholder="Enter email here..."></input>
+      <small class="error" ng-class="{ hidden: !newMember.errors }">{{ newMember.errors.msg }}</small>
     </label>
   </div>
   <a ng-add-member="click" href="#" class="small-12 large-3 large-offset-9 columns button tiny invite-button">Send Invite</a>
