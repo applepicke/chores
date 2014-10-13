@@ -109,7 +109,6 @@ chores.factory 'Base', ($q, $http) ->
       return data
 
     successCallback: (data, status, headers, config) =>
-      console.log data
       @assignProperties data.data, true
 
     failureCallback: (data, status, headers, config) =>

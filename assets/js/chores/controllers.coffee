@@ -2,14 +2,11 @@ chores = angular.module 'chores'
 
 chores.controller 'MainController', ($scope, $route, $routeParams, House) ->
 
-closeModal = ->
-  $('body').foundation('reveal', 'close')
-
 chores.controller 'Welcome', ($scope, $location, House) ->
   $scope.house = new House()
 
   $scope.next = ->
-    $location.path('/houses/' + $scope.house.id + '/members/')
+    $location.path('/house/' + $scope.house.id + '/members/')
 
 chores.controller 'AddMembers', ($scope, $location, $routeParams, $rootScope, House, Account) ->
   $(document).foundation()
@@ -24,7 +21,7 @@ chores.controller 'AddMembers', ($scope, $location, $routeParams, $rootScope, Ho
       $location.path('/')
 
   $scope.next = ->
-    $location.path('/houses/' + $routeParams.houseId)
+    $location.path('/house/' + $routeParams.houseId)
 
   $scope.addMember = ->
     $scope.house.addMember($scope.newMember).then (response) ->
@@ -61,71 +58,37 @@ chores.controller 'Account', ($scope, Account) ->
       $scope.account.has_password = true
       done(result)
 
-chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House) ->
+chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account) ->
   $(document).foundation()
 
-  $scope = initScope $scope,
-
+  _.extend $scope,
     house: {},
-    newChore:
-      nameError: false,
-      model: {}
-    newMember:
-      generalError: false,
-      model: {}
+    newChore: new Chore()
+    editingChore: null
+    newMember: new Account()
 
-  House.getHouse $routeParams.houseId, (response) ->
-    if response.success
-      $scope.house = response.house
-      $scope.resetNewChore()
+  House.find({id: $routeParams.houseId}).then (response) ->
+    if response
+      $scope.house = response[0]
+    else
+      $location.path('/')
 
-      if !$scope.house.description
-        $scope.house.description = 'Your household doesn\'t have a description yet!'
+  $scope.addMember = ->
+    $scope.house.addMember($scope.newMember).then (response) ->
+      $scope.newMember = new Account()
+      closeModal()
 
-      $rootScope.title = $scope.house.name
+  $scope.saveChore = (chore) ->
+    $scope.house.saveChore(chore).then (response) ->
+      $scope.newChore = new Chore()
+      $scope.closeModal()
 
-    else {
-      #Redirect somewhere else
-    }
+  $scope.removeChore = (chore) ->
+    $scope.house.removeChore(chore).then (response) ->
+      closeModal()
 
-  $scope.reloadChores = ->
-    House.getChores $scope.house, (result) ->
-      $scope.house.chores = result.chores
-
-
-  $scope._replaceChore = (newChore) ->
-    chore = _.find $scope.house.chores, (chore) ->
-      return chore.id == newChore.id
-
-    chore.name = newChore.name
-    chore.description = newChore.description
-    chore.user = newChore.user
-
-  $scope.saveChore = (done) ->
-    if !$scope.newChore.model.name
-      $scope.newChore.nameError = true
-      $scope.newChore.nameErrorMsg = 'Cannot be empty'
-      return done({ success: false })
-
-    House.createChore $scope.house, $scope.newChore.model, (result) ->
-
-      if !result.success
-        $scope.newChore.generalError = true
-        $scope.newChore.generalErrorMsg = result.msg
-        return done(result)
-
-      $scope.reloadChores()
-
-      done(result);
-
-  $scope.resetNewChore = ->
-    $scope.newChore.model = {}
-    $scope.newChore.model.userId = $scope.house.owner.id
-    $scope.newChore.title = 'Add Chore'
-    $scope.newChore.showDelete = false
-    $scope.newChore.generalError = false
-    $scope.newChore.nameError = false
-    true
+  $scope.editChore = (chore) ->
+    $scope.editingChore = chore
 
   $scope.replaceNewChore = (id) ->
     id = parseInt id

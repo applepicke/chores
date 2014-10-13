@@ -11,20 +11,21 @@ urlpatterns = patterns('',
   url(r'^login/$', 'chores.views.login_view', name='login'),
   url(r'^logout/$', 'chores.views.logout_view', name='logout'),
   url(r'^admin/', include(admin.site.urls)),
-  url(r'^houses/?$', 'chores.views.index', name='houses'),
-  url(r'^houses/(?P<house_id>\d+)/', 'chores.views.house', name='house'),
+  url(r'^house/?$', 'chores.views.index', name='houses'),
+  url(r'^house/(?P<house_id>\d+)/', 'chores.views.house', name='house'),
   url(r'^welcome/?$', 'chores.views.welcome', name='welcome'),
   url(r'^account/?$', 'chores.views.account', name='account'),
 
-  url(r'^api/houses/?$', 'chores.views.api_houses', name='api_houses'),
-  url(r'^api/houses/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
-  url(r'^api/houses/(?P<house_id>\d+)/chores/?$', 'chores.views.chores', name='create_chore'),
-  url(r'^api/houses/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
+  url(r'^api/house/?$', 'chores.views.api_houses', name='api_houses'),
+  url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
+  url(r'^api/house/(?P<house_id>\d+)/chore/?$', 'chores.views.house_chores', name='api_chores'),
+  url(r'^api/house/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
 
   url(r'^api/account/?$', 'chores.views.api_account', name='api_account'),
 
   url(r'^confirm/(?P<token>.+)/$', 'chores.views.confirmation', name='confirmation'),
-  url(r'^api/chores/(?P<chore_id>\d+)/?$', 'chores.views.chore', name='api_chore'),
+  url(r'^api/chore/?$', 'chores.views.chores', name='api_chores'),
+  url(r'^api/chore/(?P<chore_id>\d+)/?$', 'chores.views.chore', name='api_chore'),
 
   url(r'^$', 'chores.views.index', name='index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

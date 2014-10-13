@@ -2,12 +2,6 @@
   <div class="row">
     <h1 ng-bind="house.name" class="small-centered small-12 columns"></h1>
   </div>
-  <div class="row">
-    <div class="small-12 columns">
-      <h5 class="left" ng-bind="house.description"></h5>
-      <span class="left edit-description fa fa-pencil"></span>
-    </div>
-  </div>
 
   <br/>
 
@@ -16,7 +10,7 @@
       <h4>
         <span class="fa fa-cutlery"></span>
         Chores
-        <a ng-clear="chore" data-reveal-id="choreModal" href="#">
+        <a data-reveal-id="newChoreModal" href="#">
           <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
         </a>
       </h4>
@@ -29,7 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="chore-row" ng-edit-chore="{{ chore.id }}" data-reveal-id="choreModal" ng-repeat="chore in house.chores">
+          <tr class="chore-row" ng-click="editChore(chore)" data-reveal-id="editChoreModal" ng-repeat="chore in house.chores">
             <td>{{ chore.name }}</td>
             <td>{{ chore.description }}</td>
             <td>{{ chore.user.name }}</td>
@@ -52,37 +46,73 @@
       </table>
     </div>
 
-    <div id="choreModal" class="reveal-modal small" data-reveal>
+    <div id="newChoreModal" class="reveal-modal small" data-reveal>
       <div class="row">
         <h3 class="small-12 columns">
           <span>{{ newChore.title }}</span>
         </h3>
       </div>
       <div class="row">
-        <div class="alert-box alert" ng-class="{ hidden: !newChore.generalError }">{{ newChore.generalErrorMsg }}</div>
+        <div class="alert-box alert" ng-class="{ hidden: !newChore.errors.general }">{{ newChore.errors.general }}</div>
       </div>
       <div class="row">
         <div class="large-6 columns">
           <label for="name">Name
-            <input ng-save-chore="keypress" ng-model="newChore.model.name" ng-class="{ error: newChore.nameError }" type="text" name="name" placeholder="Enter name here..."></input>
+            <input ng-save-chore="keypress" ng-model="newChore.name" ng-class="{ error: newChore.errors.name }" type="text" name="name" placeholder="Enter name here..."></input>
           </label>
-          <small class="error" ng-class="{ hidden: !newChore.nameError }">{{ newChore.nameErrorMsg }}</small>
+          <small class="error" ng-class="{ hidden: !newChore.errors.name }">{{ newChore.errors.name }}</small>
         </div>
         <div class="large-6 columns">
           <label for="chore-users">Who is doing the chore?</label>
-          <select ng-model="newChore.model.userId" ng-options="user.id as user.name for user in house.members" name="chore-users" placeholder="Enter name here...">
+          <select ng-model="newChore.assigned" ng-options="user.name for user in house.members track by user.id" name="chore-users" placeholder="Enter name here...">
+            <option value="">No one!</option>
           </select>
         </div>
       </div>
       <div class="row">
         <div class="large-12 columns">
           <label for="description">Description</label>
-          <textarea ng-model="newChore.model.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
+          <textarea ng-model="newChore.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
         </div>
       </div>
       <div class="right">
-        <a ng-delete-chore="{{ newChore.model.id }}" ng-class="{ hidden: !newChore.showDelete }" class="button alert" href="#">Delete</a>
-        <a ng-save-chore="click" class="right button" href="#">Save</a>
+        <a ng-click="saveChore(newChore)" ng-modal-close class="right button" href="#">Save</a>
+      </div>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <div id="editChoreModal" class="reveal-modal small" data-reveal>
+      <div class="row">
+        <h3 class="small-12 columns">
+          <span>{{ editingChore.title }}</span>
+        </h3>
+      </div>
+      <div class="row">
+        <div class="alert-box alert" ng-class="{ hidden: !editingChore.errors.general }">{{ editingChore.errors.general }}</div>
+      </div>
+      <div class="row">
+        <div class="large-6 columns">
+          <label for="name">Name
+            <input ng-save-chore="keypress" ng-model="editingChore.name" ng-class="{ error: editingChore.error.name }" type="text" name="name" placeholder="Enter name here..."></input>
+          </label>
+          <small class="error" ng-class="{ hidden: !editingChore.errors.name }">{{ newChore.errors.name }}</small>
+        </div>
+        <div class="large-6 columns">
+          <label for="chore-users">Who is doing the chore?</label>
+          <select ng-model="editingChore.assigned" ng-options="user.name for user in house.members track by user.id" name="chore-users" placeholder="Enter name here...">
+            <option value="">No one!</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <label for="description">Description</label>
+          <textarea ng-model="editingChore.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
+        </div>
+      </div>
+      <div class="right">
+        <a ng-click="removeChore(editingChore)" class="button alert" href="#">Delete</a>
+        <a ng-click="saveChore(editingChore)" class="right button" href="#">Save</a>
       </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>

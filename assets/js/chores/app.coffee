@@ -11,15 +11,15 @@ chores.config ['$routeProvider', '$locationProvider',
         templateUrl: '/static/partials/account_detail.html',
         controller: 'Account'
 
-      .when '/houses',
+      .when '/house',
         templateUrl: '/static/partials/house_list.html',
         controller: 'HouseList'
 
-      .when '/houses/:houseId/members/',
+      .when '/house/:houseId/members/',
         templateUrl: '/static/partials/members.html',
         controller: 'AddMembers'
 
-      .when '/houses/:houseId',
+      .when '/house/:houseId',
         templateUrl: '/static/partials/house_detail.html',
         controller: 'HouseDetail'
 

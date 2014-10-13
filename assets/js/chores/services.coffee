@@ -1,15 +1,15 @@
 chores = angular.module 'chores'
 
-chores.factory 'House', (Base, Account, $resource) ->
-
+chores.factory 'House', (Base, Account, Chore) ->
   class House extends Base
 
     @properties: ->
       p = Base.properties()
       p.members = []
+      p.chores = []
       p
 
-    @apiPath: "#{Base.apiPath}/houses/"
+    @apiPath: "#{Base.apiPath}/house/"
 
     validateName: ->
       if not @name
@@ -26,90 +26,42 @@ chores.factory 'House', (Base, Account, $resource) ->
       member.sendInvite(@id).then (_member) =>
         @members.push(_member)
 
-  return House
+    saveChore: (chore) ->
+      chore.save(@id).then (_chore) =>
+        @chores.push(_chore)
 
-  getHouse = (id, done) ->
-    house = $resource '/api/houses/:houseId/', {},
-      query:
-        method:'GET',
-        params:
-          houseId: id
+    successCallback: (data, status, headers, config) =>
+      super
+      @.members = _.map @.members, (member) ->
+        return new Account(member)
 
-    house.query(done)
+  House
 
-  getHouses = (done) ->
-    houses = $resource '/api/houses/', {},
-      query:
-        method: 'GET',
-        params: {}
+chores.factory 'Chore', (Base) ->
+  class Chore extends Base
 
-    houses.query(done)
+    @properties: ->
+      p = Base.properties()
+      p.assigned = null
+      p
 
-  getChores = (house, done) ->
-    chores = $resource '/api/houses/:houseId/chores/', {},
-      query:
-        method: 'GET',
-        params:
-          houseId: house.id
+    @apiPath: "#{Base.apiPath}/chore/"
 
-    chores.query(done)
+    validate: ->
+      if not @name
+        @errors = {name: 'Forgot something!'}
+        return false
+      return true
 
-  deleteChore = (id, done) ->
-    Chore = $resource '/api/chores/:choreId/', {},
-      delete:
-        method: 'DELETE',
-        params:
-          choreId: id
-
-    Chore.delete {}, {}, done
-
-  createHouse = (name, done) ->
-    house = $resource '/api/houses/', {},
-      query:
-        method: 'POST',
-        params:
-          'name': name
-
-    house.query done;
-
-  createChore = (house, chore, done) ->
-    Chore = $resource '/api/houses/:houseId/chores/', {},
-      save:
-        method: 'POST',
-        params:
-          houseId: house.id
-
-    Chore.save(
-      name: chore.name,
-      description: chore.description,
-      userId: chore.userId,
-      id: chore.id
-    , {}, done)
+    save: (house_id) ->
+      if @validate()
+        super
+          name: @name
+          assigned: [if @assigned then @assigned.id else null]
+          house_id: house_id
 
 
-  addMember = (house, email, done) ->
-    Member = $resource '/api/houses/:houseId/members/', {},
-      add:
-        method: 'POST',
-        params:
-          houseId: house.id
-
-    Member.add(
-      email: email
-    , {}, done)
-
-  return {
-    getHouse: getHouse,
-    getHouses: getHouses,
-    createHouse: createHouse,
-    createChore: createChore,
-    getChores: getChores,
-    deleteChore: deleteChore,
-    addMember: addMember
-  }
-
-chores.factory 'Account', (Base, $resource) ->
-
+chores.factory 'Account', (Base) ->
   class Account extends Base
 
     @properties: ->
@@ -140,22 +92,4 @@ chores.factory 'Account', (Base, $resource) ->
         @save
           email: @email
 
-  return Account
-
-  Account = $resource '/api/account', {},
-    get: { method: 'GET', params: {} },
-    post: { method: 'POST', params: {} }
-
-  getAccount = (done) ->
-    Account.get({}, done)
-
-  changePassword = (password, confirmPassword, done) ->
-    Account.post({}, JSON.stringify(
-      password: password,
-      confirm_password: confirmPassword
-    ), done);
-
-  return {
-    getAccount: getAccount,
-    changePassword: changePassword
-  }
+  Account

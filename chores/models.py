@@ -110,13 +110,14 @@ class House(models.Model):
     return {
       'id': self.id,
       'name': self.name,
-      'members': [m.as_dict() for m in self.users]
+      'members': [m.as_dict() for m in self.users],
+      'chores': [c.as_dict() for c in self.chores.all()],
     }
 
 class Chore(models.Model):
   name = models.CharField(max_length=255)
   description = models.CharField(max_length=2000, null=True, default='')
-  user = models.ForeignKey(User, null=True)
+  users = models.ManyToManyField(User, null=True, related_name='chores')
   house = models.ForeignKey(House, related_name='chores')
 
   def __str__(self):
@@ -129,7 +130,7 @@ class Chore(models.Model):
       'id': self.id,
       'name': self.name,
       'description': self.description,
-      'user': self.user.as_dict() if self.user else None,
+      'assigned': self.users.all()[0].as_dict() if self.users.all().exists() else None,
     }
 
 class UserAdmin(admin.ModelAdmin):

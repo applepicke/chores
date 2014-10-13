@@ -193,8 +193,14 @@ def api_house(request, id):
   }))
 
 @login_required
-def chores(request, house_id):
+def chores(request, house_id=None):
   user = request.app_user
+
+  if not house_id:
+    house_id = request.POST.get('house_id')
+
+  if not house_id:
+    raise http.Http404
 
   try:
     house = user.owned_houses.get(id=house_id)
@@ -202,46 +208,22 @@ def chores(request, house_id):
     raise Http404
 
   if request.method == "POST":
+    users = []
+    for u in request.POST.get('assigned', []) or []:
+      try:
+        u = next(_u for _u in house.users if _u.id == u)
+      except:
+        continue
+      users.append(u)
 
-    user = [user for user in house.users if str(user.id) == request.REQUEST.get('userId', '')]
-
-    if not user:
-      return http.HttpResponse(json.dumps({
-        'success': False,
-        'msg': 'User does not exist in this household',
-      }))
-
-    if len(user) > 1:
-      return http.HttpResponse(json.dumps({
-        'success': False,
-        'msg': 'Uh oh. There is more than one user with that id. We fudged up, but we\'ll fix it for you!',
-      }))
-
-    user = user[0]
-
-    try:
-      db_chore = house.chores.get(id=request.REQUEST.get('id'))
-      db_chore.name = request.REQUEST.get('name')
-      db_chore.description = request.REQUEST.get('description')
-      db_chore.user = user
-      db_chore.save()
-      created = False
-    except Chore.DoesNotExist:
-      db_chore = house.chores.create(
-        name=request.REQUEST.get('name'),
-        description=request.REQUEST.get('description'),
-        user=user,
-      )
-      created = True
+    db_chore = house.chores.create(
+      name=request.REQUEST.get('name'),
+      description=request.REQUEST.get('description'),
+    )
+    db_chore.users = users
 
     return http.HttpResponse(json.dumps({
-      'created': created,
-      'success': True,
-      'chore': {
-        'name': db_chore.name,
-        'description': db_chore.description,
-        'user': user.as_dict(),
-      },
+      'data': db_chore.as_dict()
     }))
 
   chores = house.chores.all()
