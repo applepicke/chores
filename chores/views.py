@@ -5,7 +5,7 @@ import smtplib
 from django import http
 from django.conf import settings
 from django.contrib.auth import models as auth_models, login, logout, authenticate
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -193,7 +193,7 @@ def api_house(request, id):
   }))
 
 @login_required
-def chores(request, house_id=None):
+def api_chores(request, house_id=None):
   user = request.app_user
 
   if not house_id:
@@ -208,19 +208,12 @@ def chores(request, house_id=None):
     raise Http404
 
   if request.method == "POST":
-    users = []
-    for u in request.POST.get('assigned', []) or []:
-      try:
-        u = next(_u for _u in house.users if _u.id == u)
-      except:
-        continue
-      users.append(u)
-
     db_chore = house.chores.create(
       name=request.REQUEST.get('name'),
       description=request.REQUEST.get('description'),
     )
-    db_chore.users = users
+
+    db_chore.users = db_chore.parse_assigned(request.POST.get('assigned'))
 
     return http.HttpResponse(json.dumps({
       'data': db_chore.as_dict()
@@ -232,21 +225,30 @@ def chores(request, house_id=None):
   }))
 
 @login_required
-def chore(request, chore_id):
+def api_chore(request, chore_id):
   user = request.app_user
 
-  try:
-    chore = Chore.objects.get(id=chore_id)
-  except Chore.DoesNotExist:
+  db_chore = get_object_or_404(Chore.objects.all(), id=chore_id)
+
+  house = user.owned_houses.filter(id=request.POST.get('house_id'))[:1]
+  house = house.get() if house else None
+
+  if house and db_chore in house.chores.all() and not user.can_modify_chore(db_chore):
     raise http.Http404
 
-  if not user.owns_chore(chore_id):
-    raise http.Http404
+  if request.method == "PUT":
+    db_chore.users = db_chore.parse_assigned(request.POST.get('assigned'))
+    db_chore.name = request.REQUEST.get('name')
+    db_chore.description = request.REQUEST.get('description')
+    db_chore.save()
+
+    return http.HttpResponse(json.dumps({
+      'data': db_chore.as_dict()
+    }))
 
   if request.method == 'DELETE':
-    chore.delete()
+    db_chore.delete()
     return http.HttpResponse(json.dumps({
-      'success': True,
       'id': int(chore_id),
     }))
 
@@ -256,10 +258,7 @@ def chore(request, chore_id):
 def members(request, house_id):
   user = request.app_user
 
-  try:
-    house = user.owned_houses.get(id=house_id)
-  except House.DoesNotExist:
-    raise http.Http404
+  house = get_object_or_404(user.owned_houses.all(), id=house_id)
 
   if 'email' not in request.REQUEST:
     return http.HttpResponse(json.dumps({

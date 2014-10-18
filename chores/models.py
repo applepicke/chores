@@ -56,6 +56,10 @@ class User(models.Model):
 
     self.d_user = d_user
 
+  def can_modify_chore(self, chore):
+    if self.owns_chore(chore.id):
+      return True
+
   def owns_chore(self, id):
     for house in self.owned_houses.all():
       if int(id) in [chore.id for chore in house.chores.all()]:
@@ -124,6 +128,16 @@ class Chore(models.Model):
     return '%s' % (
       self.name
     )
+
+  def parse_assigned(self, raw_assigned):
+    users = []
+    for u in raw_assigned or []:
+      try:
+        u = next(_u for _u in self.house.users if _u.id == u)
+      except:
+        continue
+      users.append(u)
+    return users
 
   def as_dict(self):
     return {

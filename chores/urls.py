@@ -18,14 +18,13 @@ urlpatterns = patterns('',
 
   url(r'^api/house/?$', 'chores.views.api_houses', name='api_houses'),
   url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
-  url(r'^api/house/(?P<house_id>\d+)/chore/?$', 'chores.views.house_chores', name='api_chores'),
   url(r'^api/house/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
 
   url(r'^api/account/?$', 'chores.views.api_account', name='api_account'),
 
   url(r'^confirm/(?P<token>.+)/$', 'chores.views.confirmation', name='confirmation'),
-  url(r'^api/chore/?$', 'chores.views.chores', name='api_chores'),
-  url(r'^api/chore/(?P<chore_id>\d+)/?$', 'chores.views.chore', name='api_chore'),
+  url(r'^api/chore/?$', 'chores.views.api_chores', name='api_chores'),
+  url(r'^api/chore/(?P<chore_id>\d+)/?$', 'chores.views.api_chore', name='api_chore'),
 
   url(r'^$', 'chores.views.index', name='index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

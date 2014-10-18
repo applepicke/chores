@@ -85,10 +85,10 @@ chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore
 
   $scope.removeChore = (chore) ->
     $scope.house.removeChore(chore).then (response) ->
-      closeModal()
+      $scope.closeModal()
 
   $scope.editChore = (chore) ->
-    $scope.editingChore = chore
+    $scope.editingChore = new Chore(chore)
 
   $scope.replaceNewChore = (id) ->
     id = parseInt id
