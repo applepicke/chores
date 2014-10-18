@@ -111,7 +111,7 @@
         </div>
       </div>
       <div class="right">
-        <a ng-click="removeChore(editingChore)" class="button alert" href="#">Delete</a>
+        <a ng-confirm="removeChore(editingChore)" ng-confirm-message="Are you sure you want to delete this thing?" class="button alert" href="#">Delete</a>
         <a ng-click="saveChore(editingChore)" class="right button" href="#">Save</a>
       </div>
       <a class="close-reveal-modal">&#215;</a>
@@ -122,18 +122,13 @@
       <div class="row">
         <label for="email">
           Email
-          <input ng-add-member="keypress" ng-class="{ error: newMember.model.generalError }" ng-model="newMember.model.email" type="email" name="email" placeholder="Enter email here..."></input>
-          <small class="error" ng-class="{ hidden: !newMember.model.generalError }">{{ newMember.model.generalErrorMsg }}</small>
+          <input ng-add-member="keypress" ng-class="{ error: newMember.errors.email }" ng-model="newMember.email" type="email" name="email" placeholder="Enter email here..."></input>
+          <small class="error" ng-class="{ hidden: !newMember.email }">{{ newMember.model.generalErrorMsg }}</small>
         </label>
       </div>
       <a ng-add-member="click" href="#" class="small-12 large-3 large-offset-9 columns button tiny invite-button">Send Invite</a>
       <a class="close-reveal-modal">&#215;</a>
     </div>
-
-    <div id="areYouSureModal" class="reveal-modal small" data-reveal>
-      <p>Are you sure you want to delete this chore?</p>
-    </div>
-
   </div>
 
 </div>
