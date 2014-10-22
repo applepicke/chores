@@ -41,6 +41,9 @@ class User(models.Model):
   def chores(self):
     return Chore.objects.filter(user__id=self.id)
 
+  def can_edit_house(self, house):
+    return house.owner == self
+
   def add_d_user(self, email):
     d_user = auth_models.User.objects.filter(
       email=email,
@@ -114,7 +117,7 @@ class House(models.Model):
     return {
       'id': self.id,
       'name': self.name,
-      'members': [m.as_dict() for m in self.users],
+      'members': [m.as_dict() for m in self.users if m],
       'chores': [c.as_dict() for c in self.chores.all()],
     }
 

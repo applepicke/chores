@@ -1,4 +1,5 @@
-<div class="members">
+<modal-init/>
+<div class="members" ng-modal-close>
   <div class="row setup-flow">
     <h1 class="small-10 small-offset-1 large-10 large-offset-1 columns">
       {{ house.name }} is a great name, probably.
@@ -22,7 +23,7 @@
   </div>
 
   <div class="add-member-button row">
-    <a href="#" data-reveal-id="userModal" class="button tiny success radius small-10 small-offset-1 large-2 large-offset-5">Invite Member</a>
+    <a href="#" data-reveal-id="userModal" class="button small success radius small-10 small-offset-1 large-2 large-offset-5">Invite Member</a>
   </div>
 
   <a href="#" class="button radius secondary small-10 small-offset-1 large-2 large-offset-2"><< Back</a>
@@ -38,6 +39,6 @@
       <small class="error" ng-class="{ hidden: !newMember.errors }">{{ newMember.errors.msg }}</small>
     </label>
   </div>
-  <a ng-add-member="click" href="#" class="small-12 large-3 large-offset-9 columns button tiny invite-button">Send Invite</a>
+  <a ng-click="addMember(newMember)" href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>
   <a class="close-reveal-modal">&#215;</a>
 </div>

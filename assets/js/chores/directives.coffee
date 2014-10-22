@@ -1,5 +1,10 @@
 chores = angular.module('chores')
 
+chores.directive 'modalInit', ->
+  restrict: 'E'
+  link: (scope, elm, attrs) ->
+    $(document).foundation()
+
 chores.directive 'ngModalClose', ->
   restrict: 'A'
   link: (scope, elm, attrs) ->
@@ -15,7 +20,7 @@ chores.directive 'ngConfirm', ->
       $('.message', modal).text(message)
 
       $('.okay', modal).unbind().click =>
-        $scope.$eval attrs.ngConfirm
+        scope.$eval attrs.ngConfirm
 
       $('.cancel', modal).click =>
         modal.foundation 'reveal', 'close'

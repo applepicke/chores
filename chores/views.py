@@ -36,9 +36,14 @@ def index(request):
 
 @login_required
 def house(request, house_id):
+  user = request.app_user
+
   try:
     house = House.objects.get(id=house_id)
   except House.DoesNotExist:
+    return http.HttpResponseRedirect('/')
+
+  if not user.can_edit_house(house):
     return http.HttpResponseRedirect('/')
 
   return render_to_response('app.html', context(request))
@@ -144,7 +149,7 @@ def api_houses(request):
   user = request.app_user
   houses = list(user.houses.all()) + list(user.owned_houses.all())
 
-  if request.method == 'POST' and not houses:
+  if request.method == 'POST':
 
     name = request.POST.get('name', '')
 

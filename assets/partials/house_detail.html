@@ -1,3 +1,4 @@
+<modal-init/>
 <div class="house-detail">
   <div class="row">
     <h1 ng-bind="house.name" class="small-centered small-12 columns"></h1>
@@ -123,10 +124,10 @@
         <label for="email">
           Email
           <input ng-add-member="keypress" ng-class="{ error: newMember.errors.email }" ng-model="newMember.email" type="email" name="email" placeholder="Enter email here..."></input>
-          <small class="error" ng-class="{ hidden: !newMember.email }">{{ newMember.model.generalErrorMsg }}</small>
+          <small class="error" ng-class="{ hidden: !newMember.errors.email }">{{ newMember.errors.email }}</small>
         </label>
       </div>
-      <a ng-add-member="click" href="#" class="small-12 large-3 large-offset-9 columns button tiny invite-button">Send Invite</a>
+      <a ng-click="addMember(newMember)" href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>
       <a class="close-reveal-modal">&#215;</a>
     </div>
   </div>

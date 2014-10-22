@@ -5,11 +5,12 @@ chores.controller 'MainController', ($scope, $route, $routeParams, House) ->
 chores.controller 'Welcome', ($scope, $location, House) ->
   $scope.house = new House()
 
-  $scope.next = ->
-    $location.path('/house/' + $scope.house.id + '/members/')
+  $scope.createHouse = (house) ->
+    house.create().then (response) ->
+      if $scope.house.id
+        $location.path('/house/' + $scope.house.id + '/members/')
 
 chores.controller 'AddMembers', ($scope, $location, $routeParams, $rootScope, House, Account) ->
-  $(document).foundation()
 
   _.extend $scope,
     newMember: new Account()
@@ -23,21 +24,24 @@ chores.controller 'AddMembers', ($scope, $location, $routeParams, $rootScope, Ho
   $scope.next = ->
     $location.path('/house/' + $routeParams.houseId)
 
-  $scope.addMember = ->
-    $scope.house.addMember($scope.newMember).then (response) ->
+  $scope.addMember = (member) ->
+    $scope.house.addMember(member).then (response) ->
       $scope.newMember = new Account()
-      closeModal()
+      $scope.closeModal()
 
 chores.controller 'HouseList', ($scope, House) ->
   House.getHouses (data) ->
     $scope.houses = data.houses
 
 chores.controller 'Account', ($scope, Account) ->
-  $(document).foundation()
+
   $scope.newPassword = {}
 
-  Account.getAccount (account) ->
-    $scope.account = account
+  Account.find().then (response) ->
+    if response
+      $scope.account = response[0]
+    else
+      $location.path('/')
 
   $scope.closeModal = (result) ->
     if result.success
@@ -59,7 +63,6 @@ chores.controller 'Account', ($scope, Account) ->
       done(result)
 
 chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account) ->
-  $(document).foundation()
 
   _.extend $scope,
     house: {},
@@ -73,10 +76,10 @@ chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore
     else
       $location.path('/')
 
-  $scope.addMember = ->
-    $scope.house.addMember($scope.newMember).then (response) ->
+  $scope.addMember = (member) ->
+    $scope.house.addMember(member).then (response) ->
       $scope.newMember = new Account()
-      closeModal()
+      $scope.closeModal()
 
   $scope.saveChore = (chore) ->
     $scope.house.saveChore(chore).then (response) ->

@@ -8,12 +8,12 @@
     <div class="house-input small-centered small-8 large-5 columns">
       <p class="error" ng-show="house.errors">{{ house.errors.msg }}</p>
       <label for="house">Household Name</label>
-      <input ng-model="house.name" ng-enter="house.create().then(next)" type="text" name="house" placeholder="Enter the name of your household..."></input>
+      <input ng-model="house.name" ng-enter="createHouse(house)" type="text" name="house" placeholder="Enter the name of your household..."></input>
     </div>
   </div>
   <div class="row">
     <div class="next-page small-centered small-8 large-3 columns">
-      <a href="#" class="button success radius small" ng-click="house.create().then(next)">
+      <a href="#" class="button success radius small" ng-click="createHouse(house)">
         <span class="">Next Step</span>
         <span class="fa fa-arrow-circle-o-right"></span>
       </a>
