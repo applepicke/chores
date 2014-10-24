@@ -39,7 +39,7 @@ chores.controller 'Account', ($scope, Account) ->
 
   Account.find().then (response) ->
     if response
-      $scope.account = response[0]
+      $scope.account = response
     else
       $location.path('/')
 

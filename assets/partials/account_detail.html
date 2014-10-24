@@ -7,18 +7,18 @@
     <div class="section small-12 columns">
       <div class="row">
         <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
-          <label for="first_name">
+          <label for="firstName">
             First Name
-            <input type="text" name="first_name" ng-model="account.first_name"></input>
+            <input type="text" name="firstName" ng-model="account.firstName"></input>
           </label>
         </div>
       </div>
 
       <div class="row">
         <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
-          <label for="last_name">
+          <label for="lastName">
             Last Name
-            <input type="text" name="last_name" ng-model="account.last_name"></input>
+            <input type="text" name="lastName" ng-model="account.lastName"></input>
           </label>
         </div>
       </div>
@@ -26,12 +26,12 @@
       <div class="row">
         <div class="small-10 small-offset-1 large-5 large-offset-1 columns">
 
-          <label ng-show="account.has_password" for="password">
+          <label ng-show="account.hasPassword" for="password">
             Password
             <input type="password" disabled name="password" value="12345678"></input>
             <a href="#" ng-clear="password" data-reveal-id="change-password-modal" class="button tiny success">Change Password</a>
           </label>
-          <a href="#" ng-clear="password" ng-hide="account.has_password" data-reveal-id="change-password-modal">Set a Password</a>
+          <a href="#" ng-clear="password" ng-hide="account.hasPassword" data-reveal-id="change-password-modal">Set a Password</a>
         </div>
       </div>
 
@@ -43,7 +43,7 @@
           <div>
             <h4 class="left">Email Reminders</h4>
             <span class="switch tiny radius">
-              <input id="allow-email" type="checkbox" ng-model="account.email_enabled">
+              <input id="allow-email" type="checkbox" ng-model="account.emailEnabled">
               <label for="allow-email"></label>
             </span>
           </div>
@@ -55,7 +55,7 @@
           <div>
             <h4 class="left">SMS Reminders</h4>
             <span class="switch tiny radius">
-              <input id="allow-sms" type="checkbox" ng-model="account.sms_enabled">
+              <input id="allow-sms" type="checkbox" ng-model="account.smsEnabled">
               <label for="allow-sms"></label>
             </span>
           </div>
@@ -64,18 +64,18 @@
           <div class="">
             <span class="small-6 large-8 columns">Status:</span>
             <span class="small-4 large-2 end columns">
-              <span ng-show="account.sms_verified" class="label success radius">Verified</span>
-              <span ng-hide="account.sms_verified" class="label alert radius">Not Verified</span>
+              <span ng-show="account.smsVerified" class="label success radius">Verified</span>
+              <span ng-hide="account.smsVerified" class="label alert radius">Not Verified</span>
             </span>
             <br/>
             <span class="small-6 large-8 columns">SMS Number:</span>
             <span class="small-4 large-2 end columns">
-              <span ng-show="account.sms_verified" class="label radius">{{ account.phone_number }}</span>
-              <span ng-hide="account.sms_verified" class="label radius">No number set</span>
+              <span ng-show="account.smsVerified" class="label radius">{{ account.phoneNumber }}</span>
+              <span ng-hide="account.smsVerified" class="label radius">No number set</span>
             </span>
             <br/>
-            <br ng-show="account.sms_verified"/>
-            <span ng-show="account.sms_verified"><a href="#" class="">Change Number</a></span>
+            <br ng-show="account.smsVerified"/>
+            <span ng-show="account.smsVerified"><a href="#" class="">Change Number</a></span>
           </div>
         </div>
       </div>

@@ -79,7 +79,16 @@ chores.factory 'Account', (Base) ->
 
     @properties: ->
       p = Base.properties()
+      p.confirmed = false
+      p.emailEnabled = false
+      p.firstName = ''
+      p.lastName = ''
+      p.hasPassword = false
+      p.name = ''
+      p.smsEnabled = false
+      p.smsVerified = false
       p.email = null
+      p
 
     @apiPath: "#{Base.apiPath}/account/"
 
