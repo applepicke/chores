@@ -20,7 +20,8 @@ urlpatterns = patterns('',
   url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
   url(r'^api/house/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
 
-  url(r'^api/account/?$', 'chores.views.api_account', name='api_account'),
+  url(r'^api/account/?$', 'chores.views.api_accounts', name='api_accounts'),
+  url(r'^api/account/(?P<account_id>\d+)/?$', 'chores.views.api_account', name='api_account'),
 
   url(r'^confirm/(?P<token>.+)/$', 'chores.views.confirmation', name='confirmation'),
   url(r'^api/chore/?$', 'chores.views.api_chores', name='api_chores'),

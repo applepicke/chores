@@ -35,7 +35,8 @@ chores.controller 'HouseList', ($scope, House) ->
 
 chores.controller 'Account', ($scope, Account) ->
 
-  $scope.newPassword = {}
+  $scope.newPassword = ''
+  $scope.confirmPassword = ''
 
   Account.find().then (response) ->
     if response
@@ -43,24 +44,11 @@ chores.controller 'Account', ($scope, Account) ->
     else
       $location.path('/')
 
-  $scope.closeModal = (result) ->
-    if result.success
-      $('body').foundation('reveal', 'close')
-
-  $scope.changePassword = (done) ->
-    if $scope.newPassword.password != $scope.newPassword.confirmPassword
-      $scope.newPassword.generalError = true
-      $scope.newPassword.generalErrorMsg = 'Passwords don\'t match'
-      return done({success: false})
-
-    Account.changePassword $scope.newPassword.password, $scope.newPassword.confirmPassword, (result) ->
-      if !result.success
-        $scope.newPassword.generalError = true
-        $scope.newPassword.generalErrorMsg = result.msg
-        return done(result)
-
-      $scope.account.has_password = true
-      done(result)
+  $scope.changePassword =  ->
+    $scope.account.changePassword($scope.newPassword, $scope.confirmPassword).then ->
+      $scope.newPassword = ''
+      $scope.confirmPassword = ''
+      $scope.closeModal()
 
 chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account) ->
 

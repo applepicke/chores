@@ -62,39 +62,13 @@ def logout_view(request):
   return http.HttpResponseRedirect('/')
 
 @login_required
-def api_account(request):
+def api_accounts(request):
   user = request.app_user
 
   if not user:
     raise http.Http404
 
   if request.method == 'POST':
-
-    # SAVE PREFERENCES
-    if request.POST.get('id'):
-      password = request.JSON.get('password')
-      confirm = request.JSON.get('confirm_password')
-
-      if not password or password.strip() != confirm.strip():
-        return http.HttpResponse(json.dumps({
-          'success': False,
-          'msg': 'Passwords don\'t match',
-        }))
-
-      try:
-        user.d_user.set_password(password)
-        user.d_user.save()
-      except:
-        return http.HttpResponse(json.dumps({
-          'success': False,
-          'msg': 'Hmmm, can\'t set password. Not quite sure why. Sorry.',
-        }))
-
-      return http.HttpResponse(json.dumps({
-        'success': True,
-        'account': user.as_dict(),
-      }))
-
     # ADD MEMBER
     if request.POST.get('email') and request.POST.get('house_id'):
 
@@ -138,6 +112,37 @@ def api_account(request):
 
       return http.HttpResponse(json.dumps({
         'data': member.as_dict()
+      }))
+
+  return http.HttpResponse(json.dumps({
+    'data': user.as_dict(),
+  }))
+
+@login_required
+def api_account(request, account_id):
+  user = request.app_user
+
+  if not user:
+    raise http.Http404
+
+  if request.method == 'PUT':
+
+    # SAVE PREFERENCES
+    if request.POST.get('id'):
+      password = request.JSON.get('password')
+
+      try:
+        user.d_user.set_password(password)
+        user.d_user.save()
+      except:
+        return http.HttpResponse(json.dumps({
+          'success': False,
+          'msg': 'Hmmm, can\'t set password. Not quite sure why. Sorry.',
+        }))
+
+      return http.HttpResponse(json.dumps({
+        'success': True,
+        'account': user.as_dict(),
       }))
 
   return http.HttpResponse(json.dumps({

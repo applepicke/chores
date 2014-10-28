@@ -1,3 +1,4 @@
+<modal-init/>
 <div class="account-detail row">
   <div class="semi-section row">
     <h1 class="small-10 small-offset-1 large-12 large-offset-1 columns">{{ account.name }}'s Settings</h1>
@@ -92,23 +93,26 @@
 
   <div id="change-password-modal" class="reveal-modal tiny" data-reveal>
     <div class="row">
-      <span class="small-12 alert-box alert" ng-class="{ hidden: !newPassword.generalError }">{{ newPassword.generalErrorMsg }}</span>
-    </div>
-    <div class="row">
       <div class="small-12 columns">
         <label for="name">Enter New Password
-          <input ng-model="newPassword.password" ng-class="{ error: newPassword.generalError }" type="password" name="name" placeholder="Enter password here..."></input>
+          <input ng-model="newPassword" ng-class="{ error: account.errors.password }" type="password" name="name" placeholder="Enter password here..."></input>
         </label>
       </div>
 
       <div class="small-12 columns">
         <label for="chore-users">Confirm New Password
-          <input ng-model="newPassword.confirmPassword" ng-class="{ error: newPassword.generalError }" type="password" name="name" placeholder="Enter matching password here..."></input>
+          <input ng-model="confirmPassword" ng-class="{ error: account.errors.password }" type="password" name="name" placeholder="Enter matching password here..."></input>
         </label>
       </div>
-      <a ng-click="changePassword(closeModal)" href="#" class="small-12 large-5 large-offset-7 columns button tiny change-password-button">Change Password</a>
-      <a class="close-reveal-modal">&#215;</a>
+
     </div>
+
+    <div class="row">
+      <span class="small-12 alert-box alert" ng-class="{ hidden: !account.errors.password }">{{ account.errors.password }}</span>
+    </div>
+
+    <a ng-click="changePassword()" ng-modal-close href="#" class="small-12 large-5 large-offset-7 columns button tiny change-password-button">Change Password</a>
+    <a class="close-reveal-modal">&#215;</a>
   </div>
 
 </div>

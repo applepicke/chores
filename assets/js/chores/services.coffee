@@ -90,7 +90,7 @@ chores.factory 'Account', (Base) ->
       p.email = null
       p
 
-    @apiPath: "#{Base.apiPath}/account/"
+    @apiPath: "#{Base.apiPath}/account"
 
     validate: ->
       if not @validateForConfirmation()
@@ -108,6 +108,14 @@ chores.factory 'Account', (Base) ->
         @save
           email: @email
           house_id: houseId
+
+    changePassword: (newPassword, confirmPassword) ->
+      if newPassword != confirmPassword
+        @errors =
+          password: 'Passwords don\'t match!'
+        return
+      @save
+        password: newPassword
 
     create: ->
       if @validate()
