@@ -50,6 +50,9 @@ chores.controller 'Account', ($scope, Account) ->
       $scope.confirmPassword = ''
       $scope.closeModal()
 
+  $scope.saveAccount = ->
+    $scope.account.savePreferences()
+
 chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account) ->
 
   _.extend $scope,

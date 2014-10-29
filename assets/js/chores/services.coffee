@@ -117,6 +117,10 @@ chores.factory 'Account', (Base) ->
       @save
         password: newPassword
 
+    savePreferences: ->
+      if @validate()
+        @save()
+
     create: ->
       if @validate()
         @save

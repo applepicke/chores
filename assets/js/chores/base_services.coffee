@@ -112,10 +112,12 @@ chores.factory 'Base', ($q, $http) ->
       @assignProperties data.data, true
 
     failureCallback: (data, status, headers, config) =>
-      @assignErrors { msg: data.msg }
+      @assignErrors
+        msg: data.msg
+        type: data.type
 
     assignErrors: (errorData) ->
-      @errors = errorData
+      @errors[errorData.type] = errorData.msg
 
     @toCamelCase: (string) ->
       string.replace /_([a-z])/g, (g) -> g[1].toUpperCase()

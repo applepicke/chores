@@ -127,23 +127,24 @@ def api_account(request, account_id):
 
   if request.method == 'PUT':
 
-    # SAVE PREFERENCES
-    if request.POST.get('id'):
-      password = request.JSON.get('password')
-
+    # SET PASSWORD
+    password = request.POST.get('password')
+    if password:
       try:
         user.d_user.set_password(password)
         user.d_user.save()
       except:
         return http.HttpResponse(json.dumps({
-          'success': False,
           'msg': 'Hmmm, can\'t set password. Not quite sure why. Sorry.',
-        }))
+          'type': 'password',
+        }), status=400)
 
-      return http.HttpResponse(json.dumps({
-        'success': True,
-        'account': user.as_dict(),
-      }))
+    else:
+      user.first_name = request.POST.get('first_name')
+      user.last_name = request.POST.get('last_name')
+      user.email_enabled = request.POST.get('email_enabled')
+      user.sms_enabled = request.POST.get('sms_enabled')
+      user.save()
 
   return http.HttpResponse(json.dumps({
     'data': user.as_dict(),
