@@ -24,7 +24,7 @@ function checkLoginState() {
       };
       $.post('/login/', data)
         .success(function (response) {
-          window.location = '/welcome/';
+          window.location = '/';
         });
     } else if (response.status === 'not_authorized') {
     } else {
