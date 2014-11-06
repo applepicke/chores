@@ -56,7 +56,7 @@
           <div>
             <h4 class="left">SMS Reminders</h4>
             <span class="switch tiny radius">
-              <input id="allow-sms" type="checkbox" ng-model="account.smsEnabled">
+              <input id="allow-sms" type="checkbox" ng-sms-confirm ng-model="account.smsEnabled">
               <label for="allow-sms"></label>
             </span>
           </div>
@@ -111,9 +111,11 @@
       <span class="small-12 alert-box alert" ng-class="{ hidden: !account.errors.password }">{{ account.errors.password }}</span>
     </div>
 
-    <a ng-click="changePassword()" ng-modal-close href="#" class="small-12 large-5 large-offset-7 columns button tiny change-password-button">Change Password</a>
+    <a ng-click="changePassword()" ng-modal-close href="#" class="small-12 large-5 large-offset-7 columns button small change-password-button">Change Password</a>
     <a class="close-reveal-modal">&#215;</a>
   </div>
+
+  <ng-include src="'/static/partials/confirm_sms.html'"></ng-include>
 
 </div>
 

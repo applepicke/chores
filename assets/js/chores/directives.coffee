@@ -27,4 +27,31 @@ chores.directive 'ngConfirm', ->
 
       modal.foundation 'reveal', 'open'
 
+chores.directive 'ngSmsConfirm', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.click =>
+      account = scope.account
+      if account.smsVerified
+        if account.smsEnabled
+          # disable sms
+          console.log('hello')
+
+      else
+        account.smsEnabled = false
+        $('#allow-sms').attr "checked", false
+        $('#confirm-sms-modal').foundation('reveal', 'open');
+
+chores.directive 'ngSendVerification', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    $('.send-verification').click =>
+      scope.account.sendSmsVerification()
+      $('#confirm-sms-code-modal').foundation('reveal', 'open');
+
+    $('.verify-sms').click =>
+      scope.account.verifySms()
+
+
+
 

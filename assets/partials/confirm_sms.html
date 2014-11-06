@@ -1,0 +1,35 @@
+<div id="confirm-sms-modal" ng-modal-close class="reveal-modal tiny" data-reveal>
+  <div class="row">
+    <div class="small-12 columns">
+      <p>Before you can receive SMS messages we need to verify your number.</p>
+    </div>
+
+    <div class="small-12 columns">
+      <label for="sms-number">
+        Mobile Number
+        <input type="text" placeholder="x-xxx-xxx-xxxx" ng-model="account.sms"></input>
+      </label>
+    </div>
+  </div>
+
+  <a href="#" ng-send-verification class="small-12 large-5 large-offset-7 columns button small send-verification">Send Code</a>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+
+<div id="confirm-sms-code-modal" ng-modal-close class="reveal-modal tiny" data-reveal>
+  <div class="row">
+    <div class="small-12 columns">
+      <p>Great! Now just enter the verification code we sent you.</p>
+    </div>
+
+    <div class="small-12 columns">
+      <label for="verification-code">
+        Verification Code
+        <input type="text" placeholder="XXXXX" ng-model="account.verificationCode"></input>
+      </label>
+    </div>
+  </div>
+
+  <a href="#" class="small-12 large-5 large-offset-7 columns button small verify-sms">Verify</a>
+  <a class="close-reveal-modal">&#215;</a>
+</div>

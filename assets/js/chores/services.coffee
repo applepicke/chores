@@ -88,6 +88,8 @@ chores.factory 'Account', (Base) ->
       p.smsEnabled = false
       p.smsVerified = false
       p.email = null
+      p.sms = ''
+      p.verificationCode = null
       p
 
     @apiPath: "#{Base.apiPath}/account"
@@ -120,6 +122,12 @@ chores.factory 'Account', (Base) ->
     savePreferences: ->
       if @validate()
         @save()
+
+    sendSmsVerification: ->
+      console.log('verifying')
+
+    verifySms: ->
+      console.log('ver')
 
     create: ->
       if @validate()
