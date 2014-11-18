@@ -7,9 +7,13 @@
     <div class="small-12 columns">
       <label for="sms-number">
         Mobile Number
-        <input type="text" placeholder="x-xxx-xxx-xxxx" ng-model="account.sms"></input>
+        <input type="text" placeholder="x-xxx-xxx-xxxx" ng-model="account.sms" ng-class="{ error: account.errors.sms_send_verify }"></input>
       </label>
     </div>
+  </div>
+
+  <div class="row">
+    <span class="small-12 alert-box alert" ng-class="{ hidden: !account.errors.sms_send_verify }">{{ account.errors.sms_send_verify }}</span>
   </div>
 
   <a href="#" ng-send-verification class="small-12 large-5 large-offset-7 columns button small send-verification">Send Code</a>
@@ -25,9 +29,13 @@
     <div class="small-12 columns">
       <label for="verification-code">
         Verification Code
-        <input type="text" placeholder="XXXXX" ng-model="account.verificationCode"></input>
+        <input type="text" placeholder="XXXXX" ng-model="account.verificationCode" ng-class="{ error: account.errors.sms_verify }"></input>
       </label>
     </div>
+  </div>
+
+  <div class="row">
+    <span class="small-12 alert-box alert" ng-class="{ hidden: !account.errors.sms_verify }">{{ account.errors.sms_verify }}</span>
   </div>
 
   <a href="#" class="small-12 large-5 large-offset-7 columns button small verify-sms">Verify</a>

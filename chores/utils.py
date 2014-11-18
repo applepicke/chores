@@ -3,10 +3,14 @@ import json
 import logging
 import base64
 import random
+import string
 
 from django.conf import settings
 
 logger = logging.getLogger('')
+
+def random_string(size=5, chars=string.ascii_uppercase + string.digits):
+  return ''.join(random.choice(chars) for _ in range(size))
 
 def rando_msg(msgs):
   num = random.randint(0, len(msgs) - 1)

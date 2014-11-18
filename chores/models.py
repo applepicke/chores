@@ -4,6 +4,10 @@ from django.contrib import admin
 
 from jsonfield import JSONField
 
+from chores.cache import CachedSMSVerificationCode
+from chores.utils import random_string
+from chores.sms import SMSClient
+
 class User(models.Model):
   fb_user_id = models.CharField(max_length=255, default='')
   first_name = models.CharField(max_length=255, default='')
@@ -17,6 +21,7 @@ class User(models.Model):
   email_enabled = models.BooleanField(default=True)
   sms_enabled = models.BooleanField(default=False)
   sms_verified = models.BooleanField(default=False)
+  sms_banned = models.BooleanField(default=False)
 
   @property
   def has_password(self):
@@ -40,6 +45,35 @@ class User(models.Model):
   @property
   def chores(self):
     return Chore.objects.filter(user__id=self.id)
+
+  @property
+  def can_receive_sms(self):
+    return self.sms_enabled and self.sms_verified and self.phone_number and not self.sms_banned
+
+  def send_sms_verification_code(self, number):
+    code = random_string()
+    cached_code = CachedSMSVerificationCode(user_id=self.id)
+    cached_code.set(code)
+
+    self.phone_number = number
+    self.save()
+
+    client = SMSClient(self)
+    client.send_verification_code(code, number)
+
+  def verify_sms(self, code):
+    cached_code = CachedSMSVerificationCode(user_id=self.id).get()
+
+    if not cached_code:
+      return False, 'Your verification code has expired.'
+
+    if cached_code == code:
+      self.sms_verified = True
+      self.sms_enabled = True
+      self.save()
+      return True, ''
+
+    return False, 'Invalid verification code.'
 
   def can_edit_house(self, house):
     return house.owner == self
@@ -81,7 +115,7 @@ class User(models.Model):
       'has_password': self.has_password,
       'email_enabled': self.email_enabled,
       'sms_enabled': self.sms_enabled,
-      'sms_verified': False
+      'sms_verified': self.sms_verified,
     }
 
   def __str__(self):

@@ -126,9 +126,9 @@ def api_account(request, account_id):
     raise http.Http404
 
   if request.method == 'PUT':
+    password = request.POST.get('password')
 
     # SET PASSWORD
-    password = request.POST.get('password')
     if password:
       try:
         user.d_user.set_password(password)
@@ -139,6 +139,30 @@ def api_account(request, account_id):
           'type': 'password',
         }), status=400)
 
+    # SEND SMS VERIFICATION
+    elif request.POST.get('send_sms_verification_code'):
+      if user.sms_banned:
+        return http.HttpResponse(json.dumps({
+          'msg': 'Your account has been banned from using sms services.',
+          'type': 'sms_send_verify',
+        }), status=400)
+
+      user.send_sms_verification_code(request.POST.get('sms'))
+
+    # VERIFY SMS
+    elif request.POST.get('verify_sms'):
+      code = request.POST.get('sms_code')
+      verified, msg = user.verify_sms(code)
+
+      if not verified:
+        return http.HttpResponse(json.dumps({
+          'msg': msg,
+          'type': 'sms_verify',
+        }), status=400)
+
+      return http.HttpResponse()
+
+    # ACCOUNT INFO SAVE
     else:
       user.first_name = request.POST.get('first_name')
       user.last_name = request.POST.get('last_name')

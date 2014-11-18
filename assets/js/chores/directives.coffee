@@ -46,11 +46,29 @@ chores.directive 'ngSendVerification', ->
   restrict: 'A'
   link: (scope, elm, attrs) ->
     $('.send-verification').click =>
-      scope.account.sendSmsVerification()
-      $('#confirm-sms-code-modal').foundation('reveal', 'open');
+      scope.account.sendSmsVerification().then ->
+        $('#confirm-sms-code-modal').foundation('reveal', 'open');
 
     $('.verify-sms').click =>
-      scope.account.verifySms()
+      scope.account.verifySms().then ->
+        $('#confirm-sms-code-modal').foundation('reveal', 'close');
+        scope.account.smsVerified = true
+        scope.account.smsEnabled = true
+
+
+
+# chores.directive 'ngMobile', ->
+#   restrict: 'A'
+#   link: (scope, elm, attrs) ->
+#     items = attrs.ngMobile.split('.')
+#     obj = null
+#     if items.length == 1
+#       scope[items[0]].
+#     else
+#       _.each items, (item, index) ->
+#         if index == (items.length - 1)
+#           obj =
+
 
 
 

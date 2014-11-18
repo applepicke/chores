@@ -99,6 +99,17 @@ chores.factory 'Account', (Base) ->
         return false
       super
 
+    validateSms: ->
+      # TODO: Some real sms validation
+      return true
+
+    validateSmsCode: ->
+      if not @verificationCode.length or @verificationCode.length != 5
+        @errors = { sms_verify: 'Invalid verification code' }
+        return false
+
+      return true
+
     validateForConfirmation: ->
       if not @email
         @errors = {msg: 'You forget to type in an email. Dummy.'}
@@ -124,10 +135,16 @@ chores.factory 'Account', (Base) ->
         @save()
 
     sendSmsVerification: ->
-      console.log('verifying')
+      if @validateSms
+        @save
+          send_sms_verification_code: true
+          sms: @sms
 
     verifySms: ->
-      console.log('ver')
+      if @validateSmsCode
+        @save
+          verify_sms: true,
+          sms_code: @verificationCode
 
     create: ->
       if @validate()

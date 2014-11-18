@@ -6,8 +6,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 from chores.models import House
-
-from twilio.rest import TwilioRestClient
+from chores.sms import SMSClient
 
 today = datetime.datetime.now().strftime('%A').lower()
 
@@ -24,11 +23,9 @@ Hello %s, your chore for the week is %s.
 """
 
 class Command(BaseCommand):
-  help = 'Makes mockdata'
+  help = 'Runs daily stuff'
 
   def handle(self, *args, **options):
-    client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
     for house in House.objects.filter(recurs__iexact=today):
       print 'Entering: %s' % house.name
 
@@ -47,15 +44,10 @@ class Command(BaseCommand):
             )
             print 'sending mail to %s' % email
 
-          number = chore.user.phone_number
-
           if settings.DEBUG == True:
             print SMS_MSG % (chore.user.name, chore.name)
-          elif number:
-            client.messages.create(
-              to=number,
-              from_=settings.TWILIO_NUM,
-              body=SMS_MSG % (chore.user.name, chore.name)
-            )
+          else:
+            client = SMSClient(chore.user)
+            client.send_message(SMS_MSG % (chore.user.name, chore.name))
 
       house.shuffle()
