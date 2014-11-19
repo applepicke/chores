@@ -88,7 +88,7 @@ chores.factory 'Account', (Base) ->
       p.smsEnabled = false
       p.smsVerified = false
       p.email = null
-      p.sms = ''
+      p.phoneNumber = ''
       p.verificationCode = null
       p
 
@@ -138,7 +138,7 @@ chores.factory 'Account', (Base) ->
       if @validateSms
         @save
           send_sms_verification_code: true
-          sms: @sms
+          sms: @phoneNumber
 
     verifySms: ->
       if @validateSmsCode

@@ -116,6 +116,7 @@ class User(models.Model):
       'email_enabled': self.email_enabled,
       'sms_enabled': self.sms_enabled,
       'sms_verified': self.sms_verified,
+      'phone_number': self.phone_number,
     }
 
   def __str__(self):

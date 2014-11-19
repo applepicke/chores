@@ -32,12 +32,7 @@ chores.directive 'ngSmsConfirm', ->
   link: (scope, elm, attrs) ->
     elm.click =>
       account = scope.account
-      if account.smsVerified
-        if account.smsEnabled
-          # disable sms
-          console.log('hello')
-
-      else
+      if not account.smsVerified
         account.smsEnabled = false
         $('#allow-sms').attr "checked", false
         $('#confirm-sms-modal').foundation('reveal', 'open');
