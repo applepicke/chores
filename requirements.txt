@@ -1,4 +1,3 @@
-coverage
 Cheetah==2.4.4
 Coffin==0.3.8
 Django==1.5
