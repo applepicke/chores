@@ -37,6 +37,12 @@ chores.directive 'ngSmsConfirm', ->
         $('#allow-sms').attr "checked", false
         $('#confirm-sms-modal').foundation('reveal', 'open');
 
+chores.directive 'ngSmsChange', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.click =>
+      $('#confirm-sms-modal').foundation('reveal', 'open');
+
 chores.directive 'ngSendVerification', ->
   restrict: 'A'
   link: (scope, elm, attrs) ->

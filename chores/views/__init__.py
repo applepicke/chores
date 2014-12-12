@@ -160,8 +160,6 @@ def api_account(request, account_id):
           'type': 'sms_verify',
         }), status=400)
 
-      return http.HttpResponse()
-
     # ACCOUNT INFO SAVE
     else:
       user.first_name = request.POST.get('first_name')

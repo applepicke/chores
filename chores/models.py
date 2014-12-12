@@ -50,12 +50,20 @@ class User(models.Model):
   def can_receive_sms(self):
     return self.sms_enabled and self.sms_verified and self.phone_number and not self.sms_banned
 
+  def change_phone_number(self, number):
+    number = number.replace('-', '')
+    number = number.replace(' ', '')
+    if not number.startswith('+'):
+      number = '+%s' % number
+    self.phone_number = number
+    self.save()
+
   def send_sms_verification_code(self, number):
     code = random_string()
     cached_code = CachedSMSVerificationCode(user_id=self.id)
     cached_code.set(code)
 
-    self.phone_number = number
+    self.change_phone_number(number)
     self.save()
 
     client = SMSClient(self)
