@@ -56,21 +56,18 @@ chores.directive 'ngSendVerification', ->
         scope.account.smsVerified = true
         scope.account.smsEnabled = true
 
+chores.directive 'ngHoverShow', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    item = $('.' + attrs.ngHoverShow, elm)
+    item.hide()
+    elm.hover =>
+      item.show()
+    elm.mouseleave =>
+      item.hide()
 
-
-# chores.directive 'ngMobile', ->
-#   restrict: 'A'
-#   link: (scope, elm, attrs) ->
-#     items = attrs.ngMobile.split('.')
-#     obj = null
-#     if items.length == 1
-#       scope[items[0]].
-#     else
-#       _.each items, (item, index) ->
-#         if index == (items.length - 1)
-#           obj =
-
-
-
-
+chores.directive 'ngWeekday', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.weekday();
 

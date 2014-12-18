@@ -6,6 +6,9 @@
   <script type="text/javascript">
     window.APP_ID = {{ APP_ID }}
   </script>
+
+  {% include 'partials/dates.html' %}
+
   {% block styles %}
     {% compressed_css 'app' %}
   {% endblock %}
@@ -21,7 +24,8 @@
   {% block scripts %}
     {% compressed_js 'app' %}
   {% endblock %}
-  {% block extra_scripts %}{% endblock %}
+  {% block extra_scripts %}
+  {% endblock %}
 
   {% block footer %}
   {% endblock %}

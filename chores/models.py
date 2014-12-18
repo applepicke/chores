@@ -135,7 +135,9 @@ class House(models.Model):
   address = models.CharField(max_length=2000, default='', null=True)
   owner = models.ForeignKey(User, null=True, related_name="owned_houses")
   members = models.ManyToManyField(User, related_name="houses")
+
   recurs = models.CharField(max_length=255, default='sunday')
+  recurs_hour = models.CharField(max_length=255, default='0:00')
 
   @property
   def users(self):

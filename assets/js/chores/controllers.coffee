@@ -84,6 +84,9 @@ chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore
   $scope.editChore = (chore) ->
     $scope.editingChore = new Chore(chore)
 
+  $scope.addReminder = (chore) ->
+    console.log('hello')
+
   $scope.replaceNewChore = (id) ->
     id = parseInt id
     chore = _.find $scope.house.chores, (c) ->

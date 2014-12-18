@@ -1,7 +1,20 @@
 <modal-init/>
 <div class="house-detail">
+
   <div class="row">
-    <h1 ng-bind="house.name" class="small-centered small-12 columns"></h1>
+    <h1 ng-bind="house.name" class="title small-centered small-12 columns"></h1>
+  </div>
+
+  <div class="row">
+    <div class="weekly-reminder small-centered small-12 columns">
+      <span class="fa fa-clock-o"></span>
+      <span ng-hide="house.recurs">
+        <a class="change" href="#">Set reccuring day</a>
+      </span>
+      <span ng-show="house.recurs">
+        Weekly Reminder: {{ house.recurs }}<a class="change" href="#">Change</a>
+      </span>
+    </div>
   </div>
 
   <br/>
@@ -20,14 +33,17 @@
           <tr>
             <th>Name</th>
             <th>Description</th>
-            <th>Assigned to</th>
+            <th class="icon"><span class="fa fa-user"></span>User</th>
+            <th class="icon"><span class="fa fa-clock-o"></span>Reminder</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="chore-row" ng-click="editChore(chore)" data-reveal-id="editChoreModal" ng-repeat="chore in house.chores">
+          <tr class="chore-row" ng-click="editChore(chore)" data-reveal-id="editChoreModal" ng-hover-show="add-reminder" ng-repeat="chore in house.chores">
             <td>{{ chore.name }}</td>
             <td>{{ chore.description }}</td>
             <td>{{ chore.assigned.name }}</td>
+            <td ng-show="chore.reminder">{{ chore.reminder }}</td>
+            <td ng-hide="chore.reminder"><a class="add-reminder" href="#">Add Reminder</a></td>
           </tr>
         </tbody>
       </table>
