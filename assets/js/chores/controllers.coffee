@@ -84,6 +84,9 @@ chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore
   $scope.editChore = (chore) ->
     $scope.editingChore = new Chore(chore)
 
+  $scope.changeDay = (day) ->
+    $scope.house.changeDay(day)
+
   $scope.addReminder = (chore) ->
     console.log('hello')
 

@@ -7,14 +7,16 @@ chores.factory 'House', (Base, Account, Chore) ->
       p = Base.properties()
       p.members = []
       p.chores = []
+      p.recurs = null
       p
 
-    @apiPath: "#{Base.apiPath}/house/"
+    @apiPath: "#{Base.apiPath}/house"
 
     validateName: ->
       if not @name
         @errors = {msg: 'You forgot to give your household a cool name!'}
         return false
+
       true
 
     create: ->
@@ -25,6 +27,11 @@ chores.factory 'House', (Base, Account, Chore) ->
     addMember: (member) ->
       member.sendInvite(@id).then (_member) =>
         @members.push(_member)
+
+    changeDay: (day) ->
+      @recurs = day
+      @save
+        recurs: @recurs
 
     removeChore: (chore) ->
       chore_id = chore.id

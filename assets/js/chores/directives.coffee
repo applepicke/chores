@@ -61,13 +61,33 @@ chores.directive 'ngHoverShow', ->
   link: (scope, elm, attrs) ->
     item = $('.' + attrs.ngHoverShow, elm)
     item.hide()
+
     elm.hover =>
       item.show()
+
     elm.mouseleave =>
       item.hide()
 
-chores.directive 'ngWeekday', ->
+chores.directive 'ngWeekday', ($parse) ->
   restrict: 'A'
   link: (scope, elm, attrs) ->
-    elm.weekday();
+    content = $('<input class="day-input"></input>')
+
+    content.change ->
+      value = content.val()
+      item = $parse(attrs.ngWeekday)
+      item.assign(scope, value)
+
+      scope.$eval(attrs.ngWeekdayChange)
+
+    elm.popover
+      content: content
+
+    content.weekday {}
+
+
+
+
+
+
 

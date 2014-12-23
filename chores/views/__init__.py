@@ -215,14 +215,14 @@ def api_house(request, id):
   except House.DoesNotExist:
     raise http.Http404
 
+  recurs = request.POST.get('recurs')
+
+  if recurs:
+    house.recurs = recurs
+    house.save()
+
   return http.HttpResponse(json.dumps({
-    'data': {
-      'id': house.id,
-      'name': house.name,
-      'members': [user.as_dict() for user in house.users],
-      'owner': house.owner.as_dict(),
-      'chores': [chore.as_dict() for chore in house.chores.all()],
-    },
+    'data': house.as_dict(),
   }))
 
 @login_required

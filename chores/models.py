@@ -164,6 +164,7 @@ class House(models.Model):
       'name': self.name,
       'members': [m.as_dict() for m in self.users if m],
       'chores': [c.as_dict() for c in self.chores.all()],
+      'recurs': self.recurs,
     }
 
 class Chore(models.Model):

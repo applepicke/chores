@@ -8,11 +8,11 @@
   <div class="row">
     <div class="weekly-reminder small-centered small-12 columns">
       <span class="fa fa-clock-o"></span>
-      <span ng-hide="house.recurs">
-        <a class="change" href="#">Set reccuring day</a>
-      </span>
-      <span ng-show="house.recurs">
-        Weekly Reminder: {{ house.recurs }}<a class="change" href="#">Change</a>
+      <span ng-show="house.recurs">Notify household on <span class="recurs">{{ house.recurs }}</span></span>
+      <a class="change popover-item" ng-weekday="house.recurs" ng-weekday-change="changeDay(house.recurs)" href="#">
+        <span class="inner-text" ng-hide="house.recurs">Set a weekly notification day</span>
+        <span class="inner-text" ng-show="house.recurs">Change</span>
+      </a>
       </span>
     </div>
   </div>
@@ -128,7 +128,7 @@
         </div>
       </div>
       <div class="right">
-        <a ng-confirm="removeChore(editingChore)" ng-confirm-message="Are you sure you want to delete this thing?" class="button alert" href="#">Delete</a>
+        <a ng-confirm="removeChore(editingChore)" ng-confirm-message="Are you sure you want to delete this thing?" class="button alert delete" href="#">Delete</a>
         <a ng-click="saveChore(editingChore)" class="right button" href="#">Save</a>
       </div>
       <a class="close-reveal-modal">&#215;</a>

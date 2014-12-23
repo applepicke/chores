@@ -1,8 +1,56 @@
 
+.popover
+  cursor: default
+
+  &.weekday
+    position: absolute
+    background: #000
+    opacity: 0.9
+    z-index: 20
+    width: 150px
+    height: 35px
+    left: -45px
+    top: -45px
+
+    border-radius: 5px
+    transition: all 0.5 ease-in
+
+  &:before
+    border-top: 7px solid rgba(0,0,0,0.85)
+    border-right: 7px solid transparent
+    border-left: 7px solid transparent
+    bottom: -7px
+    content: ''
+    display: block
+    left: 50%
+    margin-left: -7px
+    position: absolute
+
+
 .weekday-picker
+  text-align: center
+  margin-top: 4px
 
   .day
     display: inline-block
-    width: 20px
-    height: 20px
-    border: 1px solid #999
+    width: 15px
+    padding: 2px
+    height: 15px
+
+    span:hover
+      color: #008CBA
+      cursor: pointer
+
+a.popover-item
+  position: relative
+  display: inline-block
+
+  .inner-text
+    color: #008CBA
+
+.recurs
+  text-transform: uppercase
+  font-size: 18px
+  color: #ccc
+  font-weight: bold
+  padding: 2px
