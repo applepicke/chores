@@ -35,10 +35,12 @@ $ ->
 
     elm.click (e) ->
       e.preventDefault()
+      elm.addClass('popped')
       popover.show()
 
     $(document).click (e) ->
       if not $(e.target).closest(elm).length or $(e.target).closest('.day').length
+        elm.removeClass('popped')
         popover.hide()
 
 

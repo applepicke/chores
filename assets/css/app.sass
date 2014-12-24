@@ -46,6 +46,9 @@ body
   .button-holder
     padding: 0
 
+table
+  border-radius: 5px
+
 p
   .small-description
     font-size: 15px
@@ -136,10 +139,23 @@ p
 
   .chores-list
     .chore-row
+
+      .add-reminder
+        opacity: 0
+
+      .reminder-cell.popped
+        .add-reminder
+          opacity: 1
+
       &:hover
         cursor: pointer
+
         .chore-actions
           display: block
+
+        .add-reminder
+          opacity: 1
+          color: #008CBA
 
 .divider
   margin: 0 auto
@@ -270,5 +286,44 @@ p
 
   .delete
     margin-right: 5px
+
+
+
+.add-reminders
+  text-align: center
+
+  .save-reminder
+    width: 200px
+    border-radius: 5px
+    margin-top: 10px
+
+  .reminder-types
+    font-size: 24px
+    text-align: center
+    padding-left: 5px
+    margin-bottom: 15px
+
+    .reminder-type
+      padding: 8px
+      border: 1px solid #333333
+      border-left: none
+      width: 65px
+      margin-left: -8px
+
+      &:last-child
+        border-radius: 0 5px 5px 0
+
+      &:first-child
+        border-left: 1px solid #333
+        border-radius: 5px 0 0 5px
+
+      &:hover, &.selected
+        color: #fff
+        background: #333
+        cursor: pointer
+
+      &.selected
+        cursor: default
+
 
 

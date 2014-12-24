@@ -9,7 +9,7 @@
     <div class="weekly-reminder small-centered small-12 columns">
       <span class="fa fa-clock-o"></span>
       <span ng-show="house.recurs">Notify household on <span class="recurs">{{ house.recurs }}</span></span>
-      <a class="change popover-item" ng-weekday="house.recurs" ng-weekday-change="changeDay(house.recurs)" href="#">
+      <a class="change popover-item" ng-weekday-popover="house.recurs" ng-weekday-change="changeDay(house.recurs)" href="#">
         <span class="inner-text" ng-hide="house.recurs">Set a weekly notification day</span>
         <span class="inner-text" ng-show="house.recurs">Change</span>
       </a>
@@ -28,22 +28,26 @@
           <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
         </a>
       </h4>
-      <table ng-show="house.chores">
+      <table ng-show="house.chores" class="small-12">
         <thead>
           <tr>
             <th>Name</th>
-            <th>Description</th>
+          <th>Description</th>
             <th class="icon"><span class="fa fa-user"></span>User</th>
             <th class="icon"><span class="fa fa-clock-o"></span>Reminder</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="chore-row" ng-click="editChore(chore)" data-reveal-id="editChoreModal" ng-hover-show="add-reminder" ng-repeat="chore in house.chores">
+          <tr class="chore-row" ng-click="editChore(chore)" data-reveal-id="edit-chore-modal" ng-repeat="chore in house.chores">
             <td>{{ chore.name }}</td>
             <td>{{ chore.description }}</td>
             <td>{{ chore.assigned.name }}</td>
-            <td ng-show="chore.reminder">{{ chore.reminder }}</td>
-            <td ng-hide="chore.reminder"><a class="add-reminder" href="#">Add Reminder</a></td>
+            <td ng-reveal="add-reminder-modal">
+              <a class="reminder-cell" href="#">
+                <span class="inner-text add-reminder" ng-hide="chore.reminder">Add Reminder</span>
+                <span class="inner-text" ng-show="chore.reminder">{{ chore.reminder }}</span>
+              </a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -54,9 +58,9 @@
       <h4>
         <span class="fa fa-user"></span>
         Members
-        <a ng-clear="member" data-reveal-id="userModal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
+        <a ng-clear="member" data-reveal-id="user-modal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
       </h4>
-      <table>
+      <table class="small-12">
         <tr ng-repeat="user in house.members" class="user">
           <td>{{ user.name }}</td>
         </tr>
@@ -66,7 +70,7 @@
     <div id="newChoreModal" class="reveal-modal small" data-reveal>
       <div class="row">
         <h3 class="small-12 columns">
-          <span>{{ newChore.title }}</span>
+          <span>New Chore</span>
         </h3>
       </div>
       <div class="row">
@@ -97,55 +101,95 @@
       </div>
       <a class="close-reveal-modal">&#215;</a>
     </div>
+  </div>
 
-    <div id="editChoreModal" class="reveal-modal small" data-reveal>
-      <div class="row">
-        <h3 class="small-12 columns">
-          <span>{{ editingChore.title }}</span>
-        </h3>
-      </div>
-      <div class="row">
-        <div class="alert-box alert" ng-class="{ hidden: !editingChore.errors.general }">{{ editingChore.errors.general }}</div>
-      </div>
-      <div class="row">
-        <div class="large-6 columns">
-          <label for="name">Name
-            <input ng-save-chore="keypress" ng-model="editingChore.name" ng-class="{ error: editingChore.error.name }" type="text" name="name" placeholder="Enter name here..."></input>
-          </label>
-          <small class="error" ng-class="{ hidden: !editingChore.errors.name }">{{ newChore.errors.name }}</small>
-        </div>
-        <div class="large-6 columns">
-          <label for="chore-users">Who is doing the chore?</label>
-          <select ng-model="editingChore.assigned" ng-options="user.name for user in house.members track by user.id" name="chore-users" placeholder="Enter name here...">
-            <option value="">No one!</option>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-12 columns">
-          <label for="description">Description</label>
-          <textarea ng-model="editingChore.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
-        </div>
-      </div>
-      <div class="right">
-        <a ng-confirm="removeChore(editingChore)" ng-confirm-message="Are you sure you want to delete this thing?" class="button alert delete" href="#">Delete</a>
-        <a ng-click="saveChore(editingChore)" class="right button" href="#">Save</a>
-      </div>
-      <a class="close-reveal-modal">&#215;</a>
+  <div id="edit-chore-modal" class="reveal-modal small" data-reveal>
+    <div class="row">
+      <h3 class="small-12 columns">
+        <span>{{ editingChore.name }}</span>
+      </h3>
     </div>
-
-    <div id="userModal" class="reveal-modal small" data-reveal>
-      <h3>Invite Member</h3>
-      <div class="row">
-        <label for="email">
-          Email
-          <input ng-add-member="keypress" ng-class="{ error: newMember.errors.email }" ng-model="newMember.email" type="email" name="email" placeholder="Enter email here..."></input>
-          <small class="error" ng-class="{ hidden: !newMember.errors.email }">{{ newMember.errors.email }}</small>
+    <div class="row">
+      <div class="alert-box alert" ng-class="{ hidden: !editingChore.errors.general }">{{ editingChore.errors.general }}</div>
+    </div>
+    <div class="row">
+      <div class="large-6 columns">
+        <label for="name">Name
+          <input ng-save-chore="keypress" ng-model="editingChore.name" ng-class="{ error: editingChore.error.name }" type="text" name="name" placeholder="Enter name here..."></input>
         </label>
+        <small class="error" ng-class="{ hidden: !editingChore.errors.name }">{{ newChore.errors.name }}</small>
       </div>
-      <a ng-click="addMember(newMember)" href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>
-      <a class="close-reveal-modal">&#215;</a>
+      <div class="large-6 columns">
+        <label for="chore-users">Who is doing the chore?</label>
+        <select ng-model="editingChore.assigned" ng-options="user.name for user in house.members track by user.id" name="chore-users" placeholder="Enter name here...">
+          <option value="">No one!</option>
+        </select>
+      </div>
     </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <label for="description">Description</label>
+        <textarea ng-model="editingChore.description" name="description" placeholder="(Optional) Enter description here..."></textarea>
+      </div>
+    </div>
+    <div class="right">
+      <a ng-confirm="removeChore(editingChore)" ng-confirm-message="Are you sure you want to delete this thing?" class="button alert delete" href="#">Delete</a>
+      <a ng-click="saveChore(editingChore)" class="right button" href="#">Save</a>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="user-modal" class="reveal-modal small" data-reveal>
+    <h3>Invite Member</h3>
+    <div class="row">
+      <label for="email">
+        Email
+        <input ng-add-member="keypress" ng-class="{ error: newMember.errors.email }" ng-model="newMember.email" type="email" name="email" placeholder="Enter email here..."></input>
+        <small class="error" ng-class="{ hidden: !newMember.errors.email }">{{ newMember.errors.email }}</small>
+      </label>
+    </div>
+    <a ng-click="addMember(newMember)" href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+
+  <div id="add-reminder-modal" class="add-reminders reveal-modal small" data-reveal>
+    <h3>Add Reminder</h3>
+    <div class="row">
+      <div class="reminder-types">
+        <span class="reminder-type fa fa-clock-o" ng-reminder-choice="once" data-tooltip title="Once"></span>
+        <span class="reminder-type fa fa-calendar" ng-reminder-choice="weekly" data-tooltip aria-haspopup="true" title="Weekly"></span>
+        <span class="reminder-type fa fa-newspaper-o" ng-reminder-choice="daily" data-tooltip aria-haspopup="true" title="Daily"></span>
+      </div>
+    </div>
+
+    <div class="reminder-once row" ng-show="newReminder.type == 'once'">
+      <label class="small-12 medium-6 large-5 large-offset-1 columns">
+        Date
+        <input ng-calendar type="text" class="date" placeholder="MM/DD/YYYY"></input>
+      </label>
+      <label class="small-12 medium-6 large-5 end columns">
+        Time
+        <input ng-time type="text" class="time" placeholder="HH:MM PM"></input>
+      </label>
+    </div>
+
+    <div class="reminder-weekly" ng-show="newReminder.type == 'weekly'">
+      <label class="small-12 large-8 large-offset-2 end columns">
+        Day
+        <input ng-weekday type="text" class="day"></input>
+      </label>
+      <label class="small-12 large-6 large-offset-3 end columns">
+        Time
+        <input ng-time type="text" class="time" placeholder="HH:MM PM"></input>
+      </label>
+    </div>
+
+    <div class="reminder-daily" ng-show="newReminder.type == 'daily'">
+      HELLOOO
+    </div>
+
+    <a ng-click="saveReminder(newReminder)" href="#" class="save-reminder button">Save</a>
+    <a class="close-reveal-modal">&#215;</a>
   </div>
 
 </div>

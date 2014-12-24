@@ -16,13 +16,14 @@
     "tests"
   ],
   "dependencies": {
-    "foundation": "~5.4.1",
+    "foundation": "~5.4.7",
     "jquery": "~2.1.1",
     "angular": "~1.2.23",
     "angular-route": "~1.2.23",
     "angular-resource": "~1.2.23",
     "font-awesome": "~4.2.0",
     "underscore": "~1.7.0",
-    "jquery-ui": "~1.11.2"
+    "jquery-ui": "~1.11.2",
+    "moment": "~2.8.4"
   }
 }

@@ -60,22 +60,39 @@ chores.directive 'ngHoverShow', ->
   restrict: 'A'
   link: (scope, elm, attrs) ->
     item = $('.' + attrs.ngHoverShow, elm)
-    item.hide()
-
     elm.hover =>
       item.show()
 
-    elm.mouseleave =>
-      item.hide()
+chores.directive 'ngReveal', () ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.click ->
+      modal = $('#' + attrs.ngReveal)
+      modal.foundation 'reveal', 'open'
+      false
 
-chores.directive 'ngWeekday', ($parse) ->
+chores.directive 'ngReminderChoice', () ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    if scope.newReminder.type == attrs.ngReminderChoice
+      elm.addClass 'selected'
+
+    elm.click ->
+      scope.$apply ->
+        scope.newReminder =
+          type: attrs.ngReminderChoice
+
+      elm.addClass 'selected'
+      elm.siblings().removeClass 'selected'
+
+chores.directive 'ngWeekdayPopover', ($parse) ->
   restrict: 'A'
   link: (scope, elm, attrs) ->
     content = $('<input class="day-input"></input>')
 
     content.change ->
       value = content.val()
-      item = $parse(attrs.ngWeekday)
+      item = $parse(attrs.ngWeekdayPopover)
       item.assign(scope, value)
 
       scope.$eval(attrs.ngWeekdayChange)
@@ -84,6 +101,21 @@ chores.directive 'ngWeekday', ($parse) ->
       content: content
 
     content.weekday {}
+
+chores.directive 'ngWeekday', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.weekday()
+
+chores.directive 'ngCalendar', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.datepicker()
+
+chores.directive 'ngTime', ->
+  restrict: 'A'
+  link: (scope, elm, attrs) ->
+    elm.timepicker()
 
 
 

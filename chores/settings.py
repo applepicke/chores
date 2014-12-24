@@ -56,6 +56,7 @@ PIPELINE_JS = {
             'jquery-ui/jquery-ui.min.js',
             'jquery-ui/ui/datepicker.js',
             'mustache/mustache.js',
+            'moment/moment.js',
             'modernizr/modernizr.js',
             'underscore/underscore.js',
             'js/app.coffee',
@@ -85,8 +86,8 @@ PIPELINE_CSS = {
         'source_filenames': (
             'foundation/css/foundation.css',
             'font-awesome/css/font-awesome.css',
-            'css/app.sass',
             'css/dates.sass',
+            'css/app.sass',
         ),
         'output_filename': 'js/app.css',
     }

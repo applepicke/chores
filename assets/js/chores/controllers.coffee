@@ -56,10 +56,12 @@ chores.controller 'Account', ($scope, Account) ->
 chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account) ->
 
   _.extend $scope,
-    house: {},
+    house: {}
     newChore: new Chore()
     editingChore: null
     newMember: new Account()
+    newReminder:
+      type: 'weekly'
 
   House.find({id: $routeParams.houseId}).then (response) ->
     if response
