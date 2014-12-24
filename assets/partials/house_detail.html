@@ -22,11 +22,8 @@
   <div class="row">
     <div class="chores-list small-12 small-centered large-uncentered large-8 columns">
       <h4>
-        <span class="fa fa-cutlery"></span>
         Chores
-        <a data-reveal-id="newChoreModal" href="#">
-          <span class="add-chore fa fa-plus-circle" data-tooltip aria-haspopup="true" title="Add new chore"></span>
-        </a>
+        <a data-reveal-id="newChoreModal" class="btn" href="#">Add</a>
       </h4>
       <table ng-show="house.chores" class="small-12">
         <thead>
@@ -58,7 +55,7 @@
       <h4>
         <span class="fa fa-user"></span>
         Members
-        <a ng-clear="member" data-reveal-id="user-modal" href="#"><span class="add-user fa fa-plus-circle"></span></a>
+        <a ng-clear="member" class="btn" data-reveal-id="user-modal" href="#">Add</a>
       </h4>
       <table class="small-12">
         <tr ng-repeat="user in house.members" class="user">
