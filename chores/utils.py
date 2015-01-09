@@ -5,6 +5,8 @@ import base64
 import random
 import string
 import pytz
+import urllib
+import hashlib
 
 from django.conf import settings
 
@@ -31,6 +33,12 @@ def to_utc(datetime, user):
 def from_utc(datetime, user):
   tz = pytz.timezone(user.timezone or 'UTC')
   return datetime.astimezone(tz).replace(tzinfo=None)
+
+def gravatar(email, size=25):
+  gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+  gravatar_url += urllib.urlencode({'s':str(size)})
+
+  return gravatar_url
 
 class Facebook(object):
   user_info = None

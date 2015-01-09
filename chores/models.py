@@ -7,7 +7,7 @@ from django.contrib import admin
 from jsonfield import JSONField
 
 from chores.cache import CachedSMSVerificationCode
-from chores.utils import random_string, to_utc
+from chores.utils import random_string, to_utc, gravatar
 from chores.sms import SMSClient
 
 class User(models.Model):
@@ -25,6 +25,14 @@ class User(models.Model):
   sms_verified = models.BooleanField(default=False)
   sms_banned = models.BooleanField(default=False)
   timezone = models.CharField(max_length=1024, default='')
+
+  @property
+  def full_name(self):
+    return '%s %s' % (self.first_name, self.last_name)
+
+  @property
+  def avatar(self):
+    return gravatar(self.email)
 
   @property
   def has_password(self):

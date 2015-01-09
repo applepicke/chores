@@ -10,9 +10,13 @@
 
     <section class="top-bar-section">
       <ul class="right">
-        <li><a class="home-button" target="_self" href="/">Home</a></li>   
-        <li><a class="account-settings" target="_self" href="/account/">Account</a></li>
-        <li><a class="logout-button" target="_self" href="/logout/">Logout</a></li>
+        <li><a class="home-button" target="_self" href="/">Home</a></li>
+        <li class="has-dropdown">
+          <a target="_self"><img src="{{ app_user.avatar }}"></img>{{ app_user.full_name }}</a>
+          <ul class="dropdown">
+            <li><a class="account-settings" target="_self" href="/account/">Account Settings</a></li>
+            <li><a class="logout-button" target="_self" href="/logout/">Logout</a></li>
+          </ul>
       </ul>
     </section>
   </nav>
