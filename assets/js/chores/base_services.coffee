@@ -52,7 +52,7 @@ chores.factory 'Base', ($q, $http) ->
           promise = $http.post @constructor.apiPath, data, {params: params}
         promise
           .success (data, status, headers, config) =>
-            deferred.resolve #@successCallback(data, status, headers, config)
+            deferred.resolve @successCallback(data, status, headers, config)
           .error (data, status, headers, config) =>
             deferred.reject @failureCallback(data, status, headers, config)
       else

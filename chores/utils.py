@@ -4,6 +4,7 @@ import logging
 import base64
 import random
 import string
+import pytz
 
 from django.conf import settings
 
@@ -22,6 +23,14 @@ def tokenize(txt):
 def untokenize(token):
   txt, secret = base64.urlsafe_b64decode(str(token)).split(':')
   return txt
+
+def to_utc(datetime, user):
+  tz = pytz.timezone(user.timezone or 'UTC')
+  return tz.localize(datetime, is_dst=None).astimezone(pytz.utc)
+
+def from_utc(datetime, user):
+  tz = pytz.timezone(user.timezone or 'UTC')
+  return datetime.astimezone(tz).replace(tzinfo=None)
 
 class Facebook(object):
   user_info = None

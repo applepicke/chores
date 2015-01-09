@@ -12,6 +12,11 @@ chores.factory 'House', (Base, Account, Chore) ->
 
     @apiPath: "#{Base.apiPath}/house"
 
+    constructor: (propValues, convertKeys = false) ->
+      super
+      @chores = _.map @chores, (chore) ->
+        new Chore(chore)
+
     validateName: ->
       if not @name
         @errors = {msg: 'You forgot to give your household a cool name!'}
@@ -33,6 +38,10 @@ chores.factory 'House', (Base, Account, Chore) ->
       @save
         recurs: @recurs
 
+    getChore: (choreId) ->
+      _.find @chores, (item) ->
+        choreId == item.id
+
     removeChore: (chore) ->
       chore_id = chore.id
       chore.delete().then =>
@@ -40,7 +49,8 @@ chores.factory 'House', (Base, Account, Chore) ->
 
     saveChore: (chore) ->
       existing = !!chore.id
-      chore.save(@id).then (_chore) =>
+      chore.houseId = @id
+      chore.save().then (_chore) =>
         if not existing
           if not @chores.length
             @chores = [_chore]
@@ -50,22 +60,33 @@ chores.factory 'House', (Base, Account, Chore) ->
           _.extend(_.find(@chores, (item) -> item.id == _chore.id), _chore)
 
     successCallback: (data, status, headers, config) =>
-      super
-      @.members = _.map @.members, (member) ->
-        return new Account(member)
+      if data
+        super
+      if data.members
+        @members = _.map @members, (member) ->
+          new Account(member)
+      if data.chores
+        @chores = _.map @chores, (chore) ->
+          new Chore(chore)
 
   House
 
-chores.factory 'Chore', (Base) ->
+chores.factory 'Chore', (Base, Reminder) ->
   class Chore extends Base
 
     @properties: ->
       p = Base.properties()
       p.assigned = null
       p.description = null
+      p.houseId = null
+      p.reminder = null
       p
 
     @apiPath: "#{Base.apiPath}/chore"
+
+    constructor: (propValues, convertKeys = false) ->
+      super
+      @reminder = new Reminder(@reminder)
 
     validate: ->
       if not @name
@@ -73,13 +94,70 @@ chores.factory 'Chore', (Base) ->
         return false
       return true
 
-    save: (house_id) ->
+    save: (data) ->
+      if @validate()
+        if not data
+          data =
+            name: @name
+            assigned: [if @assigned then @assigned.id else null]
+            description: @description
+
+        data.house_id = @houseId
+        super data
+
+    successCallback: (data, status, headers, config) =>
+      super
+      @reminder = new Reminder(data.reminder)
+
+chores.factory 'Reminder', (Base) ->
+  class Reminder extends Base
+
+    @properties: ->
+      p = Base.properties()
+      p.type = 'weekly'
+      p.date = null
+      p.time = null
+      p.day = null
+      p.chore = null
+      p
+
+    @apiPath: "#{Base.apiPath}/reminder"
+
+    pretty: ->
+      if @type == 'once'
+        date = moment("#{@date} #{@time}" , 'MM/DD/YYYY hh:mm a')
+        return date.format('MMM DD, YYYY hh:mm a')
+
+      if @type == 'weekly'
+        return "#{@day.capitalize()}s @ #{@time}"
+
+      if @type == 'daily'
+        return "Daily @ #{@time}"
+
+      return ''
+
+    validate: ->
+      valid = true
+      @errors = {}
+
+      if @type == 'once' and not moment(@date, 'MM/DD/YYYY', true).isValid()
+        @errors.date = 'Invalid date or time format'
+        valid = false
+
+      if not moment(@time, 'hh:mm a', true).isValid()
+        @errors.time = 'Invalid time'
+        valid = false
+
+      valid
+
+    save: ->
       if @validate()
         super
-          name: @name
-          assigned: [if @assigned then @assigned.id else null]
-          house_id: house_id
-          description: @description
+          type: @type
+          date: @date
+          time: @time
+          day: @day
+          chore_id: @chore.id
 
 chores.factory 'Account', (Base) ->
   class Account extends Base

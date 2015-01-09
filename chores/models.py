@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib import admin
@@ -5,7 +7,7 @@ from django.contrib import admin
 from jsonfield import JSONField
 
 from chores.cache import CachedSMSVerificationCode
-from chores.utils import random_string
+from chores.utils import random_string, to_utc
 from chores.sms import SMSClient
 
 class User(models.Model):
@@ -22,6 +24,7 @@ class User(models.Model):
   sms_enabled = models.BooleanField(default=False)
   sms_verified = models.BooleanField(default=False)
   sms_banned = models.BooleanField(default=False)
+  timezone = models.CharField(max_length=1024, default='')
 
   @property
   def has_password(self):
@@ -45,6 +48,10 @@ class User(models.Model):
   @property
   def chores(self):
     return Chore.objects.filter(user__id=self.id)
+
+  @property
+  def editable_chores(self):
+    return Chore.objects.filter(house__owner__id=self.id)
 
   @property
   def can_receive_sms(self):
@@ -194,16 +201,53 @@ class Chore(models.Model):
       'name': self.name,
       'description': self.description,
       'assigned': self.users.all()[0].as_dict() if self.users.all().exists() else None,
+      'house_id': self.house.id,
+      'reminder': [r.as_dict() for r in self.reminders.all()][0] if self.reminders.count() else None,
+    }
+
+class Reminder(models.Model):
+  type = models.CharField(max_length=255)
+  date = models.DateTimeField(default=datetime.datetime.utcnow())
+  day = models.CharField(max_length=255, default='')
+  time = models.CharField(max_length=255, default='')
+  chore = models.ManyToManyField(Chore, related_name="reminders")
+
+  def format_for_save(self, user):
+    self.day = self.day or ''
+    self.time = self.time or ''
+
+    if type == 'once':
+      date = datetime.datetime.strptime('%s %s' % (self.date, self.time), '%m/%d/%Y %H:%M %p')
+      self.date = to_utc(date, user)
+    else:
+      self.date = datetime.datetime.utcnow()
+
+    print self.date
+
+    time = datetime.datetime.strptime(self.time, '%H:%M %p')
+    self.time = to_utc(time, user).strftime('%H:%M %p')
+
+  def as_dict(self):
+    return {
+      'id': self.id,
+      'type': self.type,
+      'date': self.date.strftime('%m/%d/%Y'),
+      'day': self.day,
+      'time': self.time,
+      'chore_id': self.chore.all()[0].id,
     }
 
 class UserAdmin(admin.ModelAdmin):
-    pass
+  pass
 
 class HouseAdmin(admin.ModelAdmin):
-    pass
+  pass
 
 class ChoreAdmin(admin.ModelAdmin):
-    pass
+  pass
+
+class ReminderAdmin(admin.ModelAdmin):
+  pass
 
 admin.site.register(User, UserAdmin)
 admin.site.register(House, HouseAdmin)

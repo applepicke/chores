@@ -9,7 +9,10 @@
     <div class="weekly-reminder small-centered small-12 columns">
       <span class="fa fa-clock-o"></span>
       <span ng-show="house.recurs">Notify household on <span class="recurs">{{ house.recurs }}</span></span>
-      <a class="change popover-item" ng-weekday-popover="house.recurs" ng-weekday-change="changeDay(house.recurs)" href="#">
+      <a class="change popover-item" ng-popover=".weekday" href="#">
+        <span class="popover weekday">
+          <ng-include ng-weekday="house.recurs" ng-weekday-change="changeDay(house.recurs)" src="'/static/partials/utils/weekday.html'"></ng-include>
+        </span>
         <span class="inner-text" ng-hide="house.recurs">Set a weekly notification day</span>
         <span class="inner-text" ng-show="house.recurs">Change</span>
       </a>
@@ -39,10 +42,10 @@
             <td>{{ chore.name }}</td>
             <td>{{ chore.description }}</td>
             <td>{{ chore.assigned.name }}</td>
-            <td ng-reveal="add-reminder-modal">
+            <td ng-reveal="add-reminder-modal" ng-click="editReminder(chore)">
               <a class="reminder-cell" href="#">
                 <span class="inner-text add-reminder" ng-hide="chore.reminder">Add Reminder</span>
-                <span class="inner-text" ng-show="chore.reminder">{{ chore.reminder }}</span>
+                <span class="inner-text existing-reminder" ng-show="chore.reminder">{{ chore.reminder.pretty() }}</span>
               </a>
             </td>
           </tr>
@@ -150,39 +153,46 @@
   </div>
 
   <div id="add-reminder-modal" class="add-reminders reveal-modal small" data-reveal>
-    <h3>Add Reminder</h3>
+    <h3>Add Reminder (<span>{{ newReminder.type }}</span>)</h3>
     <div class="row">
       <div class="reminder-types">
-        <span class="reminder-type fa fa-clock-o" ng-reminder-choice="once" data-tooltip title="Once"></span>
-        <span class="reminder-type fa fa-calendar" ng-reminder-choice="weekly" data-tooltip aria-haspopup="true" title="Weekly"></span>
-        <span class="reminder-type fa fa-newspaper-o" ng-reminder-choice="daily" data-tooltip aria-haspopup="true" title="Daily"></span>
+        <span ng-class="{ selected: newReminder.type == 'once' }" class="reminder-type fa fa-clock-o" ng-reminder-choice="once" data-tooltip title="Once"></span>
+        <span ng-class="{ selected: newReminder.type == 'weekly' }" class="reminder-type fa fa-calendar" ng-reminder-choice="weekly" data-tooltip title="Weekly"></span>
+        <span ng-class="{ selected: newReminder.type == 'daily' }" class="reminder-type fa fa-newspaper-o" ng-reminder-choice="daily" data-tooltip title="Daily"></span>
       </div>
     </div>
 
     <div class="reminder-once row" ng-show="newReminder.type == 'once'">
       <label class="small-12 medium-6 large-5 large-offset-1 columns">
         Date
-        <input ng-calendar type="text" class="date" placeholder="MM/DD/YYYY"></input>
+        <input ng-calendar ng-model="newReminder.date" type="text" class="date" placeholder="MM/DD/YYYY"></input>
+        <small class="error" ng-show="newReminder.errors.date">{{ newReminder.errors.date }}</small>
       </label>
       <label class="small-12 medium-6 large-5 end columns">
         Time
-        <input ng-time type="text" class="time" placeholder="HH:MM PM"></input>
+        <input ng-time type="text" ng-model="newReminder.time" class="time" placeholder="HH:MM PM"></input>
+        <small class="error" ng-show="newReminder.errors.time">{{ newReminder.errors.time }}</small>
       </label>
     </div>
 
     <div class="reminder-weekly" ng-show="newReminder.type == 'weekly'">
       <label class="small-12 large-8 large-offset-2 end columns">
         Day
-        <input ng-weekday type="text" class="day"></input>
+        <ng-include ng-weekday="newReminder.day" src="'/static/partials/utils/weekday.html'"></ng-include>
       </label>
       <label class="small-12 large-6 large-offset-3 end columns">
         Time
-        <input ng-time type="text" class="time" placeholder="HH:MM PM"></input>
+        <input ng-time ng-model="newReminder.time" type="text" class="time" placeholder="HH:MM PM"></input>
+        <small class="error" ng-show="newReminder.errors.time">{{ newReminder.errors.time }}</small>
       </label>
     </div>
 
     <div class="reminder-daily" ng-show="newReminder.type == 'daily'">
-      HELLOOO
+      <label class="small-12 medium-6 large-offset-3 large-6 end columns">
+        Time
+        <input ng-time ng-model="newReminder.time" type="text" class="time" placeholder="HH:MM PM"></input>
+        <small class="error" ng-show="newReminder.errors.time">{{ newReminder.errors.time }}</small>
+      </label>
     </div>
 
     <a ng-click="saveReminder(newReminder)" href="#" class="save-reminder button">Save</a>

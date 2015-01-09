@@ -27,5 +27,8 @@ urlpatterns = patterns('',
   url(r'^api/chore/?$', 'chores.views.api_chores', name='api_chores'),
   url(r'^api/chore/(?P<chore_id>\d+)/?$', 'chores.views.api_chore', name='api_chore'),
 
+  url(r'^api/reminder/?$', 'chores.views.api_reminder', name='api_reminders'),
+  url(r'^api/reminder/(?P<reminder_id>\d+)/?$', 'chores.views.api_reminder', name='api_reminder'),
+
   url(r'^$', 'chores.views.index', name='index'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

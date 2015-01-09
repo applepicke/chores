@@ -1,6 +1,7 @@
 import json
 import facebook
 import smtplib
+import datetime
 
 from django import http
 from django.conf import settings
@@ -9,7 +10,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
-from chores.models import User, House, Chore
+from chores.models import User, House, Chore, Reminder
 from chores.utils import Facebook, untokenize, rando_msg
 from chores.context import context
 from chores.users.invitations import Invitation
@@ -221,8 +222,36 @@ def api_house(request, id):
     house.recurs = recurs
     house.save()
 
+    return http.HttpResponse()
+
   return http.HttpResponse(json.dumps({
     'data': house.as_dict(),
+  }))
+
+@login_required
+def api_reminder(request, reminder_id=None):
+  user = request.app_user
+
+  chore_id = request.REQUEST.get('chore_id')
+  chore = get_object_or_404(user.editable_chores, id=chore_id)
+
+  if reminder_id:
+    reminder = chore.reminders.get(id=reminder_id)
+  else:
+    reminder = Reminder()
+
+  reminder.type = request.REQUEST.get('type')
+  reminder.date = request.REQUEST.get('date', '')
+  reminder.day = request.REQUEST.get('day', '')
+  reminder.time = request.REQUEST.get('time', '')
+
+  reminder.format_for_save(user)
+
+  reminder.save()
+  chore.reminders = [reminder]
+
+  return http.HttpResponse(json.dumps({
+    'data': reminder.as_dict(),
   }))
 
 @login_required

@@ -35,6 +35,11 @@ body
   li
     color: #eee
 
+  label
+    input[type="text"]
+      margin-bottom: 0
+
+
   a.btn
     font-size: 15px
     text-transform: uppercase
@@ -58,6 +63,9 @@ body
 
 table
   border-radius: 5px
+
+  span
+    color: #333
 
 p
   .small-description
@@ -152,6 +160,10 @@ p
 
       .add-reminder
         opacity: 0
+
+      .existing-reminder
+        &:hover
+          color: #008CBA
 
       .reminder-cell.popped
         .add-reminder
