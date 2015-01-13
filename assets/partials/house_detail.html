@@ -47,6 +47,7 @@
                 <span class="inner-text add-reminder" ng-hide="chore.reminder">Add Reminder</span>
                 <span class="inner-text existing-reminder" ng-show="chore.reminder">{{ chore.reminder.pretty() }}</span>
               </a>
+              <span class="edit-overlay fa fa-pencil"></span>
             </td>
           </tr>
         </tbody>
@@ -153,7 +154,7 @@
   </div>
 
   <div id="add-reminder-modal" class="add-reminders reveal-modal small" data-reveal>
-    <h3>Add Reminder (<span>{{ newReminder.type }}</span>)</h3>
+    <h3>{{ newReminder.chore.name }}'s Reminder</h3>
     <div class="row">
       <div class="reminder-types">
         <span ng-class="{ selected: newReminder.type == 'once' }" class="reminder-type fa fa-clock-o" ng-reminder-choice="once" data-tooltip title="Once"></span>

@@ -79,6 +79,10 @@ p
   h1, h2, h3, h4, h5, p, span, label
     color: #333
 
+.icon
+  span
+    margin-right: 5px
+
 .panel
   background: #000
   opacity: 0.8
@@ -157,6 +161,18 @@ p
 
   .chores-list
     .chore-row
+      position: relative
+
+      .edit-overlay
+        display: none
+        position: absolute
+        right: 25px
+        font-size: 20px
+        color: #008CBA
+
+      &:hover
+        .edit-overlay
+          display: inline-block
 
       .add-reminder
         opacity: 0
@@ -309,7 +325,8 @@ p
   .delete
     margin-right: 5px
 
-
+.avatar
+  margin-right: 8px
 
 .add-reminders
   text-align: center

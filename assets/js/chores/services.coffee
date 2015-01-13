@@ -86,7 +86,8 @@ chores.factory 'Chore', (Base, Reminder) ->
 
     constructor: (propValues, convertKeys = false) ->
       super
-      @reminder = new Reminder(@reminder)
+      if @reminder
+        @reminder = new Reminder(@reminder)
 
     validate: ->
       if not @name
@@ -107,7 +108,9 @@ chores.factory 'Chore', (Base, Reminder) ->
 
     successCallback: (data, status, headers, config) =>
       super
-      @reminder = new Reminder(data.reminder)
+      if data.data.reminder
+        @reminder = new Reminder(data.data.reminder)
+      @
 
 chores.factory 'Reminder', (Base) ->
   class Reminder extends Base
