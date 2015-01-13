@@ -110,6 +110,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'south',
+    'djcelery',
     'pipeline',
     'coverage',
     'chores'
@@ -154,6 +155,12 @@ CACHES = {
         }
     }
 }
+
+# CELERY SETTINGS
+BROKER_URL = 'redis://127.0.0.1:6379:1'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

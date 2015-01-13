@@ -219,6 +219,7 @@ class Reminder(models.Model):
   day = models.CharField(max_length=255, default='')
   time = models.CharField(max_length=255, default='')
   chore = models.ManyToManyField(Chore, related_name="reminders")
+  needs_run = models.BooleanField()
 
   def format_for_save(self, user):
     self.day = self.day or ''
