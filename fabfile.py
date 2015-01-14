@@ -4,7 +4,7 @@ from fabric.api import *
 def production():
   code_dir = '/home/applepicke/webapps/chores/chores/'
   with cd(code_dir):
-    with prefix('. /home/applepicke/webapps/chores/env/default/bin/activate'):
+    with prefix('. /home/applepicke/.virtualenvs/chores/bin/activate'):
       run("git pull")
       run('bower install')
       run('./manage.py syncdb')
