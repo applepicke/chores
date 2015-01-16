@@ -231,8 +231,6 @@ class Reminder(models.Model):
     else:
       self.date = datetime.datetime.utcnow()
 
-    print self.date
-
     time = datetime.datetime.strptime(self.time, '%H:%M %p')
     self.time = to_utc(time, user).strftime('%H:%M %p')
 

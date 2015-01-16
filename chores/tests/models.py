@@ -4,21 +4,18 @@ from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib import admin
 
-from jsonfield import JSONField
-
 from chores import models
-
 
 class ModelTest(TestCase):
 
   def test_User(self):
     # Setup test
-    new_user = mommy.make('chores.User', email = 'test@weiner.com')
+    new_user = mommy.make('chores.User', email='test@weiner.com')
     self.assertTrue(isinstance(new_user,models.User))
 
     # Test if has password
     self.assertFalse(new_user.has_password)
-    new_d_user = auth_models.User.objects.create(email = new_user.email, username = new_user.email)
+    new_d_user = auth_models.User.objects.create(email=new_user.email, username=new_user.email)
     new_user.d_user = new_d_user
     new_d_user.set_password('abc123')
     self.assertTrue(new_user.has_password)
@@ -32,20 +29,20 @@ class ModelTest(TestCase):
 
     # Test the houses the user belongs to
     self.assertFalse(new_user.house)
-    new_house = mommy.make('chores.House', owner = new_user)
+    new_house = mommy.make('chores.House', owner=new_user)
     self.assertEqual(new_user.house, new_house)
 
     # Test the chores that belong to the user
-    self.assertListEqual(list(new_user.chores), [])    
-    new_chore_1 = mommy.make('chores.Chore', user = new_user, house = new_house)
-    new_chore_2 = mommy.make('chores.Chore', user = new_user, house = new_house)
-    self.assertListEqual(list(new_user.chores), [new_chore_1, new_chore_2])
+    self.assertListEqual(list(new_user.chores.all()), [])
+    new_chore_1 = mommy.make('chores.Chore', users=[new_user], house=new_house)
+    new_chore_2 = mommy.make('chores.Chore', users=[new_user], house=new_house)
+    self.assertListEqual(list(new_user.chores.all()), [new_chore_1, new_chore_2])
 
     # Test the add_d_user method
-    new_user_2 = mommy.make('chores.User', email = 'test-2@weiner.com')
-    new_user_2.add_d_user(email = new_user_2.email)
+    new_user_2 = mommy.make('chores.User', email='test-2@weiner.com')
+    new_user_2.add_d_user(email=new_user_2.email)
     self.assertEqual(new_user_2.email, new_user_2.d_user.email)
-    new_user_2.add_d_user(email = new_user_2.email)
+    new_user_2.add_d_user(email=new_user_2.email)
     self.assertEqual(new_user_2.email, new_user_2.d_user.email)
 
     #Test the owns_chore method

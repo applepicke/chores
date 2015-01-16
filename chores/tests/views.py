@@ -1,21 +1,5 @@
 from django.test import TestCase
-from chores import views
-import json
-import facebook
-import smtplib
-
-from django import http
-from django.conf import settings
-from django.contrib.auth import models as auth_models, login, logout, authenticate
-from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-
-from chores.models import User, House, Chore
-from chores.utils import Facebook, untokenize
-from chores.context import context
-from chores.users.invitations import Invitation
-
 
 class ViewTest(TestCase):
 

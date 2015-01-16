@@ -1,2 +1,2 @@
-from chores.tests.test_models import *
-from chores.tests.test_views import *
+from chores.tests.models import *
+from chores.tests.views import *

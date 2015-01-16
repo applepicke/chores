@@ -15,7 +15,7 @@ app = Celery('chores')
 # pickle the object when using Windows.
 
 app.config_from_object('django.conf:settings')
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+app.autodiscover_tasks(['chores'])
 app.conf.update(
     CELERY_RESULT_BACKEND='djcelery.backends.cache:CacheBackend',
 )
