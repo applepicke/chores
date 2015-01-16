@@ -1,12 +1,13 @@
-from django.test import TestCase
 from model_mommy import mommy
+
 from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib import admin
 
 from chores import models
+from chores.tests.base import ChoresTestCase
 
-class ModelTest(TestCase):
+class ModelTest(ChoresTestCase):
 
   def test_User(self):
     # Setup test
