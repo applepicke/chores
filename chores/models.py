@@ -268,7 +268,7 @@ class Reminder(models.Model):
       'date': self.date.strftime('%m/%d/%Y'),
       'day': self.day,
       'time': self.time,
-      'chore_id': self.chore.all()[0].id,
+      'chore_id': self.chore.id,
     }
 
 class UserAdmin(admin.ModelAdmin):

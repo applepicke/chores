@@ -12,7 +12,7 @@ urlpatterns = patterns('',
   url(r'^logout/$', 'chores.views.logout_view', name='logout'),
   url(r'^admin/', include(admin.site.urls)),
   url(r'^house/?$', 'chores.views.index', name='houses'),
-  url(r'^house/(?P<house_id>\d+)/', 'chores.views.house', name='house'),
+  url(r'^house/(?P<house_id>\d+)/?$', 'chores.views.house', name='house'),
   url(r'^welcome/?$', 'chores.views.welcome', name='welcome'),
   url(r'^account/?$', 'chores.views.account', name='account'),
 
