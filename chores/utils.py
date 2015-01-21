@@ -9,6 +9,7 @@ import urllib
 import hashlib
 
 from django.conf import settings
+from django.core.mail import mail_admins
 
 logger = logging.getLogger('')
 
@@ -39,6 +40,15 @@ def gravatar(email, size=25):
   gravatar_url += urllib.urlencode({'s':str(size)})
 
   return gravatar_url
+
+def errorize(e, type):
+  import traceback
+
+  subject = '%s' % type
+  msg = '%s: %s\n\n%s' % (type, e, traceback.format_exc())
+
+  logger.debug(msg)
+  mail_admins(subject, msg)
 
 class Facebook(object):
   user_info = None

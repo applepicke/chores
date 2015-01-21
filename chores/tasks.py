@@ -7,6 +7,7 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 
 from chores.models import Reminder
+from chores.utils import errorize
 
 @periodic_task(run_every=crontab(minute="*/1"))
 def daily_reminders():
@@ -42,4 +43,8 @@ def rollover_date():
 
 @app.task
 def send_reminder(reminder):
-  print reminder
+  try:
+    reminder.send()
+  except Exception as e:
+    errorize(e, 'SEND REMINDER ERROR')
+

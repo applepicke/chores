@@ -3,12 +3,15 @@ import datetime
 from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib import admin
+from django.core.mail import send_mail
+from django.conf import settings
 
 from jsonfield import JSONField
 
 from chores.cache import CachedSMSVerificationCode
 from chores.utils import random_string, to_utc, gravatar
 from chores.sms import SMSClient
+from chores.messages import SMS_MSG, EMAIL_MSG
 
 class User(models.Model):
   fb_user_id = models.CharField(max_length=255, default='')
@@ -218,7 +221,7 @@ class Reminder(models.Model):
   date = models.DateTimeField(default=datetime.datetime.utcnow())
   day = models.CharField(max_length=255, default='')
   time = models.CharField(max_length=255, default='')
-  chore = models.ManyToManyField(Chore, related_name="reminders")
+  chore = models.ForeignKey(Chore, related_name="reminders", null=True)
   needs_run = models.BooleanField()
 
   def format_for_save(self, user):
@@ -233,6 +236,30 @@ class Reminder(models.Model):
 
     time = datetime.datetime.strptime(self.time, '%H:%M %p')
     self.time = to_utc(time, user).strftime('%H:%M %p')
+
+  def send(self):
+    if not self.chore:
+      raise Exception('Reminder has no chore')
+
+    chore = self.chore
+    users = chore.users.all()
+
+    if not users:
+      raise Exception('Chore has no user')
+
+    for user in users:
+      if user.email and user.email_enabled:
+        send_mail(
+          'Chores',
+          EMAIL_MSG % (chore.name, chore.description),
+          'wcurtiscollins@willyc.me',
+          [user.email],
+          fail_silently=False
+        )
+
+      if user.can_receive_sms:
+        client = SMSClient(chore.user)
+        client.send_message(SMS_MSG % (chore.user.name, chore.name))
 
   def as_dict(self):
     return {
