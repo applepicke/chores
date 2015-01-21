@@ -222,7 +222,7 @@ class Reminder(models.Model):
   day = models.CharField(max_length=255, default='')
   time = models.CharField(max_length=255, default='')
   chore = models.ForeignKey(Chore, related_name="reminders", null=True)
-  needs_run = models.BooleanField()
+  needs_run = models.BooleanField(default=False)
 
   def format_for_save(self, user):
     self.day = self.day or ''
