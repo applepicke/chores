@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from chores.models import User, House, Chore, Reminder
-from chores.utils import Facebook, untokenize, rando_msg
+from chores.utils import Facebook, untokenize, rando_msg, get_timezones
 from chores.context import context
 from chores.users.invitations import Invitation
 
@@ -321,6 +321,10 @@ def api_chore(request, chore_id):
     }))
 
   raise http.Http404
+
+@login_required
+def timezones(request):
+  return http.HttpResponse(json.dumps(get_timezones()))
 
 @login_required
 def members(request, house_id):

@@ -60,7 +60,7 @@ chores.controller 'Account', ($scope, Account) ->
   $scope.saveAccount = ->
     $scope.account.savePreferences()
 
-chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account, Reminder) ->
+chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account, Reminder, Timezones) ->
 
   _.extend $scope,
     house: {}
@@ -74,6 +74,9 @@ chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore
       $scope.house = response[0]
     else
       $location.path('/')
+
+  Timezones.get().then (response) ->
+    $scope.timezones = response
 
   $scope.addMember = (member) ->
     $scope.house.addMember(member).then (response) ->

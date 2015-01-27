@@ -1,5 +1,20 @@
 chores = angular.module 'chores'
 
+chores.factory 'GenericBase', ($q, $http) ->
+
+  class GenericBase
+    @get: (params = {}, url) ->
+      deferred = $q.defer()
+
+      $http.get(url, {params: params})
+      .success (data, status, headers, config) =>
+        deferred.resolve data
+
+      .error (data, status, headers, config) =>
+        deferred.reject data.errors
+
+      deferred.promise
+
 chores.factory 'Base', ($q, $http) ->
 
   class Base

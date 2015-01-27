@@ -1,5 +1,12 @@
 chores = angular.module 'chores'
 
+chores.factory 'Timezones', (GenericBase) ->
+  class Timezones extends GenericBase
+
+    @get: () ->
+      super {}, '/timezones/'
+
+
 chores.factory 'House', (Base, Account, Chore) ->
   class House extends Base
 

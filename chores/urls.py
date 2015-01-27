@@ -17,7 +17,7 @@ urlpatterns = patterns('',
   url(r'^account/?$', 'chores.views.account', name='account'),
 
   url(r'^api/house/?$', 'chores.views.api_houses', name='api_houses'),
-  url(r'^api/house/my_house?$', 'chores.views.api_my_house', name='api_my_house'),
+  # url(r'^api/house/my_house?$', 'chores.views.api_my_house', name='api_my_house'),
   url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
   url(r'^api/house/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
 
@@ -32,4 +32,6 @@ urlpatterns = patterns('',
   url(r'^api/reminder/(?P<reminder_id>\d+)/?$', 'chores.views.api_reminder', name='api_reminder'),
 
   url(r'^$', 'chores.views.index', name='index'),
+  url(r'^timezones/?$', 'chores.views.timezones', name='timezones'),
+
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

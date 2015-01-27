@@ -61,6 +61,7 @@ PIPELINE_JS = {
             'underscore/underscore.js',
             'js/app.coffee',
             'js/facebook.js',
+            'js/jstz.js',
         ),
         'output_filename': 'js/app.js',
     },

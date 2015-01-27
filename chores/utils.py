@@ -7,6 +7,7 @@ import string
 import pytz
 import urllib
 import hashlib
+import datetime
 
 from django.conf import settings
 from django.core.mail import mail_admins
@@ -98,3 +99,27 @@ class Facebook(object):
       return False
 
     return self.user_info.get('is_valid')
+
+def get_timezones():
+  NOW = datetime.datetime.now()
+  ZERO = datetime.timedelta(0)
+
+  timezones = {}
+
+  for tname in pytz.common_timezones:
+    tzone = pytz.timezone(tname)
+    std_date = None
+    try:
+      for utcdate, info in zip(tzone._utc_transition_times, tzone._transition_info):
+        utcoffset, dstoffset, tzname = info
+        if dstoffset == ZERO:
+          std_date = utcdate
+        if utcdate > NOW:
+          break
+    except AttributeError:
+      std_date = NOW
+
+    std_date = tzone.localize(std_date)
+    timezones[tname] = '(UTC{z}) {n}'.format(n=tname, z=std_date.strftime('%z'))
+
+  return timezones
