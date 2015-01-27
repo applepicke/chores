@@ -188,6 +188,7 @@ chores.factory 'Account', (Base) ->
       p.email = null
       p.phoneNumber = ''
       p.verificationCode = null
+      p.timezone = 'UTC'
       p
 
     @apiPath: "#{Base.apiPath}/account"

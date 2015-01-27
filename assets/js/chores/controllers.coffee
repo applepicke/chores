@@ -40,16 +40,21 @@ chores.controller 'HouseList', ($scope, House) ->
   House.getHouses (data) ->
     $scope.houses = data.houses
 
-chores.controller 'Account', ($scope, Account) ->
+chores.controller 'Account', ($scope, Account, Timezones) ->
 
   $scope.newPassword = ''
   $scope.confirmPassword = ''
+
+  Timezones.get().then (response) ->
+    $scope.timezones = response
 
   Account.find().then (response) ->
     if response
       $scope.account = response
     else
       $location.path('/')
+
+    console.log $scope.account
 
   $scope.changePassword =  ->
     $scope.account.changePassword($scope.newPassword, $scope.confirmPassword).then ->

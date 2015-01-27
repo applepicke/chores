@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 from django.db import models
 from django.contrib.auth import models as auth_models
@@ -27,7 +28,7 @@ class User(models.Model):
   sms_enabled = models.BooleanField(default=False)
   sms_verified = models.BooleanField(default=False)
   sms_banned = models.BooleanField(default=False)
-  timezone = models.CharField(max_length=1024, default='')
+  timezone = models.CharField(max_length=1024, default='UTC')
 
   @property
   def full_name(self):
@@ -130,6 +131,11 @@ class User(models.Model):
 
     return False
 
+  def get_timezone(self):
+    if not self.timezone:
+      return pytz.UTC
+    return pytz.timezone(self.timezone)
+
   def as_dict(self):
     return {
       'id': self.id,
@@ -143,6 +149,7 @@ class User(models.Model):
       'sms_enabled': self.sms_enabled,
       'sms_verified': self.sms_verified,
       'phone_number': self.phone_number,
+      'timezone': self.timezone or 'UTC',
     }
 
   def __str__(self):
