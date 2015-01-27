@@ -5,6 +5,10 @@ chores.controller 'MainController', ($scope, $route, $routeParams, House) ->
 chores.controller 'Welcome', ($scope, $location, House) ->
   $scope.house = new House()
 
+  House.find().then (response) ->
+    if response
+      $scope.house = response[0]
+
   $scope.createHouse = (house) ->
     house.create().then (response) ->
       if $scope.house.id
@@ -20,6 +24,9 @@ chores.controller 'AddMembers', ($scope, $location, $routeParams, $rootScope, Ho
       $scope.house = response[0]
     else
       $location.path('/')
+
+  $scope.back = ->
+    $location.path('/welcome/')
 
   $scope.next = ->
     $location.path('/house/' + $routeParams.houseId)

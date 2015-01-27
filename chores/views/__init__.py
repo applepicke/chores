@@ -16,7 +16,6 @@ from chores.context import context
 from chores.users.invitations import Invitation
 
 def index(request):
-
   if not request.user.is_authenticated():
     if not request.path_info == '/':
       return http.HttpResponseRedirect('/')
@@ -191,10 +190,7 @@ def api_houses(request):
         }), status=400)
 
       return http.HttpResponse(json.dumps({
-        'data': {
-          'id': house.id,
-          'name': house.name,
-        },
+        'data': house.as_dict(),
       }))
 
   house_id = request.GET.get('id')
@@ -215,6 +211,16 @@ def api_house(request, id):
     house = user.owned_houses.get(id=id)
   except House.DoesNotExist:
     raise http.Http404
+
+  name = request.POST.get('name', '')
+
+  if name:
+    house.name = name
+    house.save()
+
+    return http.HttpResponse(json.dumps({
+      'data': house.as_dict(),
+    }))
 
   recurs = request.POST.get('recurs')
 

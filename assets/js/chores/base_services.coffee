@@ -13,12 +13,12 @@ chores.factory 'Base', ($q, $http) ->
     @apiPath: '/api'
     @requestedFields: []
 
-    @find: (params = {}) ->
+    @find: (params = {}, url = '') ->
       params.fields = if Array.isArray(params.fields) then params.fields.concat(@requestedFields) else @requestedFields
 
       deferred = $q.defer()
 
-      $http.get(@apiPath, {params: params})
+      $http.get(url or @apiPath, {params: params})
       .success (data, status, headers, config) =>
 
         if Array.isArray data.data

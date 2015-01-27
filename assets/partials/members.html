@@ -26,8 +26,8 @@
     <a href="#" data-reveal-id="userModal" class="button small success radius small-10 small-offset-1 large-2 large-offset-5">Invite Member</a>
   </div>
 
-  <a href="#" class="button radius secondary small-10 small-offset-1 large-2 large-offset-2"><< Back</a>
-  <a href="#" ng-click="next()" class="button radius small-10 small-offset-1 large-2 large-offset-4">Next Step >></a>
+  <a href="#" ng-click="back()" class="button radius secondary small-10 small-offset-1 large-2 large-offset-2"><span class="fa fa-arrow-circle-left"></span> Back</a>
+  <a href="#" ng-click="next()" class="button radius small-10 small-offset-1 large-2 large-offset-4">Next Step <span class="fa fa-arrow-circle-right"></span></a>
 </div>
 
 <div id="userModal" class="reveal-modal small" data-reveal>
@@ -36,7 +36,7 @@
     <label for="email">
       Email
       <input ng-add-member="keypress" ng-class="{ error: newMember.errors }" ng-model="newMember.email" type="email" name="email" placeholder="Enter email here..."></input>
-      <small class="error" ng-class="{ hidden: !newMember.errors }">{{ newMember.errors.msg }}</small>
+      <small class="error" ng-show="newMember.errors.msg">{{ newMember.errors.msg }}</small>
     </label>
   </div>
   <a ng-click="addMember(newMember)" href="#" class="small-12 large-3 large-offset-9 columns button small invite-button">Send Invite</a>

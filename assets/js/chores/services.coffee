@@ -24,6 +24,9 @@ chores.factory 'House', (Base, Account, Chore) ->
 
       true
 
+    myHouse: ->
+      @find({}, '/api/house/my_house/')
+
     create: ->
       if @validateName()
         @save

@@ -12,11 +12,12 @@ urlpatterns = patterns('',
   url(r'^logout/$', 'chores.views.logout_view', name='logout'),
   url(r'^admin/', include(admin.site.urls)),
   url(r'^house/?$', 'chores.views.index', name='houses'),
-  url(r'^house/(?P<house_id>\d+)/?$', 'chores.views.house', name='house'),
+  url(r'^house/(?P<house_id>\d+)/', 'chores.views.house', name='house'),
   url(r'^welcome/?$', 'chores.views.welcome', name='welcome'),
   url(r'^account/?$', 'chores.views.account', name='account'),
 
   url(r'^api/house/?$', 'chores.views.api_houses', name='api_houses'),
+  url(r'^api/house/my_house?$', 'chores.views.api_my_house', name='api_my_house'),
   url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
   url(r'^api/house/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
 
