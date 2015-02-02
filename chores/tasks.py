@@ -41,7 +41,7 @@ def one_off_reminders():
   for reminder in reminders:
     send_reminder.delay(reminder)
 
-@periodic_task(run_every=crontab(hour=9, minute=00, day_of_week=1))
+@periodic_task(run_every=crontab(hour=9, minute=00))
 def rollover_date():
   now = datetime.datetime.utcnow()
   day = datetime.datetime.now().strftime('%A').lower()
@@ -63,7 +63,6 @@ def rollover_house(house):
     user = chore.user
 
     if user and user.confirmed:
-
       if user.email and user.email_enabled:
         send_mail(
           'Chores',
