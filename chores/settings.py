@@ -27,6 +27,8 @@ ADMINS = (
     ('William Collins', 'wcurtiscollins@gmail.com'),
 )
 
+SERVER_EMAIL = 'wcurtiscollins@gmail.com'
+
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
