@@ -118,7 +118,7 @@ chores.factory 'Chore', (Base, Reminder) ->
 
     successCallback: (data, status, headers, config) =>
       super
-      if data.data.reminder
+      if data.data and data.data.reminder
         @reminder = new Reminder(data.data.reminder)
       @
 
