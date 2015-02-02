@@ -70,3 +70,28 @@ class ModelTest(ChoresTestCase):
     #Setup test and test house model
     new_house = mommy.make('chores.House')
 
+  def test_house_rotation(self):
+    self.chore1.users = [self.user]
+    self.chore2.users = [self.user2]
+    self.chore3.users = [self.user3]
+
+    self.chore1.save()
+    self.chore2.save()
+    self.chore3.save()
+
+    self.house.shuffle()
+
+    chores = self.house.chores.order_by('id')
+
+    self.assertEqual(chores[0].user, self.user3)
+    self.assertEqual(chores[1].user, self.user)
+    self.assertEqual(chores[2].user, self.user2)
+
+    self.house.shuffle()
+
+    chores = self.house.chores.order_by('id')
+
+    self.assertEqual(chores[0].user, self.user2)
+    self.assertEqual(chores[1].user, self.user3)
+    self.assertEqual(chores[2].user, self.user)
+

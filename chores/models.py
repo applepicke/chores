@@ -175,7 +175,7 @@ class House(models.Model):
 
     i = -1
     for chore in chores:
-      chore.user = users[i]
+      chore.users = [users[i]]
       chore.save()
       i += 1
 
@@ -203,6 +203,11 @@ class Chore(models.Model):
     return '%s' % (
       self.name
     )
+
+  @property
+  def user(self):
+    users = self.users.all()
+    return users[0] if users else None
 
   def parse_assigned(self, raw_assigned):
     users = []

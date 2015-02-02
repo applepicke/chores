@@ -8,6 +8,9 @@ class ChoresTestCase(TestCase):
 
   def setUp(self):
     self.user = mommy.make('chores.User', email='test@test.com')
+    self.user2 = mommy.make('chores.User', email='test@test2.com')
+    self.user3 = mommy.make('chores.User', email='test@test3.com')
+
     self.house = mommy.make('chores.House', owner=self.user)
 
     self.user.email_enabled = True

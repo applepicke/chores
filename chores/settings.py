@@ -205,3 +205,7 @@ try:
     from .local import *
 except ImportError:
     pass
+
+import sys
+if 'test' in sys.argv or 'test_coverage' in sys.argv: #Covers regular testing and django-coverage
+    DATABASES['default']['engine'] = 'sqlite3'
