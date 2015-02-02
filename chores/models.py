@@ -10,7 +10,7 @@ from django.conf import settings
 from jsonfield import JSONField
 
 from chores.cache import CachedSMSVerificationCode
-from chores.utils import random_string, to_utc, gravatar
+from chores.utils import random_string, to_utc, from_utc, gravatar
 from chores.sms import SMSClient
 from chores.messages import SMS_MSG, EMAIL_MSG
 
@@ -183,12 +183,12 @@ class House(models.Model):
       self.name
     )
 
-  def as_dict(self):
+  def as_dict(self, user=None):
     return {
       'id': self.id,
       'name': self.name,
       'members': [m.as_dict() for m in self.users if m],
-      'chores': [c.as_dict() for c in self.chores.all()],
+      'chores': [c.as_dict(user=user) for c in self.chores.all()],
       'recurs': self.recurs,
     }
 
@@ -213,14 +213,14 @@ class Chore(models.Model):
       users.append(u)
     return users
 
-  def as_dict(self):
+  def as_dict(self, user=None):
     return {
       'id': self.id,
       'name': self.name,
       'description': self.description,
       'assigned': self.users.all()[0].as_dict() if self.users.all().exists() else None,
       'house_id': self.house.id,
-      'reminder': [r.as_dict() for r in self.reminders.all()][0] if self.reminders.count() else None,
+      'reminder': [r.as_dict(user=user) for r in self.reminders.all()][0] if self.reminders.count() else None,
     }
 
 class Reminder(models.Model):
@@ -232,17 +232,26 @@ class Reminder(models.Model):
   needs_run = models.BooleanField(default=False)
 
   def format_for_save(self, user):
+    now = datetime.datetime.now()
     self.day = self.day or ''
     self.time = self.time or ''
 
     if type == 'once':
-      date = datetime.datetime.strptime('%s %s' % (self.date, self.time), '%m/%d/%Y %H:%M %p')
+      date = datetime.datetime.strptime('%s %s' % (self.date, self.time), '%m/%d/%Y %I:%M %p')
       self.date = to_utc(date, user)
     else:
       self.date = datetime.datetime.utcnow()
 
-    time = datetime.datetime.strptime(self.time, '%H:%M %p')
-    self.time = to_utc(time, user).strftime('%H:%M %p')
+    time = datetime.datetime.strptime(self.time, '%I:%M %p')
+    time = time.replace(year=now.year, month = now.month, day=now.day)
+    self.time = to_utc(time, user).strftime('%I:%M %p')
+
+  def get_time(self, user):
+    now = datetime.datetime.now()
+    time = datetime.datetime.strptime(self.time, '%I:%M %p')
+    time = time.replace(year=now.year, month = now.month, day=now.day)
+    time = to_utc(time)
+    return from_utc(time, user).strftime('%I:%M %p')
 
   def send(self):
     if not self.chore:
@@ -268,13 +277,13 @@ class Reminder(models.Model):
         client = SMSClient(chore.user)
         client.send_message(SMS_MSG % (chore.user.name, chore.name))
 
-  def as_dict(self):
+  def as_dict(self, user=None):
     return {
       'id': self.id,
       'type': self.type,
       'date': self.date.strftime('%m/%d/%Y'),
       'day': self.day,
-      'time': self.time,
+      'time': self.get_time(user) if user else self.time,
       'chore_id': self.chore.id,
     }
 

@@ -43,8 +43,7 @@
         <div class="row">
           <div>
             <h4 class="left">Timezone</h4>
-            <select ng-model="account.timezone" id="timezone" type="select">
-              <option ng-repeat="(key, label) in timezones" value="{{ key }}">{{ label }}</option>
+            <select ng-model="account.timezone" id="timezone" ng-options="tz.key as tz.label for tz in timezones" type="select">
             </select>
           </div>
         </div>

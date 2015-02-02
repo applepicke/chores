@@ -2,6 +2,7 @@ import json
 import facebook
 import smtplib
 import datetime
+import operator
 
 from django import http
 from django.conf import settings
@@ -166,6 +167,7 @@ def api_account(request, account_id):
       user.last_name = request.POST.get('last_name')
       user.email_enabled = request.POST.get('email_enabled')
       user.sms_enabled = request.POST.get('sms_enabled')
+      user.timezone = request.POST.get('timezone')
       user.save()
 
   return http.HttpResponse(json.dumps({
@@ -190,7 +192,7 @@ def api_houses(request):
         }), status=400)
 
       return http.HttpResponse(json.dumps({
-        'data': house.as_dict(),
+        'data': house.as_dict(user=user),
       }))
 
   house_id = request.GET.get('id')
@@ -200,7 +202,7 @@ def api_houses(request):
 
   return http.HttpResponse(json.dumps({
     'count': len(houses),
-    'data': [house.as_dict() for house in houses]
+    'data': [house.as_dict(user=user) for house in houses]
   }))
 
 @login_required
@@ -219,7 +221,7 @@ def api_house(request, id):
     house.save()
 
     return http.HttpResponse(json.dumps({
-      'data': house.as_dict(),
+      'data': house.as_dict(user=user),
     }))
 
   recurs = request.POST.get('recurs')
@@ -231,7 +233,7 @@ def api_house(request, id):
     return http.HttpResponse()
 
   return http.HttpResponse(json.dumps({
-    'data': house.as_dict(),
+    'data': house.as_dict(user=user),
   }))
 
 @login_required
@@ -257,7 +259,7 @@ def api_reminder(request, reminder_id=None):
   chore.reminders = [reminder]
 
   return http.HttpResponse(json.dumps({
-    'data': reminder.as_dict(),
+    'data': reminder.as_dict(user=user),
   }))
 
 @login_required
@@ -284,12 +286,12 @@ def api_chores(request, house_id=None):
     db_chore.users = db_chore.parse_assigned(request.POST.get('assigned'))
 
     return http.HttpResponse(json.dumps({
-      'data': db_chore.as_dict()
+      'data': db_chore.as_dict(user=user)
     }))
 
   chores = house.chores.all()
   return http.HttpResponse(json.dumps({
-    'chores': [chore.as_dict() for chore in chores]
+    'chores': [chore.as_dict(user=user) for chore in chores]
   }))
 
 @login_required
@@ -311,7 +313,7 @@ def api_chore(request, chore_id):
     db_chore.save()
 
     return http.HttpResponse(json.dumps({
-      'data': db_chore.as_dict()
+      'data': db_chore.as_dict(user=user)
     }))
 
   if request.method == 'DELETE':
@@ -324,7 +326,9 @@ def api_chore(request, chore_id):
 
 @login_required
 def timezones(request):
-  return http.HttpResponse(json.dumps(get_timezones()))
+  timezones = get_timezones().values()
+  timezones = sorted(timezones, key=operator.itemgetter('key'))
+  return http.HttpResponse(json.dumps(timezones))
 
 @login_required
 def members(request, house_id):

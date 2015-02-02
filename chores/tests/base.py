@@ -22,7 +22,7 @@ class ChoresTestCase(TestCase):
 
   def setUpReminders(self):
     self.now = datetime.datetime.utcnow()
-    time = self.now.strftime('%H:%M %p')
+    time = self.now.strftime('%I:%M %p')
 
     self.daily_reminder = mommy.make('chores.Reminder',
       type='daily',

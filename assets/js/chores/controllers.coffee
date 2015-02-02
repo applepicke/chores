@@ -54,8 +54,6 @@ chores.controller 'Account', ($scope, Account, Timezones) ->
     else
       $location.path('/')
 
-    console.log $scope.account
-
   $scope.changePassword =  ->
     $scope.account.changePassword($scope.newPassword, $scope.confirmPassword).then ->
       $scope.newPassword = ''

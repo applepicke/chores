@@ -12,7 +12,7 @@ from chores.utils import errorize
 @periodic_task(run_every=crontab(minute="*/1"))
 def daily_reminders():
   now = datetime.datetime.utcnow()
-  time_str = now.strftime('%H:%M %p')
+  time_str = now.strftime('%I:%M %p')
 
   reminders = Reminder.objects.filter(time=time_str, type='daily')
   for reminder in reminders:
@@ -21,7 +21,7 @@ def daily_reminders():
 @periodic_task(run_every=crontab(minute="*/1"))
 def weekly_reminders():
   now = datetime.datetime.utcnow()
-  time_str = now.strftime('%H:%M %p')
+  time_str = now.strftime('%I:%M %p')
   day_str = now.strftime('%A').lower()
 
   reminders = Reminder.objects.filter(time=time_str, day=day_str, type='weekly')

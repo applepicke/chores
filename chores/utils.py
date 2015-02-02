@@ -28,13 +28,14 @@ def untokenize(token):
   txt, secret = base64.urlsafe_b64decode(str(token)).split(':')
   return txt
 
-def to_utc(datetime, user):
-  tz = pytz.timezone(user.timezone or 'UTC')
-  return tz.localize(datetime, is_dst=None).astimezone(pytz.utc)
+def to_utc(time, user=None):
+  timezone = user.timezone if user else 'UTC'
+  tz = pytz.timezone(timezone or 'UTC')
+  return tz.localize(time, is_dst=None).astimezone(pytz.utc)
 
-def from_utc(datetime, user):
+def from_utc(time, user):
   tz = pytz.timezone(user.timezone or 'UTC')
-  return datetime.astimezone(tz).replace(tzinfo=None)
+  return time.astimezone(tz).replace(tzinfo=None)
 
 def gravatar(email, size=25):
   gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
@@ -120,6 +121,8 @@ def get_timezones():
       std_date = NOW
 
     std_date = tzone.localize(std_date)
-    timezones[tname] = '(UTC{z}) {n}'.format(n=tname, z=std_date.strftime('%z'))
-
+    timezones[tname] = {
+      'label': '(UTC{z}) {n}'.format(n=tname, z=std_date.strftime('%z')),
+      'key': tname,
+    }
   return timezones
