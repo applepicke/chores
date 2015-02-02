@@ -71,14 +71,6 @@ class ModelTest(ChoresTestCase):
     new_house = mommy.make('chores.House')
 
   def test_house_rotation(self):
-    self.chore1.users = [self.user]
-    self.chore2.users = [self.user2]
-    self.chore3.users = [self.user3]
-
-    self.chore1.save()
-    self.chore2.save()
-    self.chore3.save()
-
     self.house.shuffle()
 
     chores = self.house.chores.order_by('id')

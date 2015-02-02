@@ -7,19 +7,20 @@ from django.test import TestCase
 class ChoresTestCase(TestCase):
 
   def setUp(self):
-    self.user = mommy.make('chores.User', email='test@test.com')
+    self.user = mommy.make('chores.User',
+      email='test@test.com',
+      email_enabled=True,
+      sms_enabled=False,
+      confirmed=True,
+    )
     self.user2 = mommy.make('chores.User', email='test@test2.com')
     self.user3 = mommy.make('chores.User', email='test@test3.com')
 
     self.house = mommy.make('chores.House', owner=self.user)
 
-    self.user.email_enabled = True
-    self.user.sms_enabled = False
-    self.user.save()
-
     self.chore1 = mommy.make('chores.Chore', house=self.house, users=[self.user])
-    self.chore2 = mommy.make('chores.Chore', house=self.house, users=[self.user])
-    self.chore3 = mommy.make('chores.Chore', house=self.house, users=[self.user])
+    self.chore2 = mommy.make('chores.Chore', house=self.house, users=[self.user2])
+    self.chore3 = mommy.make('chores.Chore', house=self.house, users=[self.user3])
 
     self.setUpReminders()
 

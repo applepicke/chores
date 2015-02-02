@@ -2,7 +2,7 @@ from django.core import mail
 
 from chores.models import Reminder
 from chores.tests.base import ChoresTestCase
-from chores.tasks import daily_reminders, weekly_reminders, one_off_reminders, send_reminder
+from chores.tasks import daily_reminders, weekly_reminders, one_off_reminders, send_reminder, rollover_house
 
 class RemindersTest(ChoresTestCase):
 
@@ -20,4 +20,8 @@ class RemindersTest(ChoresTestCase):
 
     self.daily_reminder.send()
 
+    self.assertEqual(len(mail.outbox), 1)
+
+  def test_shuffle(self):
+    rollover_house(self.house)
     self.assertEqual(len(mail.outbox), 1)
