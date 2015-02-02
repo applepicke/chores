@@ -107,7 +107,7 @@ class User(models.Model):
 
   def add_d_user(self, email):
     d_user = auth_models.User.objects.filter(
-      email=email,
+      username=email,
     )
 
     if not d_user:
@@ -119,6 +119,7 @@ class User(models.Model):
       d_user = d_user[0]
 
     self.d_user = d_user
+    self.save()
 
   def can_modify_chore(self, chore):
     if self.owns_chore(chore.id):

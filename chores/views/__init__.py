@@ -430,8 +430,9 @@ def confirmation(request, token):
 
       user.add_d_user(user.email)
       user.confirmed = True
-      user.d_user.set_password(request.REQUEST.get('password'))
       user.save()
+      user.d_user.set_password(request.REQUEST.get('password'))
+      user.d_user.save()
       authenticated = authenticate(username=user.email, password=request.REQUEST.get('password'))
 
     login(request, authenticated)
