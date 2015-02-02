@@ -6,8 +6,12 @@ from .celery import app
 from celery.schedules import crontab
 from celery.task import periodic_task
 
+from django.conf import settings
+from django.core.mail import send_mail
+
 from chores.models import Reminder
 from chores.utils import errorize
+from chores.messages import SMS_MSG, EMAIL_MSG
 
 @periodic_task(run_every=crontab(minute="*/1"))
 def daily_reminders():
@@ -37,9 +41,13 @@ def one_off_reminders():
   for reminder in reminders:
     send_reminder.delay(reminder)
 
-@periodic_task(run_every=crontab(minute=0, hour='*/1'))
+@periodic_task(run_every=crontab(hour=9, minute=00, day_of_week=1))
 def rollover_date():
-  print('rollover')
+  now = datetime.datetime.utcnow()
+  day = datetime.datetime.now().strftime('%A').lower()
+  houses = House.objects.filter(recurs=day)
+  for house in houses:
+    rollover_house.delay(house)
 
 @app.task
 def send_reminder(reminder):
@@ -48,3 +56,23 @@ def send_reminder(reminder):
   except Exception as e:
     errorize(e, 'SEND REMINDER ERROR')
 
+@app.task
+def rollover_house(house):
+  house.shuffle()
+  for chore in house.chores.all():
+    user = chore.user
+
+    if user and user.confirmed:
+
+      if user.email and user.email_enabled:
+        send_mail(
+          'Chores',
+          EMAIL_MSG % (chore.name, chore.description),
+          'wcurtiscollins@willyc.me',
+          [user.email],
+          fail_silently=False
+        )
+
+      if user.can_receive_sms:
+        client = SMSClient(chore.user)
+        client.send_message(SMS_MSG % (user.name, chore.name))

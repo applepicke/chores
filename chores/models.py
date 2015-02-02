@@ -12,7 +12,7 @@ from jsonfield import JSONField
 from chores.cache import CachedSMSVerificationCode
 from chores.utils import random_string, to_utc, from_utc, gravatar
 from chores.sms import SMSClient
-from chores.messages import SMS_MSG, EMAIL_MSG
+from chores.messages import DEFAULT_REMINDER_SMS_MSG, DEFAULT_REMINDER_EMAIL_MSG
 
 class User(models.Model):
   fb_user_id = models.CharField(max_length=255, default='')
@@ -273,7 +273,7 @@ class Reminder(models.Model):
       if user.email and user.email_enabled:
         send_mail(
           'Chores',
-          EMAIL_MSG % (chore.name, chore.description),
+          DEFAULT_REMINDER_EMAIL_MSG % (chore.name, chore.description),
           'wcurtiscollins@willyc.me',
           [user.email],
           fail_silently=False
@@ -281,7 +281,7 @@ class Reminder(models.Model):
 
       if user.can_receive_sms:
         client = SMSClient(chore.user)
-        client.send_message(SMS_MSG % (chore.user.name, chore.name))
+        client.send_message(DEFAULT_REMINDER_SMS_MSG % chore.name)
 
   def as_dict(self, user=None):
     return {
