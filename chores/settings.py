@@ -27,7 +27,7 @@ ADMINS = (
     ('William Collins', 'wcurtiscollins@gmail.com'),
 )
 
-SERVER_EMAIL = 'django@mize.com'
+SERVER_EMAIL = 'django@getmize.com'
 
 TEMPLATE_DEBUG = True
 
