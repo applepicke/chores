@@ -23,5 +23,5 @@ class RemindersTest(ChoresTestCase):
     self.assertEqual(len(mail.outbox), 1)
 
   def test_shuffle(self):
-    rollover_house(self.house)
+    rollover_house(self.house.id)
     self.assertEqual(len(mail.outbox), 1)
