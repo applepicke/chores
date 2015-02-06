@@ -10,7 +10,7 @@ from django.conf import settings
 from jsonfield import JSONField
 
 from chores.cache import CachedSMSVerificationCode
-from chores.utils import random_string, to_utc, from_utc, gravatar
+from chores.utils import random_string, to_utc, from_utc, gravatar, user_time
 from chores.sms import SMSClient
 from chores.messages import DEFAULT_REMINDER_SMS_MSG, DEFAULT_REMINDER_EMAIL_MSG
 
@@ -137,6 +137,9 @@ class User(models.Model):
       return pytz.UTC
     return pytz.timezone(self.timezone)
 
+  def short_timezone(self):
+    return from_utc(datetime.datetime.now(), self).strftime('%Z')
+
   def as_dict(self):
     return {
       'id': self.id,
@@ -253,11 +256,7 @@ class Reminder(models.Model):
     self.time = to_utc(time, user).strftime('%I:%M %p')
 
   def get_time(self, user):
-    now = datetime.datetime.now()
-    time = datetime.datetime.strptime(self.time, '%I:%M %p')
-    time = time.replace(year=now.year, month = now.month, day=now.day)
-    time = to_utc(time)
-    return from_utc(time, user).strftime('%I:%M %p')
+    return user_time(self.time, user)
 
   def send(self):
     if not self.chore:

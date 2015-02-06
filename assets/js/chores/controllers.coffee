@@ -6,7 +6,7 @@ chores.controller 'Welcome', ($scope, $location, House) ->
   $scope.house = new House()
 
   House.find().then (response) ->
-    if response
+    if response and response.length
       $scope.house = response[0]
 
   $scope.createHouse = (house) ->
