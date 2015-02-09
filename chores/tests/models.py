@@ -87,3 +87,14 @@ class ModelTest(ChoresTestCase):
     self.assertEqual(chores[1].user, self.user3)
     self.assertEqual(chores[2].user, self.user)
 
+    self.chore1.users = []
+    self.chore1.save()
+
+    self.house.shuffle()
+
+    chores = self.house.chores.order_by('id')
+
+    self.assertEqual(chores[0].user, self.user)
+    self.assertEqual(chores[1].user, None)
+    self.assertEqual(chores[2].user, self.user3)
+
