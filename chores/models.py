@@ -178,7 +178,7 @@ class House(models.Model):
 
     i = -1
     for chore in chores:
-      chore.users = [users[i]]
+      chore.users = [users[i]] if users[i] else []
       chore.save()
       i += 1
 
