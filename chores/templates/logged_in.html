@@ -21,3 +21,14 @@
     </section>
   </nav>
 {% endblock %}
+
+{% block extra_scripts %}
+  <script type="text/javascript">
+    window.doorbellOptions = {
+        appKey: 'bCOVJh2CIApPqasAdawcoArvfWZZSE7jGufDTrJ6Xw7M3X4Mc6OaNMPVJ8nUUmjo'
+    };
+    (function(d, t) {
+        var g = d.createElement(t);g.id = 'doorbellScript';g.type = 'text/javascript';g.async = true;g.src = 'https://doorbell.io/button/823';(d.getElementsByTagName('head')[0]||d.getElementsByTagName('body')[0]).appendChild(g);
+    }(document, 'script'));
+  </script>
+{% endblock %}
