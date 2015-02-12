@@ -69,6 +69,21 @@ class User(models.Model):
   def can_receive_sms(self):
     return self.sms_enabled and self.sms_verified and self.phone_number and not self.sms_banned
 
+  def send_message(self, email_message='', sms_message=''):
+    if self.confirmed:
+      if self.email and self.email_enabled and email_message:
+        send_mail(
+          'Chores',
+          email_message,
+          'wcurtiscollins@willyc.me',
+          [self.email],
+          fail_silently=False
+        )
+
+      if self.can_receive_sms and sms_message:
+        client = SMSClient(self)
+        client.send_message(sms_message)
+
   def change_phone_number(self, number):
     number = number.replace('-', '')
     number = number.replace(' ', '')
@@ -269,18 +284,10 @@ class Reminder(models.Model):
       raise Exception('Chore has no user')
 
     for user in users:
-      if user.email and user.email_enabled:
-        send_mail(
-          'Chores',
-          DEFAULT_REMINDER_EMAIL_MSG % (chore.name, chore.description),
-          'wcurtiscollins@willyc.me',
-          [user.email],
-          fail_silently=False
-        )
-
-      if user.can_receive_sms:
-        client = SMSClient(chore.user)
-        client.send_message(DEFAULT_REMINDER_SMS_MSG % chore.name)
+      user.send_message(
+        email_message=DEFAULT_REMINDER_EMAIL_MSG % (chore.name, chore.description),
+        sms_message=DEFAULT_REMINDER_SMS_MSG % chore.name,
+      )
 
   def as_dict(self, user=None):
     return {

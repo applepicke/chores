@@ -65,16 +65,12 @@ def rollover_house(house_id):
   for chore in house.chores.all():
     user = chore.user
 
-    if user and user.confirmed:
-      if user.email and user.email_enabled:
-        send_mail(
-          'Chores',
-          EMAIL_MSG % (chore.name, chore.description),
-          'wcurtiscollins@willyc.me',
-          [user.email],
-          fail_silently=False
-        )
+    if user:
+      email_msg = EMAIL_MSG % (chore.name, chore.description)
+      sms_message = SMS_MSG % (user.name, chore.name)
 
-      if user.can_receive_sms:
-        client = SMSClient(chore.user)
-        client.send_message(SMS_MSG % (user.name, chore.name))
+      user.send_message(
+        email_message=email_msg,
+        sms_message=sms_message,
+      )
+
