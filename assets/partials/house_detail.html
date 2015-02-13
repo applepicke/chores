@@ -38,16 +38,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="chore-row" ng-click="editChore(chore)" data-reveal-id="edit-chore-modal" ng-repeat="chore in house.chores">
+          <tr class="chore-row" ng-repeat="chore in house.chores">
             <td>{{ chore.name }}</td>
             <td>{{ chore.description }}</td>
             <td>{{ chore.assigned.name }}</td>
-            <td ng-reveal="add-reminder-modal" ng-click="editReminder(chore)">
-              <a class="reminder-cell" href="#">
+            <td>
+              <a class="reminder-cell" ng-reveal="add-reminder-modal" ng-click="editReminder(chore)" href="#">
                 <span class="inner-text add-reminder" ng-hide="chore.reminder">Add Reminder</span>
                 <span class="inner-text existing-reminder" ng-show="chore.reminder">{{ chore.reminder.pretty() }}</span>
               </a>
-              <span class="edit-overlay fa fa-pencil"></span>
+              <span class="edit-overlay fa fa-pencil" ng-click="editChore(chore)" data-reveal-id="edit-chore-modal"></span>
             </td>
           </tr>
         </tbody>
@@ -55,7 +55,7 @@
       <p ng-hide="house.chores">You don't have any chores.</p>
     </div>
 
-    <div class="user-list small-12 small-centered large-uncentered large-offset-1 large-3 columns">
+    <div class="user-list small-12 small-centered large-uncentered large-4 columns">
       <h4>
         <span class="fa fa-user"></span>
         Members
@@ -63,7 +63,9 @@
       </h4>
       <table class="small-12">
         <tr ng-repeat="user in house.members" class="user">
-          <td>{{ user.name }}</td>
+          <td>{{ user.name }} <span ng-show="house.isOwner(user)">(Owner)</span>
+            <span ng-confirm="removeMember(user)" ng-confirm-message="Are you sure you want to remove this member?" ng-class="{ active: !house.isOwner(user) }" class="delete-member fa fa-times"></span>
+          </td>
         </tr>
       </table>
     </div>

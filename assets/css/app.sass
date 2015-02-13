@@ -1,6 +1,7 @@
 $main-blue: #12181E
 $main-white: #eee
 $primary-green: #43AC6A
+$emphasis: #008CBA
 
 body
   background: $main-blue
@@ -43,7 +44,7 @@ body
   a.btn
     font-size: 15px
     text-transform: uppercase
-    border: 1px solid #008cba
+    border: 1px solid $emphasis
     padding: 2px 6px
     border-radius: 5px
 
@@ -172,32 +173,34 @@ p
         position: absolute
         right: 25px
         font-size: 20px
-        color: #008CBA
+        color: $emphasis
 
       &:hover
         .edit-overlay
           display: inline-block
+
+          &:hover
+            cursor: pointer
+            opacity: 0.7
 
       .add-reminder
         opacity: 0
 
       .existing-reminder
         &:hover
-          color: #008CBA
+          color: $emphasis
 
       .reminder-cell.popped
         .add-reminder
           opacity: 1
 
       &:hover
-        cursor: pointer
-
         .chore-actions
           display: block
 
         .add-reminder
           opacity: 1
-          color: #008CBA
+          color: $emphasis
 
 .divider
   margin: 0 auto
@@ -368,5 +371,25 @@ p
       &.selected
         cursor: default
 
+
+.user-list
+  .user
+    td
+      position: relative
+
+    &:hover
+      .delete-member.active
+        display: inline-block
+
+    .delete-member
+      display: none
+      position: absolute
+      right: 10px
+      color: $emphasis
+      font-size: 18px
+
+      &:hover
+        cursor: pointer
+        opacity: 0.7
 
 

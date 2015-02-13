@@ -155,7 +155,14 @@ class User(models.Model):
   def short_timezone(self):
     return from_utc(datetime.datetime.now(), self).strftime('%Z')
 
-  def as_dict(self):
+  def as_dict(self, limited=False):
+    if limited:
+      return {
+        'id': self.id,
+        'first_name': self.first_name,
+        'last_name': self.last_name,
+      }
+
     return {
       'id': self.id,
       'name': self.name,
@@ -187,6 +194,14 @@ class House(models.Model):
   def users(self):
     return [self.owner] + list(self.members.all())
 
+  def removeMember(self, member):
+    for chore in self.chores.all():
+      if chore.user == member:
+        chore.users = []
+        chore.save()
+
+    self.members.remove(member)
+
   def shuffle(self):
     chores = self.chores.order_by('id')
     users = [c.user for c in chores]
@@ -209,6 +224,7 @@ class House(models.Model):
       'members': [m.as_dict() for m in self.users if m],
       'chores': [c.as_dict(user=user) for c in self.chores.all()],
       'recurs': self.recurs,
+      'owner': self.owner.as_dict(limited=True),
     }
 
 class Chore(models.Model):

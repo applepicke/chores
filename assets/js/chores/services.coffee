@@ -15,6 +15,7 @@ chores.factory 'House', (Base, Account, Chore) ->
       p.members = []
       p.chores = []
       p.recurs = null
+      p.owner = null
       p
 
     @apiPath: "#{Base.apiPath}/house"
@@ -28,7 +29,6 @@ chores.factory 'House', (Base, Account, Chore) ->
       if not @name
         @errors = {msg: 'You forgot to give your household a cool name!'}
         return false
-
       true
 
     myHouse: ->
@@ -38,6 +38,13 @@ chores.factory 'House', (Base, Account, Chore) ->
       if @validateName()
         @save
           name: @name
+
+    isOwner: (user) ->
+      user.id == @owner.id
+
+    removeMember: (member) ->
+      @save
+        removeMember: member.id
 
     addMember: (member) ->
       member.sendInvite(@id).then (_member) =>
@@ -70,8 +77,13 @@ chores.factory 'House', (Base, Account, Chore) ->
           _.extend(_.find(@chores, (item) -> item.id == _chore.id), _chore)
 
     successCallback: (data, status, headers, config) =>
-      if data
-        super
+      if not data
+        return
+
+      super data, status, headers, config
+
+      data = data.data
+
       if data.members
         @members = _.map @members, (member) ->
           new Account(member)

@@ -232,6 +232,12 @@ def api_house(request, id):
 
     return http.HttpResponse()
 
+  removeMember = request.POST.get('removeMember')
+
+  if removeMember:
+    member = house.members.get(id=removeMember)
+    house.removeMember(member)
+
   return http.HttpResponse(json.dumps({
     'data': house.as_dict(user=user),
   }))
