@@ -23,13 +23,13 @@ The Chore People
 
 class Invitation(object):
 
-  def __init__(self, user, house, domain):
-    self.user = user
+  def __init__(self, member_request, house, domain):
+    self.member_request = member_request
     self.house = house
     self.domain = domain
 
   def generate_confirmation_link(self):
-    token = tokenize(str(self.user.id))
+    token = tokenize(str(self.member_request.id))
     url = reverse('confirmation', args=(token,))
     return 'http://%s%s' % (self.domain, url)
 
@@ -42,7 +42,7 @@ class Invitation(object):
         'confirmation_link': self.generate_confirmation_link(),
       },
       'wcurtiscollins@willyc.me',
-      [self.user.email],
+      [self.member_request.user.email],
       fail_silently=False
     )
 

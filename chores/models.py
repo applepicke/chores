@@ -69,6 +69,9 @@ class User(models.Model):
   def can_receive_sms(self):
     return self.sms_enabled and self.sms_verified and self.phone_number and not self.sms_banned
 
+  def logged_in(self, request):
+    return self.d_user and self.d_user.is_authenticated() and self.d_user == request.user
+
   def send_message(self, email_message='', sms_message=''):
     if self.confirmed:
       if self.email and self.email_enabled and email_message:
@@ -128,7 +131,7 @@ class User(models.Model):
     if not d_user:
       d_user = auth_models.User.objects.create(
         email=email,
-        username=email,
+        username='%s' % self.id,
       )
     else:
       d_user = d_user[0]
@@ -313,6 +316,19 @@ class Reminder(models.Model):
       'day': self.day,
       'time': self.get_time(user) if user else self.time,
       'chore_id': self.chore.id,
+    }
+
+class HouseMemberRequest(models.Model):
+  sender = models.ForeignKey(User, related_name="sent_email_requests")
+  user = models.ForeignKey(User, related_name="email_requests")
+  house = models.ForeignKey(House, related_name="email_requests")
+  confirmed = models.BooleanField(default=False)
+
+  def as_dict(self):
+    return {
+      'id': self.id,
+      'name': self.to_email,
+      'confirmed': self.confirmed,
     }
 
 class UserAdmin(admin.ModelAdmin):

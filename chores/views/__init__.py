@@ -11,8 +11,9 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
-from chores.models import User, House, Chore, Reminder
-from chores.utils import Facebook, untokenize, rando_msg, get_timezones
+from chores.models import User, House, Chore, Reminder, HouseMemberRequest
+from chores.utils import untokenize, rando_msg, get_timezones, tokenize
+from chores.facebook import Facebook, fb_get_or_create_user
 from chores.context import context
 from chores.users.invitations import Invitation
 
@@ -71,49 +72,69 @@ def api_accounts(request):
 
   if request.method == 'POST':
     # ADD MEMBER
-    if request.POST.get('email') and request.POST.get('house_id'):
+    try:
+      house = user.owned_houses.get(id=request.POST.get('house_id'))
+    except House.DoesNotExist:
+      raise http.Http404
 
-      try:
-        house = user.owned_houses.get(id=request.POST.get('house_id'))
-      except House.DoesNotExist:
-        raise http.Http404
+    email = request.REQUEST.get('email', '').strip()
 
-      existing_user = User.objects.filter(email=request.REQUEST.get('email'))
-
-      if existing_user:
-        existing_user = existing_user[0]
-
-      exists = existing_user in house.members.all()
-
-      if exists:
-        return http.HttpResponse(json.dumps({
-          'msg': '%s already has a member with that email address' % house.name,
-        }), 400)
-
-      if not existing_user:
-        member = house.members.create(
-          email=request.REQUEST.get('email'),
-          confirmed=False,
-        )
-      else:
-        member = existing_user
-        member.houses.add(house)
-        member.save()
-
-      try:
-        invite = Invitation(member, house, request.META['HTTP_HOST'])
-        invite.send()
-      except smtplib.SMTPException:
-        if not existing_user:
-          member.delete()
-
-        return http.HttpResponse(json.dumps({
-          'msg': 'Could not send email to that address. You sure it\'s real?',
-        }), 400)
-
+    if 'email' not in request.REQUEST:
       return http.HttpResponse(json.dumps({
-        'data': member.as_dict()
+        'success': False,
+        'msg': 'You must enter an email address'
       }))
+
+    existing_user = User.objects.filter(email=email)
+
+    if existing_user:
+      existing_user = existing_user[0]
+
+    exists = existing_user in house.members.all()
+
+    if exists:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': '%s already has a member with that email address' % house.name,
+      }))
+
+    existing_request = HouseMemberRequest.objects.filter(
+      house=house,
+      user__email=email,
+      confirmed=True,
+    )
+
+    if existing_request and existing_user:
+      house.members.add(existing_user)
+      return http.HttpResponse(json.dumps({
+        'member': existing_user.as_dict()
+      }))
+
+    if not existing_user:
+      existing_user = house.members.create(
+        email=email,
+        confirmed=False,
+      )
+
+    member_request = HouseMemberRequest.objects.create(
+      sender=user,
+      user=existing_user,
+      house=house,
+      confirmed=False,
+    )
+
+    try:
+      invite = Invitation(member_request, house, request.META['HTTP_HOST'])
+      invite.send()
+    except smtplib.SMTPException:
+      return http.HttpResponse(json.dumps({
+        'success': False,
+        'msg': 'Could not send email to that address. You sure it\'s real?',
+      }))
+
+    return http.HttpResponse(json.dumps({
+      'data': existing_user.as_dict()
+    }))
 
   return http.HttpResponse(json.dumps({
     'data': user.as_dict(),
@@ -336,67 +357,36 @@ def timezones(request):
   timezones = sorted(timezones, key=operator.itemgetter('key'))
   return http.HttpResponse(json.dumps(timezones))
 
-@login_required
-def members(request, house_id):
-  user = request.app_user
-
-  house = get_object_or_404(user.owned_houses.all(), id=house_id)
-
-  if 'email' not in request.REQUEST:
-    return http.HttpResponse(json.dumps({
-      'success': False,
-      'msg': 'You must enter an email address'
-    }))
-
-  existing_user = User.objects.filter(email=request.REQUEST.get('email'))
-
-  if existing_user:
-    existing_user = existing_user[0]
-
-  exists = existing_user in house.members.all()
-
-  if exists:
-    return http.HttpResponse(json.dumps({
-      'success': False,
-      'msg': '%s already has a member with that email address' % house.name,
-    }))
-
-  if not existing_user:
-    member = house.members.create(
-      email=request.REQUEST.get('email'),
-      confirmed=False,
-    )
-  else:
-    member = existing_user
-    member.houses.add(house)
-    member.save()
-
-  try:
-    invite = Invitation(member, house, request.META['HTTP_HOST'])
-    invite.send()
-  except smtplib.SMTPException:
-    if member.id != existing_user.id:
-      member.delete()
-
-    return http.HttpResponse(json.dumps({
-      'success': False,
-      'msg': 'Could not send email to that address. You sure it\'s real?',
-    }))
-
-  return http.HttpResponse(json.dumps({
-    'success': True,
-    'member': member.as_dict()
-  }))
-
 def confirmation(request, token):
   try:
     id = untokenize(token)
-    user = User.objects.get(id=id)
+    email_request = HouseMemberRequest.objects.get(id=id)
+    user = email_request.user
   except:
     raise http.Http404
 
-  if user.d_user and user.d_user.is_authenticated() and user.d_user == request.user:
-    return http.HttpResponseRedirect('/')
+  confirmation_url = reverse('confirmation', args=(token,))
+
+  if user.confirmed:
+    if not user.logged_in(request):
+      return http.HttpResponseRedirect('%s?next=%s' % (reverse('login'), confirmation_url))
+    else:
+      return render_to_response('confirmation.html', context(request))
+
+  else:
+    return http.HttpResponseRedirect('%s?token=%s' % (reverse('signup'), token))
+
+def signup(request):
+  token = request.GET.get('token')
+  email_request = None
+  querystring = '?token=%s' % token if token else ''
+
+  if token:
+    try:
+      id = untokenize(token)
+      email_request = HouseMemberRequest.objects.get(id=id)
+    except:
+      raise http.Http404
 
   if request.method == 'POST':
 
@@ -404,47 +394,90 @@ def confirmation(request, token):
     if 'access_token' in request.REQUEST:
       token = request.REQUEST.get('access_token')
       user_id = request.REQUEST.get('user_id')
+
       fb = Facebook()
 
-      try:
-        graph = facebook.GraphAPI(token)
-      except facebook.GraphAPIError:
+      if not fb.check_user(token, user_id):
         return http.HttpResponse(json.dumps({
           'success': False,
-          'msg': 'Quit trying to sneak in.'
+          'msg': 'Nice try.'
         }))
 
-      obj = graph.get_object('me')
-      user.add_d_user(user.email)
-      user.first_name = obj.get('first_name')
-      user.last_name = obj.get('last_name')
-      user.fb_user_id = obj.get('id')
-      user.confirmed = True
-      user.save()
+      fb_get_or_create_user(fb)
       authenticated = authenticate(token=token)
 
     # Regular signup form
     else:
-      user.first_name = request.REQUEST.get('first_name')
-      user.last_name = request.REQUEST.get('last_name')
+      first_name = request.REQUEST.get('first_name')
+      last_name = request.REQUEST.get('last_name')
+      email = request.REQUEST.get('email', '').strip()
+      password = request.REQUEST.get('password')
+      user = None
 
-      if not request.REQUEST.get('password') == request.REQUEST.get('confirm_password'):
-        return http.HttpResponse(json.dumps({
-          'success': False,
-          'msg': 'Passwords need to match',
-        }))
+      ctx = {
+        'first_name': first_name,
+        'last_name': last_name,
+        'email': email,
+        'password': password,
+        'querystring': querystring,
+        'email_request': email_request,
+      }
 
-      user.add_d_user(user.email)
-      user.confirmed = True
+      required = [first_name, last_name, password]
+
+      if not email_request:
+        required.append(email)
+      else:
+        user = email_request.user
+
+      if not all(required):
+        ctx.update({
+          'error': 'All fields are required',
+        })
+        return render_to_response('signup.html', context(request, ctx))
+
+      if not user:
+        existing_users = User.objects.filter(email=email)
+
+        if existing_users:
+          ctx.update({
+            'error': rando_msg([
+              'A user with that email already exists!',
+              'That can\'t be your email address, someone else is using it!',
+            ])
+          })
+          return render_to_response('signup.html', context(request, ctx))
+
+        user = User.objects.create(
+          email=email,
+          confirmed=False,
+        )
+      else:
+        user.confirmed = True
+
+      user.first_name
+      user.last_name
+
+      if not user.d_user:
+        user.add_d_user(user.email)
+
       user.save()
-      user.d_user.set_password(request.REQUEST.get('password'))
+      user.d_user.set_password(password)
       user.d_user.save()
-      authenticated = authenticate(username=user.email, password=request.REQUEST.get('password'))
+      authenticated = authenticate(username='%s' % user.id, password=request.REQUEST.get('password'))
 
     login(request, authenticated)
+
+    if email_request:
+      return http.HttpResponseRedirect(reverse('confirmation', args=(tokenize(str(email_request.id)),)))
+
     return http.HttpResponseRedirect('/')
 
-  return render_to_response('confirmation.html', context(request))
+  return render_to_response('signup.html', context(request, {
+    'querystring': querystring,
+    'next': next,
+    'email_request': email_request,
+  }))
 
 def login_view(request):
   token = request.POST.get('access_token')
@@ -453,8 +486,24 @@ def login_view(request):
   email = request.POST.get('email')
   password = request.POST.get('password')
 
+  next = request.POST.get('next')
+
+  def success():
+    if next:
+      return http.HttpResponseRedirect(next)
+    else:
+      return http.HttpResponse(json.dumps({
+        'success': True,
+        'code': 'logged-in',
+      }))
+
   if request.POST.get('normal_auth'):
-    authenticated = authenticate(username=email, password=password)
+    user = User.objects.filter(email=email)
+
+    if user:
+      authenticated = authenticate(username='%s' % user[0].id, password=password)
+    else:
+      authenticated = None
 
     if not authenticated:
       return http.HttpResponse(json.dumps({
@@ -467,9 +516,7 @@ def login_view(request):
       }))
 
     login(request, authenticated)
-    return http.HttpResponse(json.dumps({
-      'success': True,
-    }))
+    return success()
 
   fb = Facebook()
 
@@ -479,45 +526,10 @@ def login_view(request):
       'msg': 'Nice try.'
     }))
 
-  try:
-    user, created = User.objects.get_or_create(
-      fb_user_id=fb.user_info.get('user_id'),
-    )
-  except User.MultipleObjectsReturned:
-    user = User.objects.filter(
-      fb_user_id=fb.user_info.get('user_id')
-    ).latest('id')
-    created = False
-
-  try:
-    graph = facebook.GraphAPI(token)
-  except facebook.GraphAPIError:
-    return http.HttpResponse(json.dumps({
-      'success': False,
-      'msg': 'Quit trying to sneak in.'
-    }))
-
-  obj = graph.get_object('me')
-
-  if created or not user.d_user:
-    user.add_d_user(obj.get('email'))
-    user.email = obj.get('email')
-    user.first_name = obj.get('first_name')
-    user.last_name = obj.get('last_name')
-    user.d_user.set_password(settings.GENERIC_USER_PASSWORD)
-    user.d_user.save()
-    user.confirmed = True
-    user.save()
-
-  user.access_token = token
-  user.save()
+  fb_get_or_create_user(fb)
 
   authenticated = authenticate(token=token)
   login(request, authenticated)
 
-  return http.HttpResponse(json.dumps({
-    'success': True,
-    'code': 'logged-in',
-    'created': created,
-  }))
+  return success()
 

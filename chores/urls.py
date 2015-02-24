@@ -10,6 +10,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
   url(r'^login/$', 'chores.views.login_view', name='login'),
   url(r'^logout/$', 'chores.views.logout_view', name='logout'),
+  url(r'^signup/$', 'chores.views.signup', name='signup'),
+
   url(r'^admin/', include(admin.site.urls)),
   url(r'^house/?$', 'chores.views.index', name='houses'),
   url(r'^house/(?P<house_id>\d+)/', 'chores.views.house', name='house'),
@@ -19,7 +21,6 @@ urlpatterns = patterns('',
   url(r'^api/house/?$', 'chores.views.api_houses', name='api_houses'),
   # url(r'^api/house/my_house?$', 'chores.views.api_my_house', name='api_my_house'),
   url(r'^api/house/(?P<id>\d+)/?$', 'chores.views.api_house', name='api_house'),
-  url(r'^api/house/(?P<house_id>\d+)/members/?$', 'chores.views.members', name='api_members'),
 
   url(r'^api/account/?$', 'chores.views.api_accounts', name='api_accounts'),
   url(r'^api/account/(?P<account_id>\d+)/?$', 'chores.views.api_account', name='api_account'),

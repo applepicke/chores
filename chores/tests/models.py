@@ -43,8 +43,6 @@ class ModelTest(ChoresTestCase):
     new_user_2 = mommy.make('chores.User', email='test-2@weiner.com')
     new_user_2.add_d_user(email=new_user_2.email)
     self.assertEqual(new_user_2.email, new_user_2.d_user.email)
-    new_user_2.add_d_user(email=new_user_2.email)
-    self.assertEqual(new_user_2.email, new_user_2.d_user.email)
 
     #Test the owns_chore method
     self.assertFalse(new_user_2.owns_chore(new_chore_1.id))
