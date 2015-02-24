@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 from chores.models import User, House, Chore, Reminder, HouseMemberRequest
 from chores.utils import untokenize, rando_msg, get_timezones, tokenize
-from chores.facebook import Facebook, fb_get_or_create_user
+from chores.facebook_utils import Facebook, fb_get_or_create_user
 from chores.context import context
 from chores.users.invitations import Invitation
 
@@ -526,7 +526,7 @@ def login_view(request):
       'msg': 'Nice try.'
     }))
 
-  fb_get_or_create_user(fb)
+  fb_get_or_create_user(fb, token)
 
   authenticated = authenticate(token=token)
   login(request, authenticated)

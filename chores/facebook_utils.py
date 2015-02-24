@@ -58,7 +58,7 @@ class Facebook(object):
 
     return self.user_info.get('is_valid')
 
-def fb_get_or_create_user(fb):
+def fb_get_or_create_user(fb, token):
   try:
     user, created = User.objects.get_or_create(
       fb_user_id=fb.user_info.get('user_id'),
