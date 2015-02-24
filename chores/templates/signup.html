@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="signup-page">
+    <div class="row">
+      <div class="small-12">
+        <h1>We don't know who you are yet!</h1>
+      </div>
+      <div class="small-12">
+        <h3>Create an account with us to get started.</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="signup-form small-12 large-5 columns">
+        <h4>Boring Sign up Form</h4>
+        <form action=".{{ querystring }}" method="POST">
+          <label for="first_name">
+            First Name
+            <input type="text" name="first_name" placeholder="Enter your first name..." value="{{ first_name }}"></input>
+          </label>
+          <label for="last_name">
+            Last Name
+            <input type="text" name="last_name" placeholder="Enter your last name..." value="{{ last_name }}"></input>
+          </label>
+
+          <label for="email" {% if email_request %}style="display:none"{% endif %}>
+            Email
+            <input type="email" name="email" placeholder="Enter your email address..." value="{{ email }}"></input>
+          </label>
+          <label for="password">
+            Password
+            <input type="password" name="password" placeholder="Enter a password..."></input>
+          </label>
+          <input type="hidden" name="next" value="{{ next }}"></input>
+          <div class="alert-box alert error {% if not error %}hidden{% endif %}">{{ error }}</div>
+          <input type="submit" class="button success small-12 large-4 large-offset-8 columns" value="Sign Up"></input>
+        </form>
+      </div>
+
+      <div class="divider small-12 large-3 columns">
+        <div class="divide"></div>
+        <div class="or">
+          OR
+        </div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="small-12 large-1 end columns">
+        <div class="facebook-login-button">
+          <fb:login-button scope="public_profile,email" onlogin="loginForConfirmation();" login_text="Sign up" size="xlarge">
+          </fb:login-button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
