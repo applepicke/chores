@@ -1,6 +1,6 @@
 chores = angular.module('chores')
 
-chores.directive 'modalInit', ->
+chores.directive 'foundationInit', ->
   restrict: 'E'
   link: (scope, elm, attrs) ->
     $(document).foundation()

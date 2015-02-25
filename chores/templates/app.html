@@ -8,7 +8,9 @@
 {% block content %}
   <div ng-controller="MainController">
     <div class="view-container">
-      <div ng-view class="view-frame"></div>
+      <div ng-view class="view-frame">
+        <foundation-init/>
+      </div>
     </div>
   </div>
 {% endblock %}
