@@ -12,6 +12,7 @@ def production():
       run('./manage.py syncdb')
       run('./manage.py migrate chores')
       run('./manage.py collectstatic --noinput')
+      run('find . -name \*.pyc -delete')
       run('touch chores/wsgi.py')
     with cd(supervisor_dir):
       run('supervisorctl restart chores-celery-tasks')

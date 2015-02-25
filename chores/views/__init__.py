@@ -18,14 +18,16 @@ from chores.context import context
 from chores.users.invitations import Invitation
 
 def index(request):
-  if not request.user.is_authenticated():
+  user = request.app_user
+
+  if not user or request.user.is_authenticated():
     if not request.path_info == '/':
       return http.HttpResponseRedirect('/')
     return render_to_response('login.html', context(request))
 
   else:
-    house = request.app_user.house
-    member_of_house = request.app_user.houses.all()
+    house = user.house
+    member_of_house = user.houses.all()
 
     if house:
       return http.HttpResponseRedirect(reverse('house', args=(house.id,)))
