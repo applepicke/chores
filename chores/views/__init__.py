@@ -20,7 +20,7 @@ from chores.users.invitations import Invitation
 def index(request):
   user = request.app_user
 
-  if not user or request.user.is_authenticated():
+  if not user or not request.user.is_authenticated():
     if not request.path_info == '/':
       return http.HttpResponseRedirect('/')
     return render_to_response('login.html', context(request))
