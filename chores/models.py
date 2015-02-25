@@ -125,7 +125,7 @@ class User(models.Model):
 
   def add_d_user(self, email):
     d_user = auth_models.User.objects.filter(
-      username=email,
+      email=email,
     )
 
     if not d_user:
