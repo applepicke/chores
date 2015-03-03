@@ -2,6 +2,11 @@ chores = angular.module 'chores'
 
 chores.controller 'MainController', ($scope, $route, $routeParams, House) ->
 
+chores.controller 'NavController', ($scope, Account) ->
+  Account.find().then (response) ->
+    $scope.account = response
+    $(document).foundation()
+
 chores.controller 'Welcome', ($scope, $location, House) ->
   $scope.house = new House()
 
@@ -36,6 +41,11 @@ chores.controller 'AddMembers', ($scope, $location, $routeParams, $rootScope, Ho
       $scope.newMember = new Account()
       $scope.closeModal()
 
+chores.controller 'Invitations', ($scope, Account) ->
+
+  Account.find().then (response) ->
+    $scope.account = response
+
 chores.controller 'HouseList', ($scope, House) ->
   House.getHouses (data) ->
     $scope.houses = data.houses
@@ -49,10 +59,7 @@ chores.controller 'Account', ($scope, Account, Timezones) ->
     $scope.timezones = response
 
   Account.find().then (response) ->
-    if response
-      $scope.account = response
-    else
-      $location.path('/')
+    $scope.account = response
 
   $scope.changePassword =  ->
     $scope.account.changePassword($scope.newPassword, $scope.confirmPassword).then ->

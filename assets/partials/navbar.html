@@ -1,0 +1,32 @@
+<ul class="title-area">
+  <li class="name">
+  </li>
+  <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+</ul>
+
+<section class="top-bar-section">
+  <ul class="right">
+    <li><a class="home-button" target="_self" href="/">Home</a></li>
+    <li ng-show="account.ownedHouses" class="has-dropdown">
+      <a class="owned-houses" target="_self"><span class="icon fa fa-home"></span>Households</a>
+      <ul class="dropdown">
+        <li ng-repeat="household in account.ownedHouses">
+          <a class="" target="_self" href="{{ household.link }}">{{ household.name }}</a>
+        </li>
+      </ul>
+    </li>
+    <li class="has-dropdown">
+      <a class="notifications" target="_self"><span class="icon fa fa-bell"></span>Notifications {{ account.notificationsDisplay }}</a>
+      <ul class="dropdown">
+        <li><a class="" target="_self" href="/invites/">Invitations {{ account.invitationsDisplay }}</a></li>
+      </ul>
+    </li>
+    <li class="has-dropdown">
+      <a class="user-profile-name" target="_self"><img class="avatar" src="{{ account.avatar }}"></img>{{ account.name }}</a>
+      <ul class="dropdown">
+        <li><a class="account-settings" target="_self" href="/account/">Account Settings</a></li>
+        <li><a class="logout-button" target="_self" href="/logout/">Logout</a></li>
+      </ul>
+    </li>
+  </ul>
+</section>

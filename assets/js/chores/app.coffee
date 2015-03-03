@@ -23,6 +23,10 @@ chores.config ['$routeProvider', '$locationProvider',
         templateUrl: '/static/partials/house_detail.html',
         controller: 'HouseDetail'
 
+      .when '/invites',
+        templateUrl: '/static/partials/invites.html',
+        controller: 'Invitations'
+
       .otherwise
         redirectTo: '/'
 

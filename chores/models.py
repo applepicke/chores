@@ -6,6 +6,7 @@ from django.contrib.auth import models as auth_models
 from django.contrib import admin
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from jsonfield import JSONField
 
@@ -158,6 +159,15 @@ class User(models.Model):
   def short_timezone(self):
     return from_utc(datetime.datetime.now(), self).strftime('%Z')
 
+  def account_as_dict(self):
+    user_dict = self.as_dict()
+
+    user_dict.update({
+      'owned_houses': [h.as_dict() for h in self.owned_houses.all()]
+    })
+
+    return user_dict
+
   def as_dict(self, limited=False):
     if limited:
       return {
@@ -179,6 +189,8 @@ class User(models.Model):
       'sms_verified': self.sms_verified,
       'phone_number': self.phone_number,
       'timezone': self.timezone or 'UTC',
+      'avatar': self.avatar,
+      'invitations': [r.as_dict() for r in self.email_requests.all()],
     }
 
   def __str__(self):
@@ -228,6 +240,7 @@ class House(models.Model):
       'chores': [c.as_dict(user=user) for c in self.chores.all()],
       'recurs': self.recurs,
       'owner': self.owner.as_dict(limited=True),
+      'link': reverse('house', args=(self.id,))
     }
 
 class Chore(models.Model):
@@ -327,7 +340,7 @@ class HouseMemberRequest(models.Model):
   def as_dict(self):
     return {
       'id': self.id,
-      'name': self.to_email,
+      'name': self.user.as_dict(limited=True),
       'confirmed': self.confirmed,
     }
 

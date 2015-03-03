@@ -201,6 +201,9 @@ chores.factory 'Account', (Base) ->
       p.phoneNumber = ''
       p.verificationCode = null
       p.timezone = 'UTC'
+      p.avatar = ''
+      p.invitations = []
+      p.ownedHouses = []
       p
 
     @apiPath: "#{Base.apiPath}/account"
@@ -226,6 +229,19 @@ chores.factory 'Account', (Base) ->
         @errors = {msg: 'You forget to type in an email. Dummy.'}
         return false
       true
+
+    notificationsDisplay: ->
+      total = 0
+      total += @invitations.length
+
+      if total
+        return "(#{total})"
+      return ''
+
+    invitationsDisplay: ->
+      if @invitations.length
+        return "(#{@invitations.length})"
+      return ''
 
     sendInvite: (houseId) ->
       if @validateForConfirmation()

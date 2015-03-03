@@ -139,7 +139,7 @@ def api_accounts(request):
     }))
 
   return http.HttpResponse(json.dumps({
-    'data': user.as_dict(),
+    'data': user.account_as_dict(),
   }))
 
 @login_required
@@ -194,7 +194,7 @@ def api_account(request, account_id):
       user.save()
 
   return http.HttpResponse(json.dumps({
-    'data': user.as_dict(),
+    'data': user.account_as_dict(),
   }))
 
 @login_required
@@ -367,16 +367,17 @@ def confirmation(request, token):
   except:
     raise http.Http404
 
-  confirmation_url = reverse('confirmation', args=(token,))
-
   if user.confirmed:
     if not user.logged_in(request):
-      return http.HttpResponseRedirect('%s?next=%s' % (reverse('login'), confirmation_url))
+      return http.HttpResponseRedirect('%s?next=%s' % (reverse('login'), reverse('invites')))
     else:
-      return render_to_response('confirmation.html', context(request))
+      return http.HttpResponseRedirect(reverse('invites'))
 
   else:
-    return http.HttpResponseRedirect('%s?token=%s' % (reverse('signup'), token))
+    return http.HttpResponseRedirect(reverse('signup'))
+
+def invites(request):
+  return render_to_response('app.html', context(request))
 
 def signup(request):
   token = request.GET.get('token')
