@@ -15,7 +15,13 @@ from chores.utils import random_string, to_utc, from_utc, gravatar, user_time
 from chores.sms import SMSClient
 from chores.messages import DEFAULT_REMINDER_SMS_MSG, DEFAULT_REMINDER_EMAIL_MSG
 
-class User(models.Model):
+class TimeStamped(models.Model):
+  created_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
+
+  class Meta:
+    abstract = True
+
+class User(TimeStamped):
   fb_user_id = models.CharField(max_length=255, default='')
   first_name = models.CharField(max_length=255, default='')
   last_name = models.CharField(max_length=255, default='')
@@ -174,6 +180,7 @@ class User(models.Model):
         'id': self.id,
         'first_name': self.first_name,
         'last_name': self.last_name,
+        'name': self.name,
       }
 
     return {
@@ -190,13 +197,13 @@ class User(models.Model):
       'phone_number': self.phone_number,
       'timezone': self.timezone or 'UTC',
       'avatar': self.avatar,
-      'invitations': [r.as_dict() for r in self.email_requests.all()],
+      'invites': [r.as_dict() for r in self.invites.all()],
     }
 
   def __str__(self):
     return self.name
 
-class House(models.Model):
+class House(TimeStamped):
   name = models.CharField(max_length=255)
   address = models.CharField(max_length=2000, default='', null=True)
   owner = models.ForeignKey(User, null=True, related_name="owned_houses")
@@ -243,7 +250,7 @@ class House(models.Model):
       'link': reverse('house', args=(self.id,))
     }
 
-class Chore(models.Model):
+class Chore(TimeStamped):
   name = models.CharField(max_length=255)
   description = models.CharField(max_length=2000, null=True, default='')
   users = models.ManyToManyField(User, null=True, related_name='chores')
@@ -279,7 +286,7 @@ class Chore(models.Model):
       'reminder': [r.as_dict(user=user) for r in self.reminders.all()][0] if self.reminders.count() else None,
     }
 
-class Reminder(models.Model):
+class Reminder(TimeStamped):
   type = models.CharField(max_length=255)
   date = models.DateTimeField(default=datetime.datetime.utcnow())
   day = models.CharField(max_length=255, default='')
@@ -331,17 +338,19 @@ class Reminder(models.Model):
       'chore_id': self.chore.id,
     }
 
-class HouseMemberRequest(models.Model):
-  sender = models.ForeignKey(User, related_name="sent_email_requests")
-  user = models.ForeignKey(User, related_name="email_requests")
-  house = models.ForeignKey(House, related_name="email_requests")
+class HouseMemberRequest(TimeStamped):
+  sender = models.ForeignKey(User, related_name="sent_invites")
+  user = models.ForeignKey(User, related_name="invites")
+  house = models.ForeignKey(House, related_name="invites")
   confirmed = models.BooleanField(default=False)
 
   def as_dict(self):
     return {
       'id': self.id,
-      'name': self.user.as_dict(limited=True),
+      'user': self.user.as_dict(limited=True),
+      'sender': self.sender.as_dict(limited=True),
       'confirmed': self.confirmed,
+      'created_at': user_time(self.created_at, self.user, full_date=True),
     }
 
 class UserAdmin(admin.ModelAdmin):

@@ -292,6 +292,20 @@ def api_reminder(request, reminder_id=None):
   }))
 
 @login_required
+def api_invite(request, invite_id=None):
+  user = request.app_user
+  invite = get_object_or_404(user.invites.all(), id=invite_id)
+  confirmed = request.REQUEST.get('confirmed')
+
+  if confirmed:
+    invite.confirmed = confirmed
+    invite.save()
+
+  return http.HttpResponse(json.dumps({
+    'data': invite.as_dict(),
+  }))
+
+@login_required
 def api_chores(request, house_id=None):
   user = request.app_user
 
@@ -374,7 +388,7 @@ def confirmation(request, token):
       return http.HttpResponseRedirect(reverse('invites'))
 
   else:
-    return http.HttpResponseRedirect(reverse('signup'))
+    return http.HttpResponseRedirect('%s?token=%s' % (reverse('signup'), token))
 
 def invites(request):
   return render_to_response('app.html', context(request))
@@ -458,8 +472,8 @@ def signup(request):
       else:
         user.confirmed = True
 
-      user.first_name
-      user.last_name
+      user.first_name = first_name
+      user.last_name = last_name
 
       if not user.d_user:
         user.add_d_user(user.email)

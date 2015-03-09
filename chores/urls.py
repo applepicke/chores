@@ -45,6 +45,9 @@ urlpatterns = patterns('',
   url(r'^api/reminder/?$', 'chores.views.api_reminder', name='api_reminders'),
   url(r'^api/reminder/(?P<reminder_id>\d+)/?$', 'chores.views.api_reminder', name='api_reminder'),
 
+  # Invitations
+  url(r'^api/invite/(?P<invite_id>\d+)/?$', 'chores.views.api_invite', name='api_invite'),
+
   url(r'^$', 'chores.views.index', name='index'),
   url(r'^timezones/?$', 'chores.views.timezones', name='timezones'),
 

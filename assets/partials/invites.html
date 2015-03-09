@@ -1,3 +1,27 @@
 <div class="confirmation">
-  Hello
+  <div class="row">
+    <div class="small-12 large-6 large-offset-2">
+      <h1>Invitations</h1>
+    </div>
+
+    <div class="invites-container small-12 large-8 large-offset-2">
+
+      <div class="invites" ng-class="{ confirmed: invite.confirmed }" ng-show="account.invites" ng-repeat="invite in account.invites">
+        <div class="small-10 row">
+          <span class="label">From</span>
+          <span class="invited-by">{{ invite.sender.name }}</span>
+          <span class="timestamp">{{ invite.created_at }}</span>
+
+          <div class="actions small-12 large-4 large-offset-8" ng-hide="invite.confirmed">
+            <input type="button" ng-click="acceptInvite(invite)" value="Accept" class="button success small small-5"></input>
+            <input type="button" ng-click="deleteInvite(invite)" value="Delete" class="button alert small small-5 small-offset-1"></input>
+          </div>
+        </div>
+      </div>
+      <div ng-hide="account.invites">
+        <p class="empty-message">It doesn't look like anyone wants you in their household. Tough luck!</p>
+      </div>
+
+    </div>
+  </div>
 </div>

@@ -46,6 +46,9 @@ chores.controller 'Invitations', ($scope, Account) ->
   Account.find().then (response) ->
     $scope.account = response
 
+  $scope.acceptInvite = (invite) ->
+    $scope.account.acceptInvite(invite)
+
 chores.controller 'HouseList', ($scope, House) ->
   House.getHouses (data) ->
     $scope.houses = data.houses

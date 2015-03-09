@@ -134,6 +134,27 @@ chores.factory 'Chore', (Base, Reminder) ->
         @reminder = new Reminder(data.data.reminder)
       @
 
+chores.factory 'Invitation', (Base) ->
+  class Invitation extends Base
+
+    @properties: ->
+      p = Base.properties()
+      p.user = null
+      p.sender = null
+      p.confirmed = false
+      p.created_at = null
+      p
+
+    @apiPath: "#{Base.apiPath}/invite"
+
+    accept: ->
+      @confirmed = true
+      @save()
+
+    save: ->
+      super
+        confirmed: @confirmed
+
 chores.factory 'Reminder', (Base) ->
   class Reminder extends Base
 
@@ -184,7 +205,7 @@ chores.factory 'Reminder', (Base) ->
           day: @day
           chore_id: @chore.id
 
-chores.factory 'Account', (Base) ->
+chores.factory 'Account', (Base, Invitation) ->
   class Account extends Base
 
     @properties: ->
@@ -202,11 +223,18 @@ chores.factory 'Account', (Base) ->
       p.verificationCode = null
       p.timezone = 'UTC'
       p.avatar = ''
-      p.invitations = []
+      p.invites = []
       p.ownedHouses = []
       p
 
     @apiPath: "#{Base.apiPath}/account"
+
+    constructor: (propValues, convertKeys = false) ->
+      super
+      invites = @invites
+      @invites = []
+      _.each invites, (invite) =>
+        @invites.push new Invitation(invite)
 
     validate: ->
       if not @validateForConfirmation()
@@ -232,15 +260,15 @@ chores.factory 'Account', (Base) ->
 
     notificationsDisplay: ->
       total = 0
-      total += @invitations.length
+      total += @invites.length
 
       if total
         return "(#{total})"
       return ''
 
-    invitationsDisplay: ->
-      if @invitations.length
-        return "(#{@invitations.length})"
+    invitesDisplay: ->
+      if @invites.length
+        return "(#{@invites.length})"
       return ''
 
     sendInvite: (houseId) ->
@@ -273,9 +301,19 @@ chores.factory 'Account', (Base) ->
           verify_sms: true,
           sms_code: @verificationCode
 
+    acceptInvite: (invite) ->
+      invite.accept()
+
     create: ->
       if @validate()
         @save
           email: @email
+
+    successCallback: (data, status, headers, config) =>
+      super
+      if data.data
+        invites = data.data.invites or []
+        _.each invites, (invite) ->
+          @invites.push new Invitation(invite)
 
   Account

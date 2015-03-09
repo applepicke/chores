@@ -38,13 +38,22 @@ def from_utc(time, user=None):
   tz = pytz.timezone(timezone or 'UTC')
   return time.astimezone(tz)
 
-def user_time(time, user):
+def user_time(time, user, full_date=False):
   now = datetime.datetime.now()
-  time = datetime.datetime.strptime(time, '%I:%M %p')
+
+  if isinstance(time, basestring):
+    time = datetime.datetime.strptime(time, '%I:%M %p')
+
   time = time.replace(year=now.year, month = now.month, day=now.day)
   time = to_utc(time)
 
-  return from_utc(time, user).strftime('%I:%M %p')
+
+  format = '%I:%M %p'
+
+  if full_date:
+    format = '%I:%M %p %B %d, %Y'
+
+  return from_utc(time, user).strftime(format)
 
 def gravatar(email, size=25):
   gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
