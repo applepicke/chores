@@ -309,11 +309,16 @@ chores.factory 'Account', (Base, Invitation) ->
         @save
           email: @email
 
-    successCallback: (data, status, headers, config) =>
-      super
+    successCallback: (data, status, headers, config) ->
+      if not data
+        return
+
+      super data, status, headers, config
+
       if data.data
         invites = data.data.invites or []
-        _.each invites, (invite) ->
+        _.each invites, (invite) =>
           @invites.push new Invitation(invite)
+      @
 
   Account
