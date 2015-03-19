@@ -1,5 +1,8 @@
 import json
 
+from django import http
+from django.core.urlresolvers import reverse
+
 from chores.models import User
 
 class UserMiddleware(object):
@@ -27,3 +30,17 @@ class JSONMiddleware(object):
     request.POST = temp
 
     return None
+
+class ConfirmationMiddleware(object):
+  def process_request(self, request):
+    path = request.get_full_path()
+
+    valid_paths = [
+      reverse('needs_confirm'),
+      reverse('logout'),
+    ]
+
+    in_any = any([p in path for p in valid_paths])
+
+    if request.app_user and not request.app_user.confirmed and not in_any:
+      return http.HttpResponseRedirect(reverse('needs_confirm'))

@@ -53,12 +53,16 @@ def house(request, house_id):
   return render_to_response('app.html', context(request))
 
 @login_required
-def account(request):
+def app(request):
   return render_to_response('app.html', context(request))
 
 @login_required
-def welcome(request):
-  return render_to_response('app.html', context(request))
+def needs_confirm(request):
+  return render_to_response('needs_confirm.html', context(request))
+
+@login_required
+def confirm_email(request):
+  return http.HttpResponse()
 
 @login_required
 def logout_view(request):
@@ -389,9 +393,6 @@ def confirmation(request, token):
 
   else:
     return http.HttpResponseRedirect('%s?token=%s' % (reverse('signup'), token))
-
-def invites(request):
-  return render_to_response('app.html', context(request))
 
 def signup(request):
   token = request.GET.get('token')

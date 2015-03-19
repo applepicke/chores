@@ -129,6 +129,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'chores.middleware.UserMiddleware',
     'chores.middleware.JSONMiddleware',
+    'chores.middleware.ConfirmationMiddleware',
 )
 
 ROOT_URLCONF = 'chores.urls'

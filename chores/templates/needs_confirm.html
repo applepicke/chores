@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="small-12 small-centered column">
+			<h2>Welcome!</h2>
+			<h4>We sent you a confirmation email to make sure you aren't some sort of imposter. Click the link, and you'll magically be granted access to the site!</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="small-12 small-centered column">
+			<a class="button primary resend-confirmation">Resend Confirmation</a>
+			<a href="/logout">Logout</a>
+		</div>
+	</div>
+
+{% endblock %}

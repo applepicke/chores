@@ -19,11 +19,13 @@ urlpatterns = patterns('',
   #  FRONT FACING
   ################
   url(r'^admin/', include(admin.site.urls)),
+  url(r'^needs_confirm/?$', 'chores.views.needs_confirm', name='needs_confirm'),
+  url(r'^confirm/(?P<token>\d+)/?$', 'chores.views.confirm_email', name='confirm_email'),
   url(r'^house/?$', 'chores.views.index', name='houses'),
   url(r'^house/(?P<house_id>\d+)/', 'chores.views.house', name='house'),
-  url(r'^welcome/?$', 'chores.views.welcome', name='welcome'),
-  url(r'^account/?$', 'chores.views.account', name='account'),
-  url(r'^invites/?$', 'chores.views.invites', name='invites'),
+  url(r'^welcome/?$', 'chores.views.app', name='welcome'),
+  url(r'^account/?$', 'chores.views.app', name='account'),
+  url(r'^invites/?$', 'chores.views.app', name='invites'),
 
   #  API
   ########

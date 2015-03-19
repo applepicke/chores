@@ -1,6 +1,6 @@
 chores = angular.module 'chores'
 
-chores.controller 'MainController', ($scope, $route, $routeParams, House) ->
+chores.controller 'MainController', ($scope, $route, $routeParams) ->
 
 chores.controller 'NavController', ($scope, Account) ->
   Account.find().then (response) ->
