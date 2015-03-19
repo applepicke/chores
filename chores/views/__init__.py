@@ -15,7 +15,7 @@ from chores.models import User, House, Chore, Reminder, HouseMemberRequest
 from chores.utils import untokenize, rando_msg, get_timezones, tokenize
 from chores.facebook_utils import Facebook, fb_get_or_create_user
 from chores.context import context
-from chores.users.invitations import Invitation
+from chores.users.invitations import Invitation, Confirmation
 
 def index(request):
   user = request.app_user
@@ -58,11 +58,45 @@ def app(request):
 
 @login_required
 def needs_confirm(request):
+  if request.method == 'POST':
+    if request.POST.get('resend'):
+      confirmation = Confirmation(request.app_user, request.META['HTTP_HOST'])
+      confirmation.send()
+
   return render_to_response('needs_confirm.html', context(request))
 
+# Confirm signup request
 @login_required
-def confirm_email(request):
-  return http.HttpResponse()
+def confirm_email(request, token):
+  try:
+    confirmation_token = untokenize(token)
+    user = request.app_user
+  except:
+    raise http.Http404
+
+  if user.confirmation_token == confirmation_token:
+    user.confirmed = True
+    user.save()
+
+  return http.HttpResponseRedirect('/')
+
+# Confirm invite to household
+def confirmation(request, token):
+  try:
+    id = untokenize(token)
+    email_request = HouseMemberRequest.objects.get(id=id)
+    user = email_request.user
+  except:
+    raise http.Http404
+
+  if user.confirmed:
+    if not user.logged_in(request):
+      return http.HttpResponseRedirect('%s?next=%s' % (reverse('login'), reverse('invites')))
+    else:
+      return http.HttpResponseRedirect(reverse('invites'))
+
+  else:
+    return http.HttpResponseRedirect('%s?token=%s' % (reverse('signup'), token))
 
 @login_required
 def logout_view(request):
@@ -377,23 +411,6 @@ def timezones(request):
   timezones = sorted(timezones, key=operator.itemgetter('key'))
   return http.HttpResponse(json.dumps(timezones))
 
-def confirmation(request, token):
-  try:
-    id = untokenize(token)
-    email_request = HouseMemberRequest.objects.get(id=id)
-    user = email_request.user
-  except:
-    raise http.Http404
-
-  if user.confirmed:
-    if not user.logged_in(request):
-      return http.HttpResponseRedirect('%s?next=%s' % (reverse('login'), reverse('invites')))
-    else:
-      return http.HttpResponseRedirect(reverse('invites'))
-
-  else:
-    return http.HttpResponseRedirect('%s?token=%s' % (reverse('signup'), token))
-
 def signup(request):
   token = request.GET.get('token')
   email_request = None
@@ -482,6 +499,10 @@ def signup(request):
       user.save()
       user.d_user.set_password(password)
       user.d_user.save()
+
+      confirmation = Confirmation(user, request.META['HTTP_HOST'])
+      confirmation.send()
+
       authenticated = authenticate(username='%s' % user.id, password=request.REQUEST.get('password'))
 
     login(request, authenticated)

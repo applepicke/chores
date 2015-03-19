@@ -4,23 +4,9 @@ from django.core.urlresolvers import reverse
 
 from chores.utils import tokenize
 from chores.models import User, House, Chore
+from chores.messages import CONFIRMATION_MSG, INVITATION_MSG
 
-INVITATION_MSG = """
-Hello,
-
-%(owner)s has invited you to join the %(household)s household.
-Don't be embarrassed, it's probably just because you're a big slob. We all have our faults.
-
-To confirm your role in the household, click on the following link:
-%(confirmation_link)s
-
-If you think you might have gotten this email by mistake, then someone is probably playing a huge prank on you. Hilarious.
-
-love,
-The Chore People
-
-"""
-
+# Confirmation email when being invited to a household
 class Invitation(object):
 
   def __init__(self, member_request, house, domain):
@@ -41,8 +27,33 @@ class Invitation(object):
         'household': self.house.name,
         'confirmation_link': self.generate_confirmation_link(),
       },
-      'wcurtiscollins@willyc.me',
+      settings.CHORES_FROM_EMAIL,
       [self.member_request.user.email],
       fail_silently=False
     )
+
+# Original email confirmation when signing up
+class Confirmation(object):
+
+  def __init__(self, user, domain):
+    self.user = user
+    self.domain = domain
+
+  def generate_confirmation_link(self):
+    token = tokenize(self.user.get_confirmation_token())
+    url = reverse('confirm_email', args=(token,))
+    return 'http://%s%s' % (self.domain, url)
+
+  def send(self):
+    send_mail(
+      'Welcome to Chores',
+      CONFIRMATION_MSG % {
+        'user': self.user.full_name,
+        'confirmation_link': self.generate_confirmation_link(),
+      },
+      settings.CHORES_FROM_EMAIL,
+      [self.user.email],
+      fail_silently=False
+    )
+
 

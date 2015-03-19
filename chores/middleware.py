@@ -38,9 +38,10 @@ class ConfirmationMiddleware(object):
     valid_paths = [
       reverse('needs_confirm'),
       reverse('logout'),
+      '/confirm/',
     ]
 
-    in_any = any([p in path for p in valid_paths])
+    in_any = any([path.startswith(p) for p in valid_paths])
 
     if request.app_user and not request.app_user.confirmed and not in_any:
       return http.HttpResponseRedirect(reverse('needs_confirm'))

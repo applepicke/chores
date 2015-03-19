@@ -13,7 +13,7 @@ from jsonfield import JSONField
 from chores.cache import CachedSMSVerificationCode
 from chores.utils import random_string, to_utc, from_utc, gravatar, user_time
 from chores.sms import SMSClient
-from chores.messages import DEFAULT_REMINDER_SMS_MSG, DEFAULT_REMINDER_EMAIL_MSG
+from chores.messages import DEFAULT_REMINDER_SMS_MSG, DEFAULT_REMINDER_EMAIL_MSG, CONFIRMATION_MSG
 
 class TimeStamped(models.Model):
   created_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
@@ -31,6 +31,7 @@ class User(TimeStamped):
   d_user = models.ForeignKey(auth_models.User, null=True)
   access_token = models.CharField(max_length=255, default='')
   confirmed = models.BooleanField(default=False)
+  confirmation_token = models.CharField(max_length=20, default='')
   email_enabled = models.BooleanField(default=True)
   sms_enabled = models.BooleanField(default=False)
   sms_verified = models.BooleanField(default=False)
@@ -85,7 +86,7 @@ class User(TimeStamped):
         send_mail(
           'Chores',
           email_message,
-          'wcurtiscollins@willyc.me',
+          settings.CHORES_FROM_EMAIL,
           [self.email],
           fail_silently=False
         )
@@ -173,6 +174,12 @@ class User(TimeStamped):
     })
 
     return user_dict
+
+  def get_confirmation_token(self):
+    if not self.confirmation_token:
+      self.confirmation_token = random_string(size=20)
+      self.save()
+    return self.confirmation_token
 
   def as_dict(self, limited=False):
     if limited:

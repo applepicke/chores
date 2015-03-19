@@ -9,5 +9,14 @@ $ ->
       $('.popped').removeClass('popped')
 
 
+  $('.resend-signup-email-confirmation').click (e) ->
+    $(e.target).hide()
+    $('.loading').show()
+
+    $.post '/needs_confirm', resend: true, (result) ->
+      $('.loading').hide()
+      $('.success').show()
+
+
 
 

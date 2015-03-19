@@ -23,6 +23,9 @@ SECRET_KEY = '+-qo9*o7c4z42t+x8z7370199j@q-*osb5)p*!01t7jyg&pvbw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# CHORES CONTACT
+CHORES_FROM_EMAIL = 'wcurtiscollins@gmail.com'
+
 ADMINS = (
     ('William Collins', 'wcurtiscollins@gmail.com'),
 )
