@@ -24,7 +24,7 @@ SECRET_KEY = '+-qo9*o7c4z42t+x8z7370199j@q-*osb5)p*!01t7jyg&pvbw'
 DEBUG = True
 
 # CHORES CONTACT
-CHORES_FROM_EMAIL = 'wcurtiscollins@gmail.com'
+CHORES_FROM_EMAIL = 'william@willyc.me'
 
 ADMINS = (
     ('William Collins', 'wcurtiscollins@gmail.com'),
