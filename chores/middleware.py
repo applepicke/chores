@@ -38,7 +38,7 @@ class ConfirmationMiddleware(object):
     valid_paths = [
       reverse('needs_confirm'),
       reverse('logout'),
-      '/confirm/',
+      '/confirm_email/',
     ]
 
     in_any = any([path.startswith(p) for p in valid_paths])
