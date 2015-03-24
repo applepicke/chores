@@ -71,7 +71,8 @@ chores.controller 'Account', ($scope, Account, Timezones) ->
       $scope.closeModal()
 
   $scope.saveAccount = ->
-    $scope.account.savePreferences()
+    $scope.account.savePreferences().then ->
+      humane.log 'Saved!'
 
 chores.controller 'HouseDetail', ($scope, $routeParams, $rootScope, House, Chore, Account, Reminder, Timezones) ->
 

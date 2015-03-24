@@ -1,4 +1,4 @@
-chores = angular.module('chores')
+chores = angular.module 'chores'
 
 chores.directive 'foundationInit', ->
   restrict: 'E'
@@ -111,11 +111,6 @@ chores.directive 'ngTime', ->
   restrict: 'A'
   link: (scope, elm, attrs) ->
     console.log()
-
-    #elm.timepicker()
-
-
-
 
 
 
