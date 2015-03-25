@@ -306,7 +306,7 @@ class Reminder(TimeStamped):
     self.day = self.day or ''
     self.time = self.time or ''
 
-    if type == 'once':
+    if self.type == 'once':
       date = datetime.datetime.strptime('%s %s' % (self.date, self.time), '%m/%d/%Y %I:%M %p')
       self.date = to_utc(date, user)
     else:
@@ -314,10 +314,11 @@ class Reminder(TimeStamped):
 
     time = datetime.datetime.strptime(self.time, '%I:%M %p')
     time = time.replace(year=now.year, month = now.month, day=now.day)
-    self.time = to_utc(time, user).strftime('%I:%M %p')
+    utc_time = to_utc(time, user)
+    self.time = utc_time.strftime('%I:%M %p')
 
-    if type == 'weekly':
-      self.day = self.time.strftime('%A').lower()
+    if self.type == 'weekly':
+      self.day = utc_time.strftime('%A').lower()
 
   def get_time(self, user):
     return user_time(self.time, user)
