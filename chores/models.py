@@ -316,6 +316,9 @@ class Reminder(TimeStamped):
     time = time.replace(year=now.year, month = now.month, day=now.day)
     self.time = to_utc(time, user).strftime('%I:%M %p')
 
+    if type == 'weekly':
+      self.day = self.time.strftime('%A').lower()
+
   def get_time(self, user):
     return user_time(self.time, user)
 
