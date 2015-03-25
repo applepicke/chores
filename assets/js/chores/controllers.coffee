@@ -7,10 +7,10 @@ chores.controller 'NavController', ($scope, Account) ->
     $scope.account = response
     $(document).foundation()
 
-chores.controller 'Welcome', ($scope, $location, House) ->
+chores.controller 'Welcome', ($scope, $location, $routeParams, House) ->
   $scope.house = new House()
 
-  House.find().then (response) ->
+  House.find({id: $routeParams.houseId}).then (response) ->
     if response and response.length
       $scope.house = response[0]
 

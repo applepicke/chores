@@ -34,12 +34,34 @@ def index(request):
     elif member_of_house:
       return http.HttpResponseRedirect(reverse('account'))
     else:
-      return http.HttpResponseRedirect(reverse('welcome'))
+      return http.HttpResponseRedirect(reverse('new-house'))
 
   return render_to_response('app.html', context(request))
 
 @login_required
+def new_house(request):
+  user = request.app_user
+
+  house = user.owned_houses.create()
+
+  return http.HttpResponseRedirect(reverse('welcome', args=(house.id,)))
+
+@login_required
 def house(request, house_id):
+  user = request.app_user
+
+  try:
+    house = House.objects.get(id=house_id)
+  except House.DoesNotExist:
+    return http.HttpResponseRedirect('/')
+
+  if not user.can_edit_house(house):
+    return http.HttpResponseRedirect('/')
+
+  return render_to_response('app.html', context(request))
+
+@login_required
+def welcome(request, house_id):
   user = request.app_user
 
   try:

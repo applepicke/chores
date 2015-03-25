@@ -3,7 +3,7 @@ chores = angular.module 'chores', ['ngRoute', 'ngResource']
 chores.config ['$routeProvider', '$locationProvider',
   ($routeProvider, $locationProvider) ->
     $routeProvider
-      .when '/welcome',
+      .when '/welcome/:houseId/',
         templateUrl: '/static/partials/welcome.html',
         controller: 'Welcome'
 

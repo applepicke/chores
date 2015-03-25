@@ -10,6 +10,9 @@
     <li ng-show="account.ownedHouses" class="has-dropdown">
       <a class="owned-houses" target="_self"><span class="icon fa fa-home"></span>Households</a>
       <ul class="dropdown">
+        <li>
+          <a class="" target="_self" href="/new-house/"><span class="fa fa-plus-circle">&nbsp;</span>Add new household</a>
+        </li>
         <li ng-repeat="household in account.ownedHouses">
           <a class="" target="_self" href="{{ household.link }}">{{ household.name }}</a>
         </li>
