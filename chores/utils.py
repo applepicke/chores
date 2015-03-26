@@ -14,6 +14,33 @@ from django.core.mail import mail_admins
 
 logger = logging.getLogger('')
 
+WEEKDAYS = {
+  1: 'sunday',
+  2: 'monday',
+  3: 'tuesday',
+  4: 'wednesday',
+  5: 'thursday',
+  6: 'friday',
+  7: 'saturday',
+}
+
+def get_weekday(day, offset):
+
+  num = 1
+  for key, _day in WEEKDAYS.iteritems():
+    if _day == day:
+      num = key
+
+  num = num + offset
+
+  if num > 7:
+    num = 1
+
+  if num < 1:
+    num = 7
+
+  return WEEKDAYS[num]
+
 def random_string(size=5, chars=string.ascii_uppercase + string.digits):
   return ''.join(random.choice(chars) for _ in range(size))
 

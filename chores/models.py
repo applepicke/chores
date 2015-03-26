@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from jsonfield import JSONField
 
 from chores.cache import CachedSMSVerificationCode
-from chores.utils import random_string, to_utc, from_utc, gravatar, user_time
+from chores.utils import random_string, to_utc, from_utc, gravatar, user_time, get_weekday
 from chores.sms import SMSClient
 from chores.messages import DEFAULT_REMINDER_SMS_MSG, DEFAULT_REMINDER_EMAIL_MSG, CONFIRMATION_MSG
 
@@ -318,7 +318,19 @@ class Reminder(TimeStamped):
     self.time = utc_time.strftime('%I:%M %p')
 
     if self.type == 'weekly':
-      self.day = utc_time.strftime('%A').lower()
+      offset = utc_time.day - time.day
+      self.day = get_weekday(self.day, offset)
+
+  def get_day(self, user=None):
+    if not user:
+      return self.day
+
+    now = to_utc(datetime.datetime.utcnow())
+    user_now = from_utc(now, user)
+
+    offset = user_now.day - now.day
+
+    return get_weekday(self.day, offset)
 
   def get_time(self, user):
     return user_time(self.time, user)
@@ -344,7 +356,7 @@ class Reminder(TimeStamped):
       'id': self.id,
       'type': self.type,
       'date': self.date.strftime('%m/%d/%Y'),
-      'day': self.day,
+      'day': self.get_day(user=user),
       'time': self.get_time(user) if user else self.time,
       'chore_id': self.chore.id,
     }
