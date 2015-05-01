@@ -27,7 +27,7 @@ DEBUG = True
 CHORES_FROM_EMAIL = 'william@willyc.me'
 
 ADMINS = (
-    ('William Collins', 'wcurtiscollins@gmail.com'),
+    ('William Collins', 'william@getmize.com'),
 )
 
 SERVER_EMAIL = 'django@getmize.com'
