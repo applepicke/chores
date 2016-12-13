@@ -193,13 +193,13 @@ SECRET = 'captain hook polymorph my eggshells'
 SESSION_ENGINE = 'redis_sessions.session'
 
 # Facebook test site credentials
-APP_ID = '332305020261516'
-APP_SECRET = '3a54fc53a73878ed337e768eb0d2e1c7'
+APP_ID = ''
+APP_SECRET = ''
 
 # Twilio credentials
-TWILIO_ACCOUNT_SID = 'ACb388d04293abdbe17968b51fa16c74f2'
-TWILIO_AUTH_TOKEN = 'cea48444e93d33126aa9729e1f04feac'
-TWILIO_NUM = '+18194142120'
+TWILIO_ACCOUNT_SID = ''
+TWILIO_AUTH_TOKEN = ''
+TWILIO_NUM = ''
 
 GENERIC_USER_PASSWORD = 'HSOUH12849&^$(asdf'
 
